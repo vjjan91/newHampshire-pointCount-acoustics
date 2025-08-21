@@ -1,0 +1,155 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+# Data comparability
+
+In this script, we process the point-count and acoustic data and create a combined dataset for downstream analysis. 
+
+## Load necessary libraries  
+```{r}
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(vegan)
+library(scico)
+library(data.table)
+library(extrafont)
+library(sf)
+library(raster)
+library(scales)
+library(ggplot2)
+library(ggspatial)
+library(colorspace)
+library(lubridate)
+library(naniar)
+```
+
+## Loading point count and acoustic data
+
+```{r}
+point_count <-  read.csv("data/point-count-data.csv")
+acoustic_data <-  read.csv("data/acoustic-data.csv")
+```
+
+## Cleaning up point count data
+
+```{r}
+# include distance information in lieu of the categories
+point_count <- point_count %>%
+  mutate(distance = case_when(distance_band == 1 ~ "0-10",
+                              distance_band == 2 ~ "10-25",
+                              distance_band == 3 ~ "25-50",
+                              distance_band == 4 ~">50",
+                              distance_band == NA ~ NA))
+
+# convert dates to standard YYYYMMDD format
+point_count$date <- mdy(point_count$date)
+
+# convert start time and observation time to lubridate format
+point_count$start_time <- hms::as_hms(point_count$start_time)
+point_count$observation_time <- hms::as_hms(point_count$observation_time)
+
+# remove incidental observations
+point_count <- point_count %>%
+  filter(observation_method != "I")
+
+# remove non-bird species and unidentified/NA values
+point_count <- point_count %>%
+  filter(!common_name %in% c("Unidentified Woodpecker",
+                             "Eastern Chipmunk",
+                             "Eastern Gray Squirrel",
+                             "Red Squirrel",
+                             NA))
+
+# using the library naniar, we assess missing data/NANs or if exploratory processing of data did not clean up the NAs
+miss_var_summary(point_count)
+
+# above procedure revealed NAs in the observation_time column which are associated with data on Canada Geese from MABI1002 and MABI1001 on 5/22/2023. We will not delete this data
+# other columns/missing data in those can be ignored as distance was not calculated for all observations due to variation in survey_observers
+```
+
+## Cleaning up acoustic data
+
+```{r}
+# ensure begin clock and end clock time are in HHMMSS format
+# note: alternately, the begin and end clock time could be potentially extracted from the selection tables (if present)
+# appending a zero to begin and end clock time
+acoustic_data$begin_clock_time <- paste0("0", acoustic_data$begin_clock_time)
+acoustic_data$ end_clock_time <- paste0("0", acoustic_data$end_clock_time)
+
+# write a function to convert to HH:MM:SS
+convert_to_time <- function(x) {
+  # convert string to numeric
+  x <- as.numeric(x)
+  hours <- floor(x/10000)
+  minutes <- floor((x - hours*10000)/100)
+  seconds <- x - hours*10000 - minutes*100
+  sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+# make the conversion
+acoustic_data$begin_clock_time <- sapply(acoustic_data$begin_clock_time, convert_to_time)
+acoustic_data$end_clock_time<- sapply(acoustic_data$end_clock_time, convert_to_time)
+
+# convert to hms format to keep it consistent with point_count data
+acoustic_data$begin_clock_time<- hms::as_hms(acoustic_data$begin_clock_time)
+acoustic_data$end_clock_time <- hms::as_hms(acoustic_data$end_clock_time)
+
+# make the data column similar to point_count data in YYYY-MM-DD format
+acoustic_data$date <- ymd(acoustic_data$date)
+
+# extract year column
+acoustic_data$year <- lubridate::year(acoustic_data$date)
+
+# remove non-bird species and unidentified/NA values
+acoustic_data <- acoustic_data %>%
+  filter(!common_name %in% c("Eastern Chipmunk",
+                             NA))
+
+# using the library naniar, we assess missing data/NANs or if exploratory processing of data did not clean up the NAs
+miss_var_summary(acoustic_data)
+
+# the column 'background' has a large number of NAs, which can be ignored since we will not be using this column in future analysis.
+```
+
+## Creating a combined dataset
+
+```{r}
+# include the data_type for each dataset
+acoustic_data <-  acoustic_data %>%
+  mutate(dataType = "acoustic_data")
+point_count <- point_count %>%
+  mutate(dataType = "point_count")
+
+# before we combine the two datasets, we want to ensure that the dates match across the two datasets. In other words, we do not want days in which either acoustic data or point count data was not collected, since this is a simultaneous comparison
+
+# point_count data had higher number of days for which acoustic_data was not collected and we can ignore/remove those dates from the point count data
+dates_to_remove <- sort(unique(anti_join(point_count,acoustic_data, by = "date")$date))
+
+# remove dates
+point_count <- point_count %>%
+  filter(!date %in% dates_to_remove)
+
+# combine the datasets
+datSubset <- bind_rows(point_count[,c(1:3,8,9,11,12,15,18:21)],
+                   acoustic_data[,c(4:9,15,16,18:21)])
+
+# add a site name column
+datSubset <- datSubset %>%
+  mutate(site_name = case_when(
+    grepl("^ACAD", site_id) ~ "Acadia National Park",
+    grepl("^HBEF", site_id) ~ "Hubbard Brook Experimental Forest",
+    grepl("^KAWW", site_id) ~ "Kawishiwi Watershed",
+    grepl("^MABI", site_id) ~ "Marsh-Billings-Rockefeller NHP"
+  ))
+
+# write to file
+write.csv(datSubset, "results/datSubset.csv", row.names = F)
+```
+
+
+
+
+

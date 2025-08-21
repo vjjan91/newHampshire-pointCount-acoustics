@@ -1,4 +1,4 @@
-site_id,date,time,wind,sky,temperature,noise,year,visit_number,species_code,abundance,observation_time,distance_band,distance_greater_than50mts,observation_method,flyover_observed,flyover_count,common_name,scientific_name
+site_id,date,start_time,wind,sky,temperature,noise,year,visit_number,species_code,abundance,observation_time,distance_band,distance_greater_than50mts,observation_method,flyover_observed,flyover_count,common_name,scientific_name
 ACAD3002,6/5/2022,5:32:00,0,2,10,0,2022,1,BRCR,1,5:39:00,1,0,A,0,0,Brown Creeper,Certhia americana
 ACAD3002,6/30/2022,8:32:00,1,1,18,0,2022,2,PUFI,1,8:38:00,1,0,A,1,1,Purple Finch,Haemorhous purpureus
 ACAD3002,7/29/2022,8:37:00,0,2,19,1,2022,4,PUFI,1,8:41:00,1,0,A,1,1,Purple Finch,Haemorhous purpureus
@@ -5666,8 +5666,8 @@ MABI1205,6/15/2022,7:17:00,0,0,14,0,2022,2,BLJA,2,7:20:00,4,1,A,0,0,Blue Jay,Cya
 ACAD3401,6/29/2022,7:10:00,0,0,16,1,2022,2,RWBL,3,7:13:00,4,1,A,0,0,Red-winged Blackbird,Agelaius phoeniceus
 KAWW5005,5/31/2023,6:28:00,0,0,,0,2023,2,BLJA,3,6:34:00,4,1,A,0,0,Blue Jay,Cyanocitta cristata
 MABI1203,5/30/2022,6:35:00,0,1,10,0,2022,1,AMCR,4,6:37:00,4,1,A,0,0,American Crow,Corvus brachyrhynchos
-MABI1002,5/22/2023,5:53:00,1,1,08,1,2023,1,CANG,2,#VALUE!,NA,NA,A,1,2,Canada Goose,Branta canadensis
-MABI1001,5/22/2023,5:24:00,1,1,08,0,2023,1,CANG,1,5:34:00,NA,NA,A,1,1,Canada Goose,Branta canadensis
+MABI1002,5/22/2023,5:53:00,1,1,08,1,2023,1,CANG,2,NA,NA,NA,A,1,2,Canada Goose,Branta canadensis
+MABI1001,5/22/2023,5:24:00,1,1,08,0,2023,1,CANG,1,NA,NA,NA,A,1,1,Canada Goose,Branta canadensis
 HBEFV015,5/23/2023,6:44:00,1,0,6,0,2023,1,AMGO,1,6:54:00,NA,NA,A,1,1,American Goldfinch,Spinus tristis
 HBEFV075,5/23/2023,7:19:00,2,0,6,0,2023,1,AMGO,1,7:29:00,NA,NA,A,1,1,American Goldfinch,Spinus tristis
 HBEFV013,5/23/2023,8:24:00,2,0,9,0,2023,1,AMGO,1,8:34:00,NA,NA,V,1,1,American Goldfinch,Spinus tristis
@@ -5734,7 +5734,7 @@ ACAD3005,6/1/2022,7:15:00,,,,,2022,3,DEJU,1,7:17:00,NA,1,A,0,NA,Dark-eyed Junco,
 ACAD3005,6/1/2022,7:15:00,,,,,2022,3,BTNW,1,7:16:00,NA,0,A,0,NA,Black-throated Green Warbler,Setophaga virens
 ACAD3005,6/1/2022,7:15:00,,,,,2022,3,MAWA,1,7:16:00,NA,0,A,0,NA,Magnolia Warbler,Setophaga magnolia
 ACAD3005,6/1/2022,7:15:00,,,,,2022,3,WIWR,1,7:16:00,NA,1,A,0,NA,Winter Wren,Troglodytes hiemalis
-ACAD3005,6/1/2022,7:15:00,,,,,2022,3,CEDW,1,#VALUE!,NA,NC,I,0,NA,Cedar Waxwing,Bombycilla cedrorum
+ACAD3005,6/1/2022,7:15:00,,,,,2022,3,CEDW,1,NA,NA,NC,I,0,NA,Cedar Waxwing,Bombycilla cedrorum
 ACAD3101,6/7/2022,5:40:00,,,,,2022,3,BTBW,1,5:49:00,NA,0,A,0,NA,Black-throated Blue Warbler,Setophaga caerulescens
 ACAD3101,6/7/2022,5:40:00,,,,,2022,3,AMCR,1,5:47:00,NA,1,A,0,NA,American Crow,Corvus brachyrhynchos
 ACAD3101,6/7/2022,5:40:00,,,,,2022,3,OVEN,1,5:47:00,NA,1,A,0,NA,Ovenbird,Seiurus aurocapilla
@@ -5758,7 +5758,7 @@ ACAD3201,6/6/2022,5:41:00,,,,,2022,3,NOCA,1,5:44:00,NA,1,A,0,NA,Northern Cardina
 ACAD3201,6/6/2022,5:41:00,,,,,2022,3,UNKN,1,5:43:00,NA,1,A,0,NA,NA,NA
 ACAD3201,6/6/2022,5:41:00,,,,,2022,3,MODO,1,5:42:00,NA,1,A,0,NA,Mourning Dove,Zenaida macroura
 ACAD3201,6/6/2022,5:41:00,,,,,2022,3,YRWA,1,5:42:00,NA,1,A,0,NA,Yellow-rumped Warbler,Setophaga coronata
-ACAD3201,6/6/2022,5:41:00,,,,,2022,3,CEDW,1,#VALUE!,NA,NC,I,0,NA,Cedar Waxwing,Bombycilla cedrorum
+ACAD3201,6/6/2022,5:41:00,,,,,2022,3,CEDW,1,NA,NA,NC,I,0,NA,Cedar Waxwing,Bombycilla cedrorum
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,AMCR,1,7:12:00,NA,1,A,0,NA,American Crow,Corvus brachyrhynchos
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,BLJA,1,7:11:00,NA,0,A,0,NA,Blue Jay,Cyanocitta cristata
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,BTNW,1,7:11:00,NA,1,A,0,NA,Black-throated Green Warbler,Setophaga virens
@@ -5773,7 +5773,7 @@ ACAD3205,6/6/2022,7:04:00,,,,,2022,3,HETH,1,7:05:00,NA,1,A,0,NA,Hermit Thrush,Ca
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,OVEN,1,7:05:00,NA,1,A,0,NA,Ovenbird,Seiurus aurocapilla
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,REVI,1,7:05:00,NA,0,A,0,NA,Red-eyed Vireo,Vireo olivaceus
 ACAD3205,6/6/2022,7:04:00,,,,,2022,3,SOSP,1,7:05:00,NA,1,A,0,NA,Song Sparrow,Melospiza melodia
-ACAD3205,6/6/2022,7:04:00,,,,,2022,3,EAWP,1,#VALUE!,NA,NC,I,0,NA,Eastern Wood-Pewee,Contopus virens
+ACAD3205,6/6/2022,7:04:00,,,,,2022,3,EAWP,1,NA,NA,NC,I,0,NA,Eastern Wood-Pewee,Contopus virens
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,BCCH,1,5:08:00,NA,1,A,0,NA,Black-capped Chickadee,Poecile atricapillus
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,AMRO,1,5:06:00,NA,0,A,0,NA,American Robin,Turdus migratorius
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,NOPA,1,5:06:00,NA,0,A,0,NA,Northern Parula,Setophaga americana
@@ -5786,19 +5786,19 @@ ACAD3401,6/5/2022,5:00:00,,,,,2022,3,HETH,1,5:01:00,NA,1,A,0,NA,Hermit Thrush,Ca
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,HETH,1,5:01:00,NA,0,A,0,NA,Hermit Thrush,Catharus guttatus
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,MODO,1,5:01:00,NA,0,A,0,NA,Mourning Dove,Zenaida macroura
 ACAD3401,6/5/2022,5:00:00,,,,,2022,3,SWSP,1,5:01:00,NA,1,A,0,NA,Swamp Sparrow,Melospiza georgiana
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,BRCR,1,#VALUE!,NA,NC,I,0,NA,Brown Creeper,Certhia americana
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,GCKI,1,#VALUE!,NA,NC,I,0,NA,Golden-crowned Kinglet,Regulus satrapa
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,PUFI,1,#VALUE!,NA,NC,I,0,NA,Purple Finch,Haemorhous purpureus
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,WIWR,1,#VALUE!,NA,NC,I,0,NA,Winter Wren,Troglodytes hiemalis
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,WTSP,1,#VALUE!,NA,NC,I,0,NA,White-throated Sparrow,Zonotrichia albicollis
-ACAD3401,6/5/2022,5:00:00,,,,,2022,3,YBFL,1,#VALUE!,NA,NC,I,0,NA,Yellow-bellied Flycatcher,Empidonax flaviventris
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,BRCR,1,NA,NA,NC,I,0,NA,Brown Creeper,Certhia americana
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,GCKI,1,NA,NA,NC,I,0,NA,Golden-crowned Kinglet,Regulus satrapa
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,PUFI,1,NA,NA,NC,I,0,NA,Purple Finch,Haemorhous purpureus
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,WIWR,1,NA,NA,NC,I,0,NA,Winter Wren,Troglodytes hiemalis
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,WTSP,1,NA,NA,NC,I,0,NA,White-throated Sparrow,Zonotrichia albicollis
+ACAD3401,6/5/2022,5:00:00,,,,,2022,3,YBFL,1,NA,NA,NC,I,0,NA,Yellow-bellied Flycatcher,Empidonax flaviventris
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,NOPA,1,6:05:00,NA,0,A,0,NA,Northern Parula,Setophaga americana
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,WIWR,1,6:05:00,NA,0,A,0,NA,Winter Wren,Troglodytes hiemalis
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,RBNU,1,6:00:00,NA,0,A,0,NA,Red-breasted Nuthatch,Sitta canadensis
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,BTNW,1,5:59:00,NA,1,A,0,NA,Black-throated Green Warbler,Setophaga virens
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,MODO,1,5:59:00,NA,1,A,0,NA,Mourning Dove,Zenaida macroura
 ACAD3403,6/5/2022,5:58:00,,,,,2022,3,WIWR,1,5:59:00,NA,1,A,0,NA,Winter Wren,Troglodytes hiemalis
-ACAD3403,6/5/2022,5:58:00,,,,,2022,3,BHVI,1,#VALUE!,NA,NC,I,0,NA,Blue-headed Vireo,Vireo solitarius
+ACAD3403,6/5/2022,5:58:00,,,,,2022,3,BHVI,1,NA,NA,NC,I,0,NA,Blue-headed Vireo,Vireo solitarius
 ACAD3501,6/3/2022,5:58:00,,,,,2022,3,YBFL,1,6:03:00,NA,1,A,0,NA,Yellow-bellied Flycatcher,Empidonax flaviventris
 ACAD3501,6/3/2022,5:58:00,,,,,2022,3,GCKI,1,6:02:00,NA,0,A,0,NA,Golden-crowned Kinglet,Regulus satrapa
 ACAD3501,6/3/2022,5:58:00,,,,,2022,3,MODO,1,6:02:00,NA,1,A,0,NA,Mourning Dove,Zenaida macroura
@@ -6052,7 +6052,7 @@ MABI1010,6/7/2022,8:14:00,,,,,2022,3,INBU,1,8:16:00,NA,1,A,0,NA,Indigo Bunting,P
 MABI1010,6/7/2022,8:14:00,,,,,2022,3,BLBW,1,8:15:00,NA,1,A,0,NA,Blackburnian Warbler,Setophaga fusca
 MABI1010,6/7/2022,8:14:00,,,,,2022,3,OVEN,1,8:15:00,NA,0,A,0,NA,Ovenbird,Seiurus aurocapilla
 MABI1010,6/7/2022,8:14:00,,,,,2022,3,REVI,1,8:15:00,NA,0,A,0,NA,Red-eyed Vireo,Vireo olivaceus
-MABI1010,6/7/2022,8:14:00,,,,,2022,3,BWHA,1,#VALUE!,NA,NC,I,0,NA,Broad-winged Hawk,Buteo platypterus
+MABI1010,6/7/2022,8:14:00,,,,,2022,3,BWHA,1,NA,NA,NC,I,0,NA,Broad-winged Hawk,Buteo platypterus
 MABI1010,6/21/2022,8:01:00,,,,,2022,4,SCTA,1,8:09:00,NA,1,A,0,NA,Scarlet Tanager,Piranga olivacea
 MABI1010,6/21/2022,8:01:00,,,,,2022,4,BCCH,1,8:06:00,NA,0,A,0,NA,Black-capped Chickadee,Poecile atricapillus
 MABI1010,6/21/2022,8:01:00,,,,,2022,4,COYE,1,8:06:00,NA,1,A,0,NA,Common Yellowthroat,Geothlypis trichas
@@ -6107,8 +6107,8 @@ MABI1105,6/16/2022,7:20:00,,,,,2022,3,OVEN,1,7:21:00,NA,1,A,0,NA,Ovenbird,Seiuru
 MABI1105,6/16/2022,7:20:00,,,,,2022,3,REVI,1,7:21:00,NA,0,A,0,NA,Red-eyed Vireo,Vireo olivaceus
 MABI1105,6/16/2022,7:20:00,,,,,2022,3,SCTA,1,7:21:00,NA,1,A,0,NA,Scarlet Tanager,Piranga olivacea
 MABI1105,6/16/2022,7:20:00,,,,,2022,3,WOTH,1,7:21:00,NA,0,A,0,NA,Wood Thrush,Hylocichla mustelina
-MABI1105,6/16/2022,7:20:00,,,,,2022,3,AMRO,1,#VALUE!,NA,NC,I,0,NA,American Robin,Turdus migratorius
-MABI1106,6/16/2022,7:44:00,,,,,2022,3,GRCA,1,#VALUE!,NA,NC,I,0,NA,Gray Catbird,Dumetella carolinensis
+MABI1105,6/16/2022,7:20:00,,,,,2022,3,AMRO,1,NA,NA,NC,I,0,NA,American Robin,Turdus migratorius
+MABI1106,6/16/2022,7:44:00,,,,,2022,3,GRCA,1,NA,NA,NC,I,0,NA,Gray Catbird,Dumetella carolinensis
 MABI1106,6/16/2022,7:44:00,,,,,2022,3,PIWA,1,7:47:00,NA,1,A,0,NA,Pine Warbler,Setophaga pinus
 MABI1106,6/16/2022,7:44:00,,,,,2022,3,BTBW,1,7:52:00,NA,0,A,0,NA,Black-throated Blue Warbler,Setophaga caerulescens
 MABI1106,6/16/2022,7:44:00,,,,,2022,3,YBSA,1,7:47:00,NA,1,A,0,NA,Yellow-bellied Sapsucker,Sphyrapicus varius
@@ -6241,7 +6241,7 @@ MABI1204,6/23/2022,7:49:00,,,,,2022,4,BRCR,1,7:50:00,NA,0,A,0,NA,Brown Creeper,C
 MABI1204,6/23/2022,7:49:00,,,,,2022,4,BTBW,1,7:50:00,NA,1,A,0,NA,Black-throated Blue Warbler,Setophaga caerulescens
 MABI1204,6/23/2022,7:49:00,,,,,2022,4,EAWP,1,7:50:00,NA,1,A,0,NA,Eastern Wood-Pewee,Contopus virens
 MABI1204,6/23/2022,7:49:00,,,,,2022,4,REVI,1,7:50:00,NA,1,A,0,NA,Red-eyed Vireo,Vireo olivaceus
-MABI1205,6/10/2022,6:40:00,,,,,2022,3,MOWA,1,#VALUE!,NA,NC,I,0,NA,Mourning Warbler,Geothlypis philadelphia
+MABI1205,6/10/2022,6:40:00,,,,,2022,3,MOWA,1,NA,NA,NC,I,0,NA,Mourning Warbler,Geothlypis philadelphia
 MABI1205,6/10/2022,6:40:00,,,,,2022,3,AMRO,1,6:48:00,NA,1,A,0,NA,American Robin,Turdus migratorius
 MABI1205,6/10/2022,6:40:00,,,,,2022,3,BLJA,1,6:48:00,NA,0,A,0,NA,Blue Jay,Cyanocitta cristata
 MABI1205,6/10/2022,6:40:00,,,,,2022,3,EAWP,1,6:48:00,NA,1,A,0,NA,Eastern Wood-Pewee,Contopus virens
