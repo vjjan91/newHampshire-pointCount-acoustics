@@ -123,14 +123,23 @@ acoustic_data <-  acoustic_data %>%
 point_count <- point_count %>%
   mutate(data_type = "point_count")
 
-# before we combine the two datasets, we want to ensure that the dates match across the two datasets. In other words, we do not want days in which either acoustic data or point count data was not collected, since this is a simultaneous comparison
+# before we combine the two datasets, we want to ensure that both dates and site_id match across the two datasets. In other words, we do not want visits in which in which either acoustic data or point count data was not collected, since this is a simultaneous comparison
 
-# point_count data had higher number of days for which acoustic_data was not collected and we can ignore/remove those dates from the point count data
-dates_to_remove <- sort(unique(anti_join(point_count,acoustic_data, by = "date")$date))
+# find dates to remove by checking for mismatches between the two datasets using both site_id and date
+dates_to_remove <- anti_join(point_count, acoustic_data, 
+                             by = c("site_id", "date")) %>%
+  dplyr::select(site_id, date) %>%
+  distinct()
 
-# remove dates
+# remove data from sites and visits from the point count data which do not have corresponding acoustic annotations
 point_count <- point_count %>%
-  filter(!date %in% dates_to_remove)
+  anti_join(dates_to_remove, by = c("site_id", "date"))
+
+# as a sanity check, let's repeat the above with acoustic data to ensure we are not keeping any extra site/visit annotations
+acoustic_data_to_remove <- anti_join(acoustic_data, point_count, by = c("site_id", "date")) %>%
+  dplyr::select(site_id, date) %>%
+  distinct()
+# sanity check successful and suggests that the acoustic annotations are often across dates and visits that have point_count data. No data needs to be further filtered.
 
 # combine the datasets
 datSubset <- bind_rows(point_count[,c(1:3,8,9,11,12,15,18:21)],
@@ -144,6 +153,13 @@ datSubset <- datSubset %>%
     grepl("^KAWW", site_id) ~ "Kawishiwi Watershed",
     grepl("^MABI", site_id) ~ "Marsh-Billings-Rockefeller NHP"
   ))
+
+# visit_numbers need to be reassigned and sorted based on the earliest date for each site_id
+# this is being done as a secondary sanity check to ensure that the same visit_numbers are being assigned to every single site_id and date combination for each data_type. In other words, for MABI1110 for say 2022-05-26 with visit_number 1 for point_count data, we ensure that the visit_number is 1 for the same date and site_id for acoustic data
+datSubset <- datSubset %>%
+  group_by(site_id, data_type) %>%
+  arrange(date) %>%
+  mutate(visit_number = dense_rank(date))
 
 # write to file
 write.csv(datSubset, "results/datSubset.csv", row.names = F)
