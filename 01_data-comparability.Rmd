@@ -119,9 +119,9 @@ miss_var_summary(acoustic_data)
 ```{r}
 # include the data_type for each dataset
 acoustic_data <-  acoustic_data %>%
-  mutate(dataType = "acoustic_data")
+  mutate(data_type = "acoustic_data")
 point_count <- point_count %>%
-  mutate(dataType = "point_count")
+  mutate(data_type = "point_count")
 
 # before we combine the two datasets, we want to ensure that the dates match across the two datasets. In other words, we do not want days in which either acoustic data or point count data was not collected, since this is a simultaneous comparison
 
