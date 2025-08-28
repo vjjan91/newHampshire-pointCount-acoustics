@@ -1,0 +1,244 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+# Calling rates
+
+In this script, we assess if there is an association between calling rates and abundances of species across sites and years.
+
+## Load necessary libraries  
+```{r}
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(vegan)
+library(scico)
+library(data.table)
+library(extrafont)
+library(sf)
+library(raster)
+library(scales)
+library(ggplot2)
+library(ggspatial)
+library(colorspace)
+library(lubridate)
+library(naniar)
+library(ggstatsplot)
+library(patchwork)
+```
+
+## Load dataframe containing point count and acoustic data
+```{r}
+datSubset <- read.csv("results/datSubset.csv")
+```
+
+## Creating a single dataframe prior to running statistical analysis
+
+```{r}
+## filter out species that were only detected in one approach and not in the other
+
+## Nine species were detected only in point count data but not in the acoustic data and can be ignored for downstream analysis: Herring Gull, Northern Cardinal, American Goshawk, Swamp Sparrow, Red-bellied Woodpecker, Pine Siskin, Savannah Sparrow, Eastern Kingbird, Brown-headed Cowbird
+## we will remove the above list of species from the point count data
+point_count <- datSubset %>%
+  filter(data_type == "point_count") %>%
+  filter(!common_name %in% c("Herring Gull", 
+                             "Northern Cardinal", "American Goshawk", 
+                             "Swamp Sparrow", "Red-bellied Woodpecker", 
+                             "Pine Siskin",
+                             "Savannah Sparrow", "Eastern Kingbird", 
+                             "Brown-headed Cowbird"
+                             ))
+
+## Six species were detected only in acoustic data and not in the point count data and can also be ignored for downstream analysis: Cape May Warbler, Gray Catbird, Mallard, Prairie Warbler, House Wren, Bobolink
+acoustic_data <- datSubset %>%
+  filter(data_type == "acoustic_data") %>%
+  filter(!common_name %in% c("Cape May Warbler", "Gray Catbird", 
+                             "Mallard", "Prairie Warbler", 
+                             "House Wren", "Bobolink"
+                             ))
+
+# estimate abundance for each species for each site/visit combination
+# ignore distance for now as we can model it in future analysis
+abundance <- point_count %>%
+  group_by(site_id, site_name, year, visit_number,
+           scientific_name,
+           common_name) %>% 
+  summarise(abundance = sum(abundance)) %>%
+  ungroup()
+
+# estimate detections for each species for each site and year combination using the manual annotations of the acoustic data
+detections <- acoustic_data %>%
+  group_by(site_id, site_name, year, visit_number,
+           scientific_name,
+           common_name) %>% 
+  summarise(detections = n()) %>%
+  ungroup()
+
+## sanity check to ensure that we are not including any species in either data type by mistake
+pc_not_aru <- unique(anti_join(abundance[,6], 
+                               detections[,6]))
+aru_not_pc <- unique(anti_join(detections[,6], 
+                               abundance[,6]))
+## looks like we are good to join both datasets
+
+# create a single dataframe
+data <- full_join(abundance, detections) %>%
+  replace_na(list(abundance = 0, detections = 0))
+```
+
+## Calculating calling rates
+
+To calculate calling rates, we essentially divide the number of acoustic detections per visit to a site by the number of individuals detected.
+
+```{r}
+## using a random cutoff of a minimum of 10 individuals in point count
+## grouping by species, year (2022 or 2023) since vocal activity may vary by season and site_name (regional variation as a function of site/habitat)
+spp_subset <-  data %>%
+  group_by(common_name, year, site_name) %>%
+  summarise(abundance = sum(abundance), detections = sum(detections)) %>%
+  ungroup() %>%
+  filter(abundance >=10 & detections >= 10)
+
+## We did the above in our previous script, resulting in ~38 species
+
+## calculating calling rate
+data <- data %>%
+  mutate(calling_rate = (detections/abundance))
+
+## keeping only the subset of species
+data <- data %>%
+  semi_join(spp_subset, by = c("common_name", "year", "site_name"))
+
+## getting rid of zero values and Inf
+data <- data %>%
+  filter(calling_rate != 0) %>%
+  filter(calling_rate != Inf)
+
+# visualization
+# for the first correlation, let's pool data at a regional level
+# by taking the mean value of calling rate, we end up losing quite a bit of variation (here we take the mode)
+grouped_data <- data %>%
+  group_by(site_name, year, scientific_name, common_name) %>%
+  summarise(abundance = sum(abundance),
+            calling_rate = median(detections)) %>%
+  ungroup()
+
+# create a grouping variable for visualization
+grouped_data <- grouped_data %>%
+  mutate(site_year = paste(site_name, year, sep = " - ")) %>%
+  mutate(site_year = factor(site_year, levels = unique(site_year)))
+
+# visualize
+fig_abund_callingRate_community <- grouped_ggscatterstats(
+  data = grouped_data,
+  y = abundance,
+  x = calling_rate,
+  type = "r",
+  ylab = "Abundance (point-count)",
+  xlab = "Calling Rate",
+  grouping.var = site_year,
+  label.var = common_name, 
+  label.expression = calling_rate > 20,
+  ggplot.component = list(theme(text = element_text(family = "Century Gothic", size = 15, face = "bold"),plot.title = element_text(family = "Century Gothic",
+      size = 18, face = "bold"),
+      plot.subtitle = element_text(family = "Century Gothic", 
+      size = 15, face = "bold",color="#1b2838"),
+      axis.title = element_text(family = "Century Gothic",
+      size = 15, face = "bold"))))
+
+ggsave(fig_abund_callingRate_community, filename = "figs/abundance_vs_callingRates_pooled_across_sites_by_year.png", width = 25, height = 12, device = png(), units = "in", dpi = 300)
+dev.off()
+```
+
+## Species-specific correlations
+
+Here, we run analysis correlating abundance and calling rates for each species across years. 
+
+```{r}
+# create a grouping variable for visualization
+data <- data %>%
+  mutate(site_year = paste(site_name, year, sep = " - ")) %>%
+  mutate(site_year = factor(site_year, levels = unique(site_year)))
+
+# plots to be created species by species
+plots <- list()
+
+for(i in 1:length(unique(data$common_name))){
+  
+# extract species scientific name
+a <- unique(data$common_name)[i]
+  
+# subset data for plotting
+for_plot <- data[data$common_name==a,]
+
+# visualization
+plots[[i]] <- grouped_ggscatterstats(
+  data = for_plot,
+  y = abundance,
+  x = calling_rate,
+  type = "r",
+  ylab = "Abundance (point-count)",
+  xlab = "Calling Rate",
+  grouping.var = site_year,
+  ggplot.component = list(theme(text = element_text(family = "Century Gothic", size = 15, face = "bold"),plot.title = element_text(family = "Century Gothic",
+      size = 18, face = "bold"),
+      plot.subtitle = element_text(family = "Century Gothic", 
+      size = 15, face = "bold",color="#1b2838"),
+      axis.title = element_text(family = "Century Gothic",
+      size = 15, face = "bold")))) + 
+  plot_annotation(
+  title = a,
+  theme = theme(plot.title = element_text(family = "Century Gothic", 
+                                         size = 20, 
+                                         face = "bold", 
+                                         hjust = 0.5)))
+}
+
+# plot and save as a single pdf
+cairo_pdf(
+  filename = "figs/abundance-callingRates-by-species-correlations.pdf",
+  width = 25, height = 12,
+  onefile = TRUE
+)
+plots
+dev.off() 
+```
+
+## Are calling rates consistent across sites and years between species?
+
+Here, we explore calling rates further to understand its variation across sites and years
+```{r}
+## visualization 
+data$site_year <- factor(data$site_year, 
+                         levels = unique(data$site_year))  
+
+# figure
+fig_callingRate <- ggplot(data, 
+                          aes(x = common_name, y = calling_rate)) +
+  geom_boxplot(fill = "#D29C44FF") +  
+  facet_wrap(~site_year, scales ="free") +          
+  theme_bw(base_family = "Century Gothic") +    
+  theme(
+    plot.title = element_text(size = 18, face = "bold"),
+    axis.title = element_text(size = 16, face = "bold"),
+    axis.text.x = element_text(
+      size = 12,
+      angle = 45,             
+      hjust = 1,              
+      face = "italic"         
+    ),
+    axis.text.y = element_text(size = 14),
+    strip.text = element_text(size = 12, face = "bold")
+  ) +
+  labs(
+    x = "Common Name",         
+    y = "Calling Rate",        
+    title = "Calling Rate by Species" 
+  )
+
+ggsave(fig_callingRate, filename = "figs/callingRates-by-species.png", width = 25, height = 12, device = png(), units = "in", dpi = 300)
+dev.off()
+```
+
+
