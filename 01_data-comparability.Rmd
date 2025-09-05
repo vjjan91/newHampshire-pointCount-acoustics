@@ -151,7 +151,7 @@ datSubset <- datSubset %>%
   mutate(site_name = case_when(
     grepl("^ACAD", site_id) ~ "Acadia National Park",
     grepl("^HBEF", site_id) ~ "Hubbard Brook Experimental Forest",
-    grepl("^KAWW", site_id) ~ "Kawishiwi Watershed",
+    grepl("^KAWW", site_id) ~ "Katahdin Woods and Waters",
     grepl("^MABI", site_id) ~ "Marsh-Billings-Rockefeller NHP"
   ))
 

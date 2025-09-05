@@ -71,19 +71,29 @@ abundance <- point_count %>%
 detections <- acoustic_data %>%
   group_by(site_id, site_name, year, visit_number,
            scientific_name,
-           common_name) %>% 
+           common_name, begin_clock_time,
+           end_clock_time) %>% 
   summarise(detections = n()) %>%
   ungroup()
 
-## sanity check to ensure that we are not including any species in either data type by mistake
-pc_not_aru <- unique(anti_join(abundance[,6], 
-                               detections[,6]))
-aru_not_pc <- unique(anti_join(detections[,6], 
-                               abundance[,6]))
-## looks like we are good to join both datasets
+# estimating detetions per minute
+# create a table with detection counts per minute per species
+detection_per_minute <- detections %>%
+  mutate(minute = floor_date(as.POSIXct(begin_clock_time, format = "%H:%M:%S"), "minute")) %>%
+  group_by(site_id, site_name, year, visit_number,
+    scientific_name, common_name, 
+    minute) %>%
+  summarise(detections = n(), .groups = 'drop')
+
+# max_detections per minute
+# instead of computing an average or median, we extract the max value of detections for that species for that visit across each minute of calculation
+max_detections <- detection_per_minute %>%
+  group_by(site_id, site_name, year, visit_number,
+    scientific_name, common_name) %>%
+  summarise(detections = max(detections), .groups = 'drop')
 
 # create a single dataframe
-data <- full_join(abundance, detections) %>%
+data <- full_join(abundance, max_detections) %>%
   replace_na(list(abundance = 0, detections = 0))
 ```
 
@@ -98,7 +108,7 @@ spp_subset <-  data %>%
   group_by(common_name, year, site_name) %>%
   summarise(abundance = sum(abundance), detections = sum(detections)) %>%
   ungroup() %>%
-  filter(abundance >=10 & detections >= 10)
+  filter(abundance >=5 & detections >= 5)
 
 ## We did the above in our previous script, resulting in ~38 species
 
@@ -240,5 +250,4 @@ fig_callingRate <- ggplot(data,
 ggsave(fig_callingRate, filename = "figs/callingRates-by-species.png", width = 25, height = 12, device = png(), units = "in", dpi = 300)
 dev.off()
 ```
-
 
