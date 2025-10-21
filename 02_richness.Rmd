@@ -45,7 +45,7 @@ abundance <- datSubset %>%
   summarise(total_abundance = sum(abundance)) %>%
   ungroup()
 
-# Red Crossbill in Acadia National Park (ACAD3403) in year 2023 and Black-throated Green Warbler in year 2022 in Acadia National Park (ACAD3504) reported highest values of abundance (at n=19 and 16, respectively)
+# Red Crossbill in Acadia National Park (ACAD3403) in year 2023 and Black-throated Green Warbler in year 2022 in Acadia National Park (ACAD3504) reported highest values of abundance (at n= 19 and n = 16, respectively)
 
 # estimate richness for point_count data at each site
 pc_richness <- abundance %>%
@@ -65,6 +65,8 @@ detections <- datSubset %>%
   filter(data_type == "acoustic_data") %>%
   group_by(site_id, year, site_name, scientific_name, common_name) %>% summarise(total_detections = n()) %>%
   ungroup()
+
+# while this information is pooled across visits, the analysis reported highest detections for the Chestnut-sided Warbler at MABI1103 in Marsh-Billings in 2023 (n= 256 detections)
 
 # estimate richness for acoustic data
 aru_richness <- detections %>%
