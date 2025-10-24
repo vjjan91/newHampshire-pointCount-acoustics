@@ -26,7 +26,10 @@ library(lubridate)
 library(naniar)
 library(ggstatsplot)
 library(patchwork)
-library(ggpmisc)
+library(glmmTMB)
+library(lme4)
+library(DHARMa)
+library(performance)
 ```
 
 ## Load dataframe containing point count and acoustic data
@@ -81,29 +84,342 @@ pc_not_aru <- unique(anti_join(abundance[,6],
                                detections[,6]))
 aru_not_pc <- unique(anti_join(detections[,6], 
                                abundance[,6]))
-## looks like we are good to join both datasets
+```
+
+## Filtering criteria for species inclusion
+
+How do we decide on the number of species to include or what species to keep? One criteria that was employed in Ramesh et al. 2022 (Ecography) was: "we kept only those species that occurred in at least 5% of all checklists across at least 27 unique grid cells (50% of the study area)." In a similar vein, we keep species occurring in atleast 10% or 25% of sites across both years for both acoustic data and point count data. 
+
+```{r}
+# add a total number of unique sites
+# 104 unique sites
+total_sites <- length(unique(abundance$site_id)) 
+
+# how many sites was each species observed in when carrying out point counts and when carrying out manual acoustic annotations/detections?
+species_year_pc <-  abundance %>%
+  group_by(common_name, year) %>%
+  summarise(n_sites = n_distinct(site_id), .groups = 'drop') %>%
+  arrange(desc(n_sites)) %>%
+   mutate(total_sites,
+         prop_sites = n_sites/total_sites) # proportion of sites
+
+species_year_aru <- detections %>%
+  group_by(common_name, year) %>%
+  summarise(n_sites = n_distinct(site_id), .groups = 'drop') %>%
+  arrange(desc(n_sites)) %>%
+  mutate(total_sites,
+         prop_sites = n_sites/total_sites) # proportion of sites
+
+# we choose to keep species that occurred in atleast 15% of sites in each method and within a year
+species_pc <- species_year_pc %>%
+  filter(prop_sites >= 0.15)
+
+species_aru <- species_year_aru %>%
+  filter(prop_sites >= 0.15)
+
+# subset data from the abundance and detections dataframe to keep only species that occur in 15% of all sites during each year of survey
+aru_subset <- detections %>%
+  semi_join(species_aru, by = c("common_name", "year"))
+
+pc_subset <- abundance %>%
+  semi_join(species_pc, by = c("common_name", "year"))
+
+# we only keep species that satisfied the criteria for both point counts and acoustic data. In some cases, a few species satisfied the criteria for only point counts or only acoustic data and such species were filtered out prior to other analyses
+
+# how many species were detected in acoustic data but not point counts?
+# no new species were matching the criteria in acoustic data
+aru_not_pc <- unique(anti_join(aru_subset[,6], pc_subset[,6]))
+
+# five species matched criteria in point counts that were not found in the acoustic data
+pc_not_aru <- unique(anti_join(pc_subset[,6], aru_subset[,6]))
+
+# removing these five species from the pc_subset
+pc_subset <- pc_subset %>%
+  filter(!common_name %in% c("Dark-eyed Junco","Red Crossbill",
+                             "American Goldfinch","Wood Thrush",
+                             "American Redstart"))
 
 # create a single dataframe
-data <- full_join(abundance, detections) %>%
+data <- full_join(pc_subset, aru_subset) %>%
   replace_na(list(abundance = 0, detections = 0))
+
+# criteria of 15% occurrence across sites per year/season for both acoustic data and point count data resulted in 22 species.
 ```
+
+## Correlations between abundance and detections
+
+Exploratory analysis of data distributions
+```{r}
+# explore the distribution of data
+hist(data$abundance, main = "Abundance Distribution", xlab = "Abundance")
+# most species had an abundance of 1, followed by 2 and feere species had higher abundances and so on
+
+hist(data$detections, main = "Acoustic Detections Distribution", xlab = "Detections")
+# right-tailed skewed distribution that is zero-inflated
+
+plot(data$detections, data$abundance, 
+     xlab = "Acoustic Detections", ylab = "Abundance")
+
+# Check correlation
+cor(data$abundance, data$detections, use = "complete.obs")
+
+# 0.324 is the value of correlation between abundance and detections across species, sites and years.
+```
+
+## Scaling of predictors and determine distribution family
+
+Since it's abundance, we will most likely choose Poisson, but we can do a quick assessment of the distribution to ensure we are choosing the right family prior to running mixed models.
+```{r}
+## we scale acoustic detections since the range is vastly different when compared to abundance (0-10 vs. 1-500 for example)
+data$detections_scaled <- scale(data$detections)
+
+# analyze abundance distribution to choose appropriate family
+abundance_analysis <- function(y) {
+  
+  # summary statistics
+  stats <- list(
+    mean = mean(y, na.rm = TRUE),
+    var = var(y, na.rm = TRUE),
+    min = min(y, na.rm = TRUE),
+    max = max(y, na.rm = TRUE),
+    zeros = sum(y == 0, na.rm = TRUE),
+    total_obs = length(y[!is.na(y)])
+  )
+  
+  # dispersion ratio (variance/mean)
+  stats$dispersion_ratio <- stats$var / stats$mean
+  
+  # proportion of zeros
+  stats$zero_prop <- stats$zeros / stats$total_obs
+  
+  # recommendations based on characteristics
+  if(stats$zero_prop > 0.2) {
+    stats$recommended_family <- "Zero-inflated (zinb or zip)"
+  } else if(stats$dispersion_ratio > 2) {
+    stats$recommended_family <- "Negative Binomial"
+  } else if(all(y >= 0) && stats$dispersion_ratio > 1) {
+    stats$recommended_family <- "Poisson or Negative Binomial"
+  } else {
+    stats$recommended_family <- "Gaussian (if continuous) or Poisson (if counts)"
+  }
+  
+  return(stats)
+}
+
+abundance_stats <- abundance_analysis(data$abundance)
+print(abundance_stats)
+
+# visualize to confirm
+hist(data$abundance, main = "Abundance Distribution")
+plot(table(data$abundance), main = "Abundance Frequency")
+qqnorm(data$abundance)
+qqline(data$abundance)
+
+# we will choose a Poisson distribution given counts and variance is near the mean (0.8 and 1.4, a bit of a difference but since it is count data, that takes precedence)
+```
+
+## Generalized linear mixed model between abundance and acoustic detections
+
+```{r}
+# ensure factors are properly coded
+data$common_name <- as.factor(data$common_name)
+data$year <- as.factor(data$year)
+data$site_id <- as.factor(data$site_id)
+
+# poisson model
+m1 <- glmmTMB(abundance ~ detections_scaled +
+                            (1|common_name), 
+                            data = data, family = gaussian)
+summary(m1)
+
+# model diagnostics
+# DHARMa residuals
+sim_resid <- simulateResiduals(m1)
+plot(sim_resid, main = "DHARMa Residual Diagnostics")
+  
+# test for overdispersion
+testDispersion(sim_resid)
+  
+# test for zero-inflation
+testZeroInflation(sim_resid)
+  
+# performance metrics
+r2_values <- r2(m1)
+print(r2_values)
+  
+  return(sim_resid)
+}
+
+# Run diagnostics on best model
+diagnostics <- model_diagnostics(best_model)
+
+
+# Let's examine your abundance data more carefully
+abundance_investigation <- function(data) {
+  cat("=== DETAILED ABUNDANCE ANALYSIS ===\n")
+  
+  # Basic statistics
+  cat("Abundance statistics:\n")
+  cat("Mean:", mean(data$abundance, na.rm = TRUE), "\n")
+  cat("Variance:", var(data$abundance, na.rm = TRUE), "\n")
+  cat("Dispersion ratio (var/mean):", var(data$abundance, na.rm = TRUE) / mean(data$abundance, na.rm = TRUE), "\n")
+  cat("Min:", min(data$abundance, na.rm = TRUE), "\n")
+  cat("Max:", max(data$abundance, na.rm = TRUE), "\n")
+  
+  # Zero counts
+  zeros <- sum(data$abundance == 0, na.rm = TRUE)
+  total <- sum(!is.na(data$abundance))
+  cat("Zeros:", zeros, "out of", total, "(", round(100*zeros/total, 1), "%)\n")
+  
+  # Distribution shape
+  cat("\nValue frequencies (top 10):\n")
+  print(head(sort(table(data$abundance), decreasing = TRUE), 10))
+  
+  # Check if it looks more like a different distribution
+  cat("\nDistribution assessment:\n")
+  
+  # Test for normality (if continuous)
+  if(length(unique(data$abundance)) > 20) {
+    shapiro_p <- shapiro.test(sample(data$abundance, min(5000, length(data$abundance))))$p.value
+    cat("Shapiro-Wilk normality test p-value:", shapiro_p, "\n")
+  }
+  
+  # Visualizations
+  par(mfrow = c(2, 3))
+  
+  # Histogram
+  hist(data$abundance, main = "Abundance Distribution", 
+       xlab = "Abundance", breaks = 30)
+  
+  # Bar plot of counts
+  barplot(table(data$abundance)[1:min(20, length(table(data$abundance)))], 
+          main = "Frequency of Abundance Values", xlab = "Abundance")
+  
+  # Q-Q plots against different distributions
+  qqnorm(data$abundance, main = "Q-Q Plot: Normal")
+  qqline(data$abundance)
+  
+  # Log-normal check (if no zeros)
+  if(min(data$abundance, na.rm = TRUE) > 0) {
+    qqnorm(log(data$abundance), main = "Q-Q Plot: Log-Normal")
+    qqline(log(data$abundance))
+  }
+  
+  # Poisson Q-Q plot
+  lambda_est <- mean(data$abundance, na.rm = TRUE)
+  theoretical_quantiles <- qpois(ppoints(length(data$abundance)), lambda = lambda_est)
+  plot(sort(theoretical_quantiles), sort(data$abundance), 
+       main = "Q-Q Plot: Poisson", xlab = "Theoretical Poisson", ylab = "Observed")
+  abline(0, 1)
+  
+  # Mean-variance relationship by group
+  if("species" %in% names(data)) {
+    species_stats <- aggregate(abundance ~ species, data, function(x) c(mean = mean(x), var = var(x)))
+    plot(species_stats$abundance[,"mean"], species_stats$abundance[,"var"],
+         main = "Mean-Variance Relationship", xlab = "Mean", ylab = "Variance")
+    abline(0, 1, col = "red", lty = 2)  # Poisson expectation
+  }
+  
+  par(mfrow = c(1, 1))
+  
+  return(list(
+    mean = mean(data$abundance, na.rm = TRUE),
+    var = var(data$abundance, na.rm = TRUE),
+    dispersion = var(data$abundance, na.rm = TRUE) / mean(data$abundance, na.rm = TRUE),
+    zero_prop = zeros/total
+  ))
+}
+
+abundance_stats <- abundance_investigation(data)
+
+
+
+
+```
+
+
+
+
+
+Here, we run a generalized linear mixed effects model to test for associations between abundance and acoustic detections
+
+```{r}
+## all birds model
+m1 <- glmer(abundance ~ detections + (1|year) +
+                (1|common_name) + (1|site_id),
+              #ziformula = ~1,
+              family=poisson(),
+               data = data)
+
+summary(m1)
+plot_model(m1, type = "re")
+plot(ggpredict(m1))
+
+
+
+
+# Create a sequence of aruRate values for predictions
+aruRate_seq <- seq(min(data$aruRate), max(data$aruRate), length.out = 100)
+
+# Create a new data frame for predictions
+new_data <- expand.grid(aruRate = aruRate_seq, common_name = unique(data$common_name))
+
+# To make the predict function work we need to "recreate" a full dataset with dummy site_id values
+site_ids_dummy <- unique(data$site_id)[1] # Use the first unique value of site_id
+
+# Adding dummy site_id to new_data
+new_data$site_id <- site_ids_dummy
+
+# Add fixed effect predictions
+new_data$predict_fixed <- predict(m1, newdata = new_data, re.form = NA)
+
+# Extract random effects
+ranef_common_name <- ranef(m1)$cond$common_name
+ranef_common_name_data <- data.frame(common_name = rownames(ranef_common_name), ranef = ranef_common_name[,1])
+
+# Merge random effects with new data
+new_data <- merge(new_data, ranef_common_name_data, by = "common_name")
+
+# Add random effects to the predictions
+new_data$predict_all <- new_data$predict_fixed + new_data$ranef
+
+# Calculate confidence intervals for fixed effects
+pred_var <- predict(m1, newdata = new_data, re.form = NA, se.fit = TRUE)
+new_data$ci_lower <- new_data$predict_fixed - 1.96 * pred_var$se.fit
+new_data$ci_upper <- new_data$predict_fixed + 1.96 * pred_var$se.fit
+
+# Plot using ggplot2 and facet by common_name
+ggplot(new_data, aes(x = aruRate, y = exp(predict_all))) +
+  geom_line() +
+  geom_ribbon(aes(ymin = exp(ci_lower), ymax = exp(ci_upper)), alpha = 0.2) +
+  facet_wrap(~ common_name) +
+  theme_minimal() +
+  labs(title = "Predicted Abundance by Common Name",
+       y = "Predicted Abundance",
+       x = "ARU Rate")
+
+# Model diagnostics
+library(DHARMa)
+simulation_output <- simulateResiduals(fittedModel = m1)
+
+# Plot residuals
+plot(simulation_output)
+
+# Perform tests
+testUniformity(simulation_output)
+testDispersion(simulation_output)
+testZeroInflation(simulation_output)
+```
+
+
+
+
 
 ## Species-specific correlations
 
 Here, we run analysis correlating abundance and detections for each species across years. 
-
 ```{r}
-## using a random cutoff of a minimum of ten individuals in point count
-## grouping by species, year (2022 or 2023) since vocal activity may vary by season and site_name (regional variation as a function of site/habitat)
-spp_subset <-  data %>%
-  group_by(common_name, year, site_name) %>%
-  summarise(abundance = sum(abundance), detections = sum(detections)) %>%
-  ungroup() %>%
-  filter(abundance >=10 & detections >= 10)
 
-## keeping only the subset of species
-data <- data %>%
-  semi_join(spp_subset, by = c("common_name", "year", "site_name"))
 
 # define color palette
 colors <- c("#2d1b69", "#548150FF", "#DEB738FF","#852419FF")
