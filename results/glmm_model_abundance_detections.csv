@@ -1,22 +1,22 @@
 "Species","N_Observations","N_Sites","Mean_Abundance","Max_Abundance","Detection_Range","Effect_Direction","Effect_Size","Effect_Magnitude","P_Value","Significance","Pseudo_R2","Fold_Change"
-"Hermit Thrush",194,83,1.31,9,"0 - 148","Positive",0.084,"Very Small",0,"***",0.403,1.95
-"Brown Creeper",71,48,1.07,2,"0 - 63","Positive",0.21,"Small",NA,"ns",0.084,2.03
-"American Crow",79,41,1.06,4,"0 - 70","Positive",0.398,"Small",0.0013,"**",0.287,4.45
-"Yellow-rumped Warbler",104,59,1.31,4,"0 - 48","Positive",0.257,"Small",0.005,"**",0.656,1.94
-"Black-throated Green Warbler",262,86,1.78,5,"0 - 118","Positive",0.124,"Very Small",0,"***",0.4,2.19
-"Red-breasted Nuthatch",144,69,1.22,4,"0 - 55","Positive",0.026,"Very Small",0.7878,"ns",0.426,1.08
-"Winter Wren",112,55,1.09,3,"0 - 68","Positive",0.109,"Very Small",0.0374,"*",0.099,1.49
-"Blue-headed Vireo",91,56,1.05,2,"0 - 68","Negative",-0.008,"Very Small",0.9072,"ns",0.085,0.97
+"Brown Creeper",71,48,1.07,2,"0 - 63","Positive",0.21,"Small",0.0085,"**",0.084,2.03
+"American Crow",79,41,1.06,4,"0 - 70","Positive",0.356,"Small",4e-04,"***",0.515,3.81
 "Golden-crowned Kinglet",122,53,1.14,4,"0 - 70","Positive",0.196,"Very Small",0.0094,"**",0.135,2.08
-"Black-capped Chickadee",218,87,1.61,7,"0 - 106","Positive",0.255,"Small",0,"***",0.344,4.25
-"Black-and-white Warbler",93,54,1.17,3,"0 - 45","Positive",0.025,"Very Small",NA,"ns",0.001,1.06
+"Yellow-rumped Warbler",104,59,1.31,4,"0 - 48","Positive",0.257,"Small",0.005,"**",0.656,1.94
+"Black-throated Green Warbler",262,86,1.78,5,"0 - 118","Positive",0.124,"Very Small",0,"***",0.391,2.19
+"Winter Wren",112,55,1.09,3,"0 - 68","Positive",0.109,"Very Small",0.0374,"*",0.099,1.49
+"Hermit Thrush",194,83,1.31,9,"0 - 148","Positive",0.085,"Very Small",0,"***",0.39,1.96
+"Red-breasted Nuthatch",144,69,1.22,4,"0 - 55","Positive",0.025,"Very Small",0.7888,"ns",0.414,1.08
+"Blue-headed Vireo",91,56,1.05,2,"0 - 68","Negative",-0.026,"Very Small",0.6913,"ns",0.002,0.91
+"Black-capped Chickadee",218,87,1.61,7,"0 - 106","Positive",0.259,"Small",0,"***",0.364,4.37
+"Black-and-white Warbler",93,54,1.17,3,"0 - 45","Positive",0.025,"Very Small",0.7586,"ns",0.001,1.06
 "Ovenbird",320,99,2.08,6,"0 - 116","Positive",0.221,"Small",0,"***",0.472,3.96
-"Northern Parula",61,33,1.18,3,"0 - 63","Positive",0.082,"Very Small",0.2227,"ns",0.179,1.32
-"Blackburnian Warbler",140,63,1.16,3,"0 - 73","Positive",0.119,"Very Small",0.0013,"**",0.064,1.59
-"Red-eyed Vireo",294,94,1.64,4,"0 - 29","Positive",0.306,"Small",7e-04,"***",0.387,1.61
+"Northern Parula",61,33,1.18,3,"0 - 63","Positive",0.085,"Very Small",0.2118,"ns",0.144,1.33
+"Blackburnian Warbler",140,63,1.16,3,"0 - 73","Positive",0.122,"Very Small",0.0011,"**",0.106,1.61
+"Red-eyed Vireo",294,94,1.64,4,"0 - 29","Positive",0.318,"Small",3e-04,"***",0.391,1.64
 "Black-throated Blue Warbler",181,66,1.36,5,"0 - 97","Positive",0.176,"Very Small",0,"***",0.394,2.5
-"Blue Jay",127,70,1.23,3,"0 - 48","Positive",0.163,"Very Small",0.0375,"*",0.081,1.52
-"Eastern Wood-Pewee",109,49,1.14,3,"0 - 113","Positive",0.057,"Very Small",0.0868,".",0.026,1.41
+"Blue Jay",127,70,1.23,3,"0 - 48","Positive",0.17,"Very Small",0.0318,"*",0.104,1.55
 "American Robin",105,58,1,4,"0 - 58","Positive",0.424,"Small",0,"***",0.458,3.73
+"Eastern Wood-Pewee",109,49,1.14,3,"0 - 113","Positive",0.057,"Very Small",0.0868,".",0.026,1.41
 "Pine Warbler",35,24,1.17,3,"0 - 40","Positive",0.202,"Small",0.2147,"ns",0.042,1.54
-"Yellow-bellied Sapsucker",85,45,1.08,2,"0 - 28","Negative",-0.168,"Very Small",0.4184,"ns",0.009,0.78
+"Yellow-bellied Sapsucker",85,45,1.08,2,"0 - 28","Negative",-0.152,"Very Small",0.4916,"ns",0.029,0.8

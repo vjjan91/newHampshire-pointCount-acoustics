@@ -37,118 +37,9 @@ library(broom.mixed)
 library(scales)
 ```
 
-## Load dataframe containing point count and acoustic data
+## Load dataframe containing data that is already filtered for a subset of species
 ```{r}
-datSubset <- read.csv("results/datSubset.csv")
-```
-
-## Creating a single dataframe prior to running statistical analysis
-
-```{r}
-## filter out species that were only detected in one approach and not in the other
-
-## Nine species were detected only in point count data but not in the acoustic data and can be ignored for downstream analysis: Herring Gull, Northern Cardinal, American Goshawk, Swamp Sparrow, Red-bellied Woodpecker, Pine Siskin, Savannah Sparrow, Eastern Kingbird, Brown-headed Cowbird
-## we will remove the above list of species from the point count data
-point_count <- datSubset %>%
-  filter(data_type == "point_count") %>%
-  filter(!common_name %in% c("Herring Gull", 
-                             "Northern Cardinal", "American Goshawk", 
-                             "Swamp Sparrow", "Red-bellied Woodpecker", 
-                             "Pine Siskin",
-                             "Savannah Sparrow", "Eastern Kingbird", 
-                             "Brown-headed Cowbird"
-                             ))
-
-## Six species were detected only in acoustic data and not in the point count data and can also be ignored for downstream analysis: Cape May Warbler, Gray Catbird, Mallard, Prairie Warbler, House Wren, Bobolink
-acoustic_data <- datSubset %>%
-  filter(data_type == "acoustic_data") %>%
-  filter(!common_name %in% c("Cape May Warbler", "Gray Catbird", 
-                             "Mallard", "Prairie Warbler", 
-                             "House Wren", "Bobolink"
-                             ))
-
-# estimate abundance for each species for each site/visit combination
-# ignore distance for now as we can model it in future analysis
-abundance <- point_count %>%
-  group_by(site_id, site_name, year, visit_number,
-           scientific_name,
-           common_name) %>% 
-  summarise(abundance = sum(abundance)) %>%
-  ungroup()
-
-# estimate detections for each species for each site and year combination using the manual annotations of the acoustic data
-detections <- acoustic_data %>%
-  group_by(site_id, site_name, year, visit_number,
-           scientific_name,
-           common_name) %>% 
-  summarise(detections = n()) %>%
-  ungroup()
-
-## sanity check to ensure that we are not including any species in either data type by mistake
-pc_not_aru <- unique(anti_join(abundance[,6], 
-                               detections[,6]))
-aru_not_pc <- unique(anti_join(detections[,6], 
-                               abundance[,6]))
-```
-
-## Filtering criteria for species inclusion
-
-How do we decide on the number of species to include or what species to keep? One criteria that was employed in Ramesh et al. 2022 (Ecography) was: "we kept only those species that occurred in at least 5% of all checklists across at least 27 unique grid cells (50% of the study area)." In a similar vein, we keep species occurring in atleast 10% or 25% of sites across both years for both acoustic data and point count data. 
-
-```{r}
-# add a total number of unique sites
-# 104 unique sites
-total_sites <- length(unique(abundance$site_id)) 
-
-# how many sites was each species observed in when carrying out point counts and when carrying out manual acoustic annotations/detections?
-species_year_pc <-  abundance %>%
-  group_by(common_name, year) %>%
-  summarise(n_sites = n_distinct(site_id), .groups = 'drop') %>%
-  arrange(desc(n_sites)) %>%
-   mutate(total_sites,
-         prop_sites = n_sites/total_sites) # proportion of sites
-
-species_year_aru <- detections %>%
-  group_by(common_name, year) %>%
-  summarise(n_sites = n_distinct(site_id), .groups = 'drop') %>%
-  arrange(desc(n_sites)) %>%
-  mutate(total_sites,
-         prop_sites = n_sites/total_sites) # proportion of sites
-
-# we choose to keep species that occurred in atleast 15% of sites in each method and within a year
-species_pc <- species_year_pc %>%
-  filter(prop_sites >= 0.15)
-
-species_aru <- species_year_aru %>%
-  filter(prop_sites >= 0.15)
-
-# subset data from the abundance and detections dataframe to keep only species that occur in 15% of all sites during each year of survey
-aru_subset <- detections %>%
-  semi_join(species_aru, by = c("common_name", "year"))
-
-pc_subset <- abundance %>%
-  semi_join(species_pc, by = c("common_name", "year"))
-
-# we only keep species that satisfied the criteria for both point counts and acoustic data. In some cases, a few species satisfied the criteria for only point counts or only acoustic data and such species were filtered out prior to other analyses
-
-# how many species were detected in acoustic data but not point counts?
-# no new species were matching the criteria in acoustic data
-aru_not_pc <- unique(anti_join(aru_subset[,6], pc_subset[,6]))
-
-# five species matched criteria in point counts that were not found in the acoustic data
-pc_not_aru <- unique(anti_join(pc_subset[,6], aru_subset[,6]))
-
-# removing these five species from the pc_subset
-pc_subset <- pc_subset %>%
-  filter(!common_name %in% c("Dark-eyed Junco","Red Crossbill",
-                             "American Goldfinch","Wood Thrush",
-                             "American Redstart"))
-
-# create a single dataframe
-data <- full_join(pc_subset, aru_subset) %>%
-  replace_na(list(abundance = 0, detections = 0))
-
-# criteria of 15% occurrence across sites per year/season for both acoustic data and point count data resulted in 22 species.
+data <- read.csv("results/datSubset.csv")
 ```
 
 ## Correlations between abundance and detections
@@ -219,6 +110,10 @@ data$common_name <- as.factor(data$common_name)
 data$year <- as.factor(data$year)
 data$site_id <- as.factor(data$site_id)
 
+# recode visit_number as year_visit_number to indicate repeat visits are different between years
+data <- data %>%
+  mutate(year_visit_number = paste(year, visit_number, sep = "_"))
+
 # set up parallel processing
 n_cores <- detectCores() - 1  # Leave one core free
 cl <- makeCluster(n_cores)
@@ -233,6 +128,7 @@ clusterExport(cl, c("data"))
 
 # we will run models separately for each species
 model_results <- list()
+
 # include error handling for species for which the models failed
 failed_species <- character()
 
@@ -253,14 +149,11 @@ for(species in species_list) {
   
   tryCatch({
     model_results[[species]] <- glmmTMB(
-      abundance ~ detections_scaled + (1|site_id) + (1|visit_number), 
-      data = species_data, 
+      abundance ~ detections_scaled + (1|site_id) + (1|year_visit_number),       data = species_data, 
       family = compois,
       control = glmmTMBControl(parallel = n_cores,
-                               optimizer = optim,
-                               optArgs =  list(method ="BFGS"),
-                             optCtrl = list(iter.max = 2000, 
-                                            eval.max = 2000))
+                             optCtrl = list(iter.max = 1000, 
+                                            eval.max = 1000))
     )
   }, error = function(e) {
     cat("Model failed for", species, ":", e$message, "\n")
@@ -284,7 +177,7 @@ converged_status <- sapply(names(model_results), function(species) {
 non_converged <- names(converged_status)[!converged_status]
 cat("Species that didn't converge:", non_converged, "\n")
 
-# we get rid of Scarlet Tanager from the next set of analyses
+# we can get rid of Scarlet Tanager from the next set of analyses
 ```
 
 ## Model diagnostics
@@ -338,7 +231,7 @@ for(species in names(diagnostics_results)) {
 }
 dev.off()
 
-# no cases of overdispersion or issues of uniformity
+# no cases of overdispersion or mild issues of uniformity
 ```
 
 ## Predict abundance given detections
@@ -410,17 +303,19 @@ for(species in names(model_results)) {
   )
   
   # create prediction range based on observed data
-  detections_range <- seq(min(species_data$detections_scaled, na.rm = TRUE),
-                         max(species_data$detections_scaled, na.rm = TRUE),
+  detections_range <- seq(min(species_data$detections_scaled, 
+                              na.rm = TRUE),
+                         max(species_data$detections_scaled, 
+                             na.rm = TRUE),
                          length.out = 100)
   
   typical_site <- names(sort(table(species_data$site_id), decreasing = TRUE))[1]
-  typical_visit <- names(sort(table(species_data$visit_number), decreasing = TRUE))[1]
+  typical_visit <- names(sort(table(species_data$year_visit_number), decreasing = TRUE))[1]
   
   pred_data <- data.frame(
     detections_scaled = detections_range,
     site_id = typical_site,
-    visit_number = as.factor(typical_visit),
+    year_visit_number = as.factor(typical_visit),
     common_name = species
   )
   
@@ -565,7 +460,7 @@ summary_table <- data.frame(
 write.csv(summary_table, "results/glmm_model_abundance_detections.csv", row.names = FALSE)
 
 # write model results and filtered data to file for loading in future scripts
-save(model_results, data, file = "results/glmm_model_results_data.RData")
+save(model_results, file = "results/glmm_model_results.RData")
 ```
 
 
