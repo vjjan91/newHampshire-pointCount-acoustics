@@ -219,14 +219,14 @@ data |>
   ggplot(aes(x = start_time, y = abundance, color = site_name)) + 
   geom_segment(aes(y = 0, yend = abundance), alpha = 0.3) + 
   geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 4) + 
+  facet_wrap(~common_name, ncol = 3) + 
   labs(x = "Time",
        y = "Number of individuals counted in a 10-minute point count",
        color = "Site")+
   scale_color_manual(values=met.brewer("Homer2", 4))+
   theme_minimal()+
   theme(legend.position = "bottom");
-ggsave(filename = "figs/abundance-by-time-continuous.jpg", width = 12, height = 7, units = "in", dpi = 300)
+ggsave(filename = "figs/abundance-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
 
 
 data |> 
@@ -234,14 +234,14 @@ data |>
   ggplot(aes(x = start_time, y = detections, color = site_name)) + 
   geom_segment(aes(y = 0, yend = detections), alpha = 0.3) + 
   geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 4, scale = "free_y") + 
+  facet_wrap(~common_name, ncol = 3, scale = "free_y") + 
   scale_color_manual(values=met.brewer("Homer2", 4))+
   labs(x = "Time",
        y = "Number of acoustic detections in a 10-minute recording",
        color = "Site")+
   theme_minimal()+
   theme(legend.position = "bottom")
-ggsave(filename = "figs/acu_detections-by-time-continuous.jpg", width = 12, height = 7, units = "in", dpi = 300)
+ggsave(filename = "figs/acu_detections-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
 
 ```
 
