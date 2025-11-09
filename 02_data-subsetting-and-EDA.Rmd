@@ -205,23 +205,34 @@ Before including the imperfect detection aspect, let's see the general dynamic o
 # looking at time as a continuous value, and the counts as the estimate of abundance
 data |> 
   mutate(start_time = hms::as_hms(start_time)) |> 
-  ggplot(aes(x = start_time, y = abundance)) + 
-  geom_segment(aes(y = 0, yend = abundance), color = "gray") + 
-  geom_point() + 
+  ggplot(aes(x = start_time, y = abundance, color = site_name)) + 
+  geom_segment(aes(y = 0, yend = abundance), alpha = 0.3) + 
+  geom_point(alpha = 0.6) + 
   facet_wrap(~common_name, ncol = 4) + 
-  theme_minimal() 
+  labs(x = "Time",
+       y = "Number of individuals counted in a 10-minute point count",
+       color = "Site")+
+  scale_color_manual(values=met.brewer("Homer2", 4))+
+  theme_minimal()+
+  theme(legend.position = "bottom");
+ggsave(filename = "figs/abundance-by-time-continuous.jpg", width = 12, height = 7, units = "in", dpi = 300)
+
 
 data |> 
   mutate(start_time = hms::as_hms(start_time)) |> 
-  ggplot(aes(x = start_time, y = detections)) + 
-  geom_segment(aes(y = 0, yend = detections), color = "gray") + 
-  geom_point() + 
+  ggplot(aes(x = start_time, y = detections, color = site_name)) + 
+  geom_segment(aes(y = 0, yend = detections), alpha = 0.3) + 
+  geom_point(alpha = 0.6) + 
   facet_wrap(~common_name, ncol = 4, scale = "free_y") + 
-  theme_minimal() 
+  scale_color_manual(values=met.brewer("Homer2", 4))+
+  labs(x = "Time",
+       y = "Number of acoustic detections in a 10-minute recording",
+       color = "Site")+
+  theme_minimal()+
+  theme(legend.position = "bottom")
+ggsave(filename = "figs/acu_detections-by-time-continuous.jpg", width = 12, height = 7, units = "in", dpi = 300)
 
 ```
-
-
 
 
 ```{r}
