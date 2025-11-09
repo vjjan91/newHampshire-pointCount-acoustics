@@ -200,7 +200,18 @@ data <- full_join(pc_subset, aru_subset) %>%
 
 Prior to running statistical models comparing abundance and acoustic detections, we explore the two aforementioned variables as a function of time of day of survey/detection.
 
-Before including the imperfect detection aspect, let's see the general dynamic of abundance and acoustic detections during the morning of sampling
+```{r}
+# examine summary of the data and check for NAs
+miss_var_summary(data)
+
+# start_time column has NAs which is mostly showing up for the acoustic data suggesting that there are species reported in the audio data during that visit that was not detected in that point count for the very same corresponding visit
+data <- data %>%
+  group_by(site_id, year, visit_number) %>%
+  fill(start_time, .direction = "downup") %>%
+  ungroup()
+```
+
+Let's see the general dynamic of abundance and acoustic detections during the morning of sampling
 ```{r}
 # looking at time as a continuous value, and the counts as the estimate of abundance
 data |> 
@@ -232,18 +243,6 @@ data |>
   theme(legend.position = "bottom")
 ggsave(filename = "figs/acu_detections-by-time-continuous.jpg", width = 12, height = 7, units = "in", dpi = 300)
 
-```
-
-
-```{r}
-# examine summary of the data and check for NAs
-miss_var_summary(data)
-
-# start_time column has NAs which is mostly showing up for the acoustic data suggesting that there are species reported in the audio data during that visit that was not detected in that point count for the very same corresponding visit
-data <- data %>%
-  group_by(site_id, year, visit_number) %>%
-  fill(start_time, .direction = "downup") %>%
-  ungroup()
 ```
 
 
