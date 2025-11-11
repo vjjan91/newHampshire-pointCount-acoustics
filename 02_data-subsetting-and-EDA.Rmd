@@ -256,7 +256,3 @@ Interestingly, we are not observing much variation between times of day for both
 write.csv(data, "results/datSubset.csv", row.names = F)
 ```
 
-
-
-
-
