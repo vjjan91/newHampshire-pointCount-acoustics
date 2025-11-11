@@ -211,7 +211,8 @@ data <- data %>%
   ungroup()
 ```
 
-Let's see the general dynamic of abundance and acoustic detections during the morning of sampling
+## Examining abundance and acoustic detections as a function of time of day by species
+
 ```{r}
 # looking at time as a continuous value, and the counts as the estimate of abundance
 data |> 
@@ -227,7 +228,6 @@ data |>
   theme_minimal()+
   theme(legend.position = "bottom");
 ggsave(filename = "figs/abundance-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
-
 
 data |> 
   mutate(start_time = hms::as_hms(start_time)) |> 
@@ -245,208 +245,6 @@ ggsave(filename = "figs/acu_detections-by-time-continuous.jpg", width = 10, heig
 
 # I (Orlando) will play with this `data` object
 saveRDS(data, "data/data_time_continuous.RDS")
-```
-
-
-```{r}
-# create bins for time_of_day
-data <- data %>%
-  mutate(
-    hour = as.numeric(substr(start_time, 1, 2)),
-    time_of_day = case_when(
-      hour >= 5 & hour < 6 ~ "5AM to 6AM",
-      hour >= 6 & hour < 7 ~ "6AM to 7AM",
-      hour >= 7 & hour < 8 ~ "7AM to 8AM", 
-      hour >= 8 & hour < 9 ~ "8AM to 9AM",
-      hour >= 9 & hour < 10 ~ "9AM to 10AM",
-      TRUE ~ "Other"
-    )
-  ) %>%
-  dplyr::select(-hour)
-
-# create abundance by time of day 
-fig_abundance_by_time <- data%>%
-  ggbetweenstats(x = time_of_day,
-                         y = abundance,
-                         xlab = "Time of Day",
-                         ylab = "Counts of Individuals (Abundance)", 
-                          violin.args = list(width = 0),
-                         pairwise.display = "significant",
-                         package = "MetBrewer",
-                         palette = "Homer2",
-ggplot.component = list(theme(text = element_text(family = "Century Gothic", size = 15, face = "bold"),plot.title = element_text(family = "Century Gothic",
-      size = 18, face = "bold"),
-      plot.subtitle = element_text(family = "Century Gothic", 
-      size = 15, face = "bold",color="#1b2838"),
-      axis.title = element_text(family = "Century Gothic",
-      size = 15, face = "bold"))))
-
-# save
-ggsave(fig_abundance_by_time, filename = "figs/abundance-by-time-of-day.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
-dev.off()
-
-# we notice that besides 9am to 10am where there are fewer point counts & acoustic data, there aren't any differences in abundance across times
-
-# detections by time of day 
-fig_detections_by_time <- data%>%
-  ggbetweenstats(x = time_of_day,
-                         y = detections,
-                         xlab = "Time of Day",
-                         ylab = "Acoustic detections", 
-                          violin.args = list(width = 0),
-                         pairwise.display = "significant",
-                         package = "MetBrewer",
-                         palette = "Homer2",
-ggplot.component = list(theme(text = element_text(family = "Century Gothic", size = 15, face = "bold"),plot.title = element_text(family = "Century Gothic",
-      size = 18, face = "bold"),
-      plot.subtitle = element_text(family = "Century Gothic", 
-      size = 15, face = "bold",color="#1b2838"),
-      axis.title = element_text(family = "Century Gothic",
-      size = 15, face = "bold"))))
-
-# when pooled across species and examining differences in detections by time of day, we see no differences. 
-
-# save
-ggsave(fig_detections_by_time, filename = "figs/detections-by-time-of-day.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
-dev.off()
-```
-
-## Are there differences in abundances/detections within species across times of day?
-
-While no differences were observed when datasets were pooled, we test if there are differences within species across times of day.
-```{r}
-# abundance and detections side by side
-plots <- list()
-
-for(i in 1:length(unique(data$common_name))){
- 
-  # extract species common name
-  a <- unique(data$common_name)[i]
-    
-  # subset data for plotting
-  for_plot <- data[data$common_name==a,]
-
-  # abundance plot
-  abundance_plot <- ggplot(for_plot, 
-         aes(x = time_of_day, 
-             y = abundance, 
-             fill = factor(time_of_day))) +
-    geom_boxplot(alpha = 0.7, width = 0.2, size = 0.3) +  
-    scale_fill_manual(
-      values = met.brewer("Tiepolo",5),
-      name = "Time of Day"
-    ) +
-    theme_bw() +
-    labs(
-      x = "\nTime of Day",
-      y = "Abundance\n"
-    ) +
-    theme(
-      axis.title = element_text(
-        family = "Century Gothic",
-        size = 14, 
-        face = "bold"
-      ),
-      axis.text = element_text(
-        family = "Century Gothic",
-        size = 12
-      ),
-      axis.text.x = element_text(
-        angle = 90, 
-        vjust = 0.5,
-        hjust = 1
-      ),
-       legend.title = element_text(
-        family = "Century Gothic",
-        size = 12,
-        face = "bold"
-      ),
-      legend.text = element_text(
-        family = "Century Gothic",
-        size = 10
-      ),
-      plot.title = element_text(
-        family = "Century Gothic",
-        size = 16,
-        face = "bold"
-      ),
-      strip.text = element_text(
-        family = "Century Gothic",
-        size = 12
-      )
-    )
-  
-  # detections plot
-  detections_plot <- ggplot(for_plot, 
-         aes(x = time_of_day, 
-             y = detections, 
-             fill = factor(time_of_day))) +
-    geom_boxplot(alpha = 0.7, width = 0.2, size = 0.3) +  
-    scale_fill_manual(
-      values = met.brewer("Tiepolo",5),
-      name = "Time of Day"
-    ) +
-    theme_bw() +
-    labs(
-      x = "\nTime of Day",
-      y = "Detections\n"
-    ) +
-    theme(
-      axis.title = element_text(
-        family = "Century Gothic",
-        size = 14, 
-        face = "bold"
-      ),
-      axis.text = element_text(
-        family = "Century Gothic",
-        size = 12
-      ),
-      axis.text.x = element_text(
-        angle = 90, 
-        vjust = 0.5,
-        hjust = 1
-      ),
-       legend.title = element_text(
-        family = "Century Gothic",
-        size = 12,
-        face = "bold"
-      ),
-      legend.text = element_text(
-        family = "Century Gothic",
-        size = 10
-      ),
-      plot.title = element_text(
-        family = "Century Gothic",
-        size = 16,
-        face = "bold"
-      ),
-      strip.text = element_text(
-        family = "Century Gothic",
-        size = 12
-      )
-    )
-  
-  # combine plots side by side
-  combined_plot <- abundance_plot + detections_plot + 
-  plot_annotation(title = a,
-                  theme = theme(plot.title = element_text(
-                    family = "Century Gothic",
-                    size = 18,
-                    face = "bold")))
-  
-  plots[[i]] <- combined_plot
-}
-
-# plot and save as a single pdf
-cairo_pdf(
-  filename = "figs/abundance-detections-by-species-time-of-day.pdf",
-  width = 16, height = 8,  
-  onefile = TRUE
-)
-for(i in 1:length(plots)) {
-  print(plots[[i]])
-}
-dev.off()
 ```
 
 Interestingly, we are not observing much variation between times of day for both acoustic detections and species abundances across species, potentially suggesting that time of day may/may not be impacting our results or might contribute to differences we are observing. 
