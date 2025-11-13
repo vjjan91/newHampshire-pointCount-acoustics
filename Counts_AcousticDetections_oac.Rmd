@@ -2,8 +2,15 @@
 title: "AcousticCounts by oac"
 author: "Orlando Acevedo-Charry"
 date: "`r Sys.Date()`"
-output: html_document
-editor_options: 
+output:
+  bookdown::html_document2:
+    toc: yes
+    toc_float: true
+    number_sections: yes
+    fig_caption: true
+    df_print: paged
+subtitle: A Hierarchical model
+editor_options:
   chunk_output_type: console
 ---
 
