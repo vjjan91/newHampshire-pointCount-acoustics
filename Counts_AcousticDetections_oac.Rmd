@@ -1,15 +1,4 @@
 ---
-title: "AcousticCounts by oac"
-author: "Orlando Acevedo-Charry"
-date: "`r Sys.Date()`"
-output:
-  bookdown::html_document2:
-    toc: yes
-    toc_float: true
-    number_sections: yes
-    fig_caption: true
-    df_print: paged
-subtitle: A Hierarchical model
 editor_options:
   chunk_output_type: console
 ---
@@ -107,6 +96,7 @@ ggplot(acoust_count_summary,
   theme(legend.position = "bottom")
 ggsave(filename = "figs/counts-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
 ```
+![Counts during the morning](figs/counts-by-time-continuous.jpg)
 
 Time series of acoustic detections
 
@@ -124,6 +114,7 @@ ggplot(acoust_count_summary,
   theme(legend.position = "bottom")
 ggsave(filename = "figs/acou_det-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
 ```
+![Acoustic detections during the morning](figs/acou_det-by-time-continuous.jpg)
 
 This summary dataset also allow to see the potential effect of phenology. We can see the two years independently
 
@@ -142,7 +133,10 @@ acoust_count_summary |>
   theme_minimal()+
   theme(legend.position = "bottom")
 ggsave(filename = "figs/counts-by-date_2022.jpg", width = 10, height = 10, units = "in", dpi = 300)
+```
+![Counts 2022 - phenology](figs/counts-by-date_2022.jpg)
 
+```{r}
 acoust_count_summary |>
   mutate(year = year(date)) |>
   filter(year == 2022) |>
@@ -158,9 +152,9 @@ acoust_count_summary |>
   theme(legend.position = "bottom")
 ggsave(filename = "figs/acou_det-by-date_2022.jpg", width = 10, height = 10, units = "in", dpi = 300)
 ```
+![Acoustic detections 2022 - phenology](figs/acou_det-by-date_2022.jpg)
 
-And for 2023
-
+And for 2023:
 ```{r}
 acoust_count_summary |>
   mutate(year = year(date)) |>
@@ -176,7 +170,10 @@ acoust_count_summary |>
   theme_minimal()+
   theme(legend.position = "bottom")
 ggsave(filename = "figs/counts-by-date_2023.jpg", width = 10, height = 10, units = "in", dpi = 300)
+```
+![Counts 2023 - phenology](figs/counts-by-date_2023.jpg)
 
+```{r}
 acoust_count_summary |>
   mutate(year = year(date)) |>
   filter(year == 2023) |>
@@ -192,6 +189,7 @@ acoust_count_summary |>
   theme(legend.position = "bottom")
 ggsave(filename = "figs/acou_det-by-date_2023.jpg", width = 10, height = 10, units = "in", dpi = 300)
 ```
+![Acoustic detections 2023 - phenology](figs/acou_det-by-date_2023.jpg)
 
 These figures serve to see that the date of visit have a more clear effect in acoustic detections than on counts. We can incorporate these covariates in a hierarchical model.
 
@@ -213,62 +211,69 @@ acoust_count_summary |>
             VMR_counts = varCounts/meanCounts,
             meanAcouDet = mean(acous_detections),
             varAcouDet = var(acous_detections), 
-            VMR_AcouDet = varAcouDet/meanAcouDet) |>
+            VMR_AcouDet = varAcouDet/meanAcouDet) |> #summary()
   as.data.frame() # to see all the table
 ```
 
-We can see that VMR_counts is between 0 and 1, while VMR_AcousticDetection >1. These ranges suggest using a Binomial and a Negative binomial distributions, respectively. We can follow conventional treatement with an $N$-mixture model, with the latent $N \sim \text{Poisson}(\lambda)$, and observed counts as $y \sim \text{Binomial}(N, p)$  
+We can see that VMR_counts is between 0 and 1, while VMR_AcousticDetection > 1. These ranges suggest using a Binomial and a Negative binomial distributions, respectively, in the observation process.
 
 ## Hierarchical model for counts with two observation processes
 
-### Math intro
-Let's model the latent process of log-abundance $X_{i,t} = \ln(N_{i,t})$ for species $i$ in time $t$ (sampling point count)
+### State process for each morning
+
+Assuming that every morning of sampling we find a latent number of individuals in each site (including several point counts?) that fluctuates around a mean stationary number, we can see some similarities with a Stochastic Gompertz State Space population dynamics model, which in continuous time follows a Gaussian (Ornstein-Uhlenbeck, OU) diffusion dynamic.
+
+Let's model the latent process of log-counts $X_{i,t} = \ln(C_{i,t})$ for species $i$ in time $t$ (sampling point count) in a site $m$. We can simplify this (for now) by only working in a site ($m = 1$; Katahdin Woods and Waters) and four species example ($i = 1,2,3,4$; Ovenbird - OVEN, Pine Warbler - PAWA, Red-eyed Vireo - REVI, Scarlet Tanager - SCTA). On the logarithmic scale, the process becomes linear and follows an autoregressive model of order 1 (note we are not including the index $m$ for now):
 
 $$
-X_{i,t+1} = a_i + c_i * X_{i,t} + \epsilon_{i,t}; ~ \epsilon \sim \text{Normal}(0,\sigma^2)
+X_{i,t+1} = a_i + c_i * X_{i,t} + \epsilon_{i,t}; ~ \epsilon \sim \text{Normal}(0,\sigma_i^2)
 $$
-where $a_i$ control the drift (equivalent to the growth rate), $c_i$ controls the strength of density dependence (mean-reverting $c = 1+b$) and $\epsilon_{i,t}$ captures stochasticity. Thus, this is a linear Gaussian state-space model on the log-scale, with an autoregressive structure.
-
-Then, we have the latent abundance
-$$
-N_{i,t} \sim \text{Poisson}(\lambda_{i,t})
-$$
-where $\lambda{i,t} = \exp(X_{i,t})$ from the ecological process.
-
-The observation subcomponents came from the two data sources:
-$$
-y_{i,t}^{counts} \sim \text{Binomial}(N_{i,t},~p_i)
-$$
-where $p_{i}$ is the detection probability per species.
-
-and
+where $a_i$ control the drift (equivalent to the growth rate) of each species, $c_i$ controls the mean-reverting dynamic (such as the strength of density dependence, $c = 1 + b$), and $\epsilon_{i,t}$ captures stochasticity in the process, distributed as a normal random variable with some noise of the process $\sigma_i^2$. In the long-run, we can estimate the mean of the log-counts as a function of the control drift and mean-reverting dynamic:
 
 $$
-y_{i,t}^{acoust} \sim \text{NegBinomial}(\mu_{i,t}, k); ~ \log(\mu_{i,t}) = \alpha + \gamma X_t
+\text{E}[X_{\infty,i}] = \frac{a_i}{1-c_i}
 $$
 
-How to deal with Jansen's inequality?!
+Also the variance of the log-counts is given by the ratio of variance in stochasticity and the square of the mean-reverting dynamic:
 
 $$
-\exp(\text{E}[X_\infty] \leq \text{E}[\exp(X_\infty)])
+\text{Var}[X_{\infty,i}] = \frac{\sigma_i^2}{1-c_i^2}
 $$
 
-We can estimate the mean of the log-abundance
-$$
-\text{E}[X_\infty] = \frac{a}{1-c}
-$$
-Also the variance of the log-abundance
+However, how to deal with Jansen's inequality?! 
 
 $$
-\text{Var}[X_\infty] = \frac{\sigma^2}{1-c^2}
+e^{(\text{E}[X_\infty])} \leq \text{E}[e^{(X_\infty)}]
 $$
 
-And estimate the mean counts on the original scale
+We can estimate the long-run mean count value on the original scale by adding half of the variance, which is our expected counts per species $i$:
 
 $$
-\text{E}[C_\infty] = \exp(\text{E}[X_\infty] + \frac{\text{Var}[X_\infty]}{2})
+\text{E}[C_{\infty, i}] = e^{(\text{E}[X_{\infty, i}] + (0.5 \times \text{Var}[X_{\infty, i}]))}
 $$
 
+### Observation process for each morning from point counts
+
+The VMR_counts revealed underdispersion, so we can us a Binomial distribution for this observation process:
+
+$$
+y_{i,t}^{counts} | C_{i,t} \sim \text{Binomial}(\exp(X_{i,t}),~p_i)
+$$
+where $y_{i,t}^{counts}$ is the observed counts from point counts sampling, $\exp(X_{i,t}) = e^{X_{i,t}}$ came from the state process and $p_{i}$ is the detection probability per species.
+
+### Observation process for each morning from acoustic detections
+
+The VMR_AcousticDetection revealed overdispersion, so we can use a Negative Binomial distribution for this observation process:
+
+$$
+y_{i,t}^{acoust} \sim \text{Negative Binomial}(\mu_{i,t}, k_i)
+$$
+where $y_{i,t}^{acoust}$ is the observed acoustic detections from sampling point (that overlap with point counts), $\mu_{i,t}$ is the expected number of acoustic detections per species per time (sampling) and $k_i$ is the overdispersion parameter per species. Then, we can link the expected number of acoustic detections per species ($\mu_{i,t}$) with the state process under a log-linear model:
+
+$$
+\log(\mu_{i,t}) = \alpha_i + \gamma_{i} X_{i,t}
+$$
+where $\alpha_i$ is a species-level intercept and $\gamma_{i}$ is the scaling parameter with the latent log-abundance $X_{i,t}$.
 
 ### Coding
 
@@ -276,8 +281,11 @@ Create index values. In this example I only use two species, to test the code.
 
 ```{r}
 acoust_count_nimble <- acoust_count_summary |>
+  # four examples in a single site
   filter(common_name %in% c("Ovenbird","Pine Warbler", "Red-eyed Vireo",
-                            "Scarlet Tanager")) |> # four examples
+                            "Scarlet Tanager"),
+         site_name == "Katahdin Woods and Waters") |> 
+  # Organize the data for NIMBLE
   mutate(
     species_id = as.integer(factor(common_name)),
     site_id_num = as.integer(factor(site_id)),
@@ -293,17 +301,15 @@ code <- nimbleCode({
   #Priors
   # Species level
   for (i in 1:N_species) {
-    x0[i] ~ dnorm(0, 0.01)            # Prior mean for initial abundance
-    p[i] ~ dunif(0,1)                 # Detection probability
-    alpha[i] ~ dnorm(0, 0.1)         # Intercept for acoustic detection model
-    a[i] ~ dnorm(0, 1)                  # Drift term in OU process
-    c[i] ~ dunif(0, 0.95)                  # Density dependence strength
-    sigma_sqr[i] ~ dunif(0, 10)           # Process variance
-    gamma[i] ~ dnorm(0, 0.1)             # Scaling of latent abundance in acoustic model
-    k[i] ~ dunif(0, 100)                # Overdispersion for acoustic detections
+    x0[i] ~ dnorm(0, 0.01)        # Prior mean for initial abundance
+    p[i] ~ dunif(0,1)             # Detection probability
+    alpha[i] ~ dnorm(0, 0.1)      # Intercept for acoustic detection model
+    a[i] ~ dnorm(0, 1)            # Drift term in OU process (ep. pop growth rate)
+    c[i] ~ dunif(0.05, 0.95)      # mean-reverting dynamic (eq. Density dependence strength)
+    sigma_sqr[i] ~ dunif(0, 10)   # Process variance
+    gamma[i] ~ dnorm(0, 1)        # Scaling of latent abundance in acoustic model
+    k[i] ~ dunif(0, 100)          # Overdispersion for acoustic detections
   }
-  # Global
-
 
   #Latent process (OU-Gompertz)
 
@@ -317,18 +323,10 @@ code <- nimbleCode({
     }
   }
   
-  # Latent local abundance under N-mixture model
-  for (i in 1:N_species) {
-    for (t in 1:N_time) {
-      lambda[i, t] <- exp(X[i, t])
-      N[i, t] ~ dpois(lambda[i, t])
-    }
-  }
-  
   #Observation models
   for (n in 1:N_obs) {
     # Counts from point counts observations
-    counts[n] ~ dbin(p[species_id[n]], N[species_id[n], time_id[n]])
+    counts[n] ~ dbin(p[species_id[n]], X[species_id[n], time_id[n]])
 
     # Acoustic detections in 10-minutes recordings simultaneously sampled
     log_mu[n] <- alpha[species_id[n]] + gamma[species_id[n]] * X[species_id[n], time_id[n]]
@@ -356,8 +354,8 @@ str(nimble_data <- list(N_species = length(unique(acoust_count_nimble$species_id
                         N_obs = nrow(acoust_count_nimble),
                         species_id = acoust_count_nimble$species_id,
                         time_id = acoust_count_nimble$time_id,
-                        counts = acoust_count_nimble$counts,
-                        acous_detections = acoust_count_nimble$acous_detections
+                        counts = acoust_count_nimble$log_counts,
+                        acous_detections = acoust_count_nimble$log_acoust
 ))
 
 # initial values
@@ -376,6 +374,7 @@ X_init <- X_init_df |>
   pivot_wider(names_from = time_id,
               values_from = log_counts,
               values_fn = mean) |>
+  dplyr::select(!c(species_id)) |>
   as.matrix()
 
 # initial values - using fixed initial values to check model structure, then we can change to random
@@ -394,7 +393,7 @@ inits <- function() {
 
 # monitoring parameters
 pars <- c("alpha", "a", "c", "sigma_sqr", 
-          "N","p",
+          "X","p",
           "gamma", "k", "mu",
           "E_C")
 nimble_AcoustiCounts <- nimbleMCMC(code = code,
@@ -402,9 +401,9 @@ nimble_AcoustiCounts <- nimbleMCMC(code = code,
                           inits = inits, 
                           monitors = pars, 
                           nchains = 3, 
-                          niter = 5000, 
+                          niter = 3000, 
                           nburnin = 1000,
-                          thin = 5,
+                          thin = 3,
                           samplesAsCodaMCMC = TRUE,
                           WAIC = TRUE)
 saveRDS(nimble_AcoustiCounts, "data/HM_four_spp.RDS")
@@ -423,9 +422,25 @@ traceplot(nimble_AcoustiCounts$samples[,"p[4]"], ylab = "Detection probability R
 traceplot(nimble_AcoustiCounts$samples[,"p[3]"], ylab = "Detection probability SCTA")
 ```
 
+Looking at the output of the model - expected abundance of four species in Katahdin Woods and Waters
 
+```{r}
+post_1 <- as.matrix(nimble_AcoustiCounts$samples)
 
+OVEN <- quantile(post_1[,"E_C[1]"], c(0.025, 0.5, 0.975))
+PIWA <- quantile(post_1[,"E_C[2]"], c(0.025, 0.5, 0.975))
+REVI <- quantile(post_1[,"E_C[3]"], c(0.025, 0.5, 0.975))
+SCTA <- quantile(post_1[,"E_C[4]"], c(0.025, 0.5, 0.975))
 
+ExpectedCounts <- as.data.frame(rbind(OVEN, PIWA, REVI, SCTA)) |>
+  mutate(Species = c("Ovenbird", "Pine Warbler", "Red-eyed Vireo", "Scarlet Tanager"))
 
-
-
+ggplot(ExpectedCounts, aes(x = Species, y = `50%`))+
+  geom_errorbar(aes(ymin = `2.5%`, ymax = `97.5%`), width = 0.2) +
+  scale_y_continuous(limits = c(0,50))+
+  labs(y = "Expected counts", 
+       title = "Katahdin Woods and Waters")+
+  geom_point() +
+  theme_minimal()
+ggsave(filename = "figs/E_counts-site1-KWW.jpg", width = 10, height = 5, units = "in", dpi = 300)
+```
