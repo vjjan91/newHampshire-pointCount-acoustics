@@ -3,8 +3,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Packages
+# Hierarchical model approach
 
+## Packages
 ```{r}
 library(tidyverse)
 library(MetBrewer)
@@ -444,3 +445,4 @@ ggplot(ExpectedCounts, aes(x = Species, y = `50%`))+
   theme_minimal()
 ggsave(filename = "figs/E_counts-site1-KWW.jpg", width = 10, height = 5, units = "in", dpi = 300)
 ```
+![Expected counts for 4 species in KWW](figs/E_counts-site1-KWW.jpg)
