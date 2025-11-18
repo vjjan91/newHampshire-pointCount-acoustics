@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 6 Calling rates | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd</title>
+  <meta name="description" content="Section 6 Calling rates | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 6 Calling rates | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="vjjan91/newHampshire-pointCount-acoustics" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 6 Calling rates | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  
+  
+  
+
+<meta name="author" content="Vijay Ramesh" />
+<meta name="author" content="Pooja Panwar" />
+<meta name="author" content="Laurel Symes" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="abundance-vs.-acoustic-detections.html"/>
+<link rel="next" href="hierarchical-model-approach.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#attribution"><i class="fa fa-check"></i><b>1.1</b> Attribution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#data-access"><i class="fa fa-check"></i><b>1.2</b> Data access</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#data-processing"><i class="fa fa-check"></i><b>1.3</b> Data processing</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-comparability.html"><a href="data-comparability.html"><i class="fa fa-check"></i><b>2</b> Data comparability</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-comparability.html"><a href="data-comparability.html#load-necessary-libraries"><i class="fa fa-check"></i><b>2.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="2.2" data-path="data-comparability.html"><a href="data-comparability.html#loading-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>2.2</b> Loading point count and acoustic data</a></li>
+<li class="chapter" data-level="2.3" data-path="data-comparability.html"><a href="data-comparability.html#cleaning-up-point-count-data"><i class="fa fa-check"></i><b>2.3</b> Cleaning up point count data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-comparability.html"><a href="data-comparability.html#cleaning-up-acoustic-data"><i class="fa fa-check"></i><b>2.4</b> Cleaning up acoustic data</a></li>
+<li class="chapter" data-level="2.5" data-path="data-comparability.html"><a href="data-comparability.html#creating-a-combined-dataset"><i class="fa fa-check"></i><b>2.5</b> Creating a combined dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html"><i class="fa fa-check"></i><b>3</b> Subsetting data and running exploratory data analyses</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#load-necessary-libraries-1"><i class="fa fa-check"></i><b>3.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="3.2" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#load-dataframe-containing-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>3.2</b> Load dataframe containing point count and acoustic data</a></li>
+<li class="chapter" data-level="3.3" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#estimate-total-abundance-and-richness-for-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>3.3</b> Estimate total abundance and richness for point count and acoustic data</a></li>
+<li class="chapter" data-level="3.4" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#creating-a-single-dataframe-prior-to-running-statistical-analysis"><i class="fa fa-check"></i><b>3.4</b> Creating a single dataframe prior to running statistical analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#filtering-criteria-for-species-inclusion"><i class="fa fa-check"></i><b>3.5</b> Filtering criteria for species inclusion</a></li>
+<li class="chapter" data-level="3.6" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#explore-whether-time-of-day-shows-any-variation-in-abundancedetections"><i class="fa fa-check"></i><b>3.6</b> Explore whether time of day shows any variation in abundance/detections?</a></li>
+<li class="chapter" data-level="3.7" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#examining-abundance-and-acoustic-detections-as-a-function-of-time-of-day-by-species"><i class="fa fa-check"></i><b>3.7</b> Examining abundance and acoustic detections as a function of time of day by species</a></li>
+<li class="chapter" data-level="3.8" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#save-the-subsetted-data-to-file"><i class="fa fa-check"></i><b>3.8</b> Save the subsetted data to file</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html"><i class="fa fa-check"></i><b>4</b> Creating study area map</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#load-necessary-libraries-2"><i class="fa fa-check"></i><b>4.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="4.2" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#load-associated-shapefiles-for-each-region-sampled"><i class="fa fa-check"></i><b>4.2</b> Load associated shapefiles for each region sampled</a></li>
+<li class="chapter" data-level="4.3" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#download-natural-earth-layers"><i class="fa fa-check"></i><b>4.3</b> Download natural earth layers</a></li>
+<li class="chapter" data-level="4.4" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#acadia-national-park"><i class="fa fa-check"></i><b>4.4</b> Acadia National Park</a></li>
+<li class="chapter" data-level="4.5" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#hubbard-brook"><i class="fa fa-check"></i><b>4.5</b> Hubbard Brook</a></li>
+<li class="chapter" data-level="4.6" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#katahdin-woods-and-waters"><i class="fa fa-check"></i><b>4.6</b> Katahdin Woods and Waters</a></li>
+<li class="chapter" data-level="4.7" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#marsh-billings"><i class="fa fa-check"></i><b>4.7</b> Marsh Billings</a></li>
+<li class="chapter" data-level="4.8" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#create-visualization"><i class="fa fa-check"></i><b>4.8</b> Create visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html"><i class="fa fa-check"></i><b>5</b> Abundance vs. acoustic detections</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#load-necessary-libraries-3"><i class="fa fa-check"></i><b>5.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="5.2" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#load-dataframe-containing-data-that-is-already-filtered-for-a-subset-of-species"><i class="fa fa-check"></i><b>5.2</b> Load dataframe containing data that is already filtered for a subset of species</a></li>
+<li class="chapter" data-level="5.3" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#correlations-between-abundance-and-detections"><i class="fa fa-check"></i><b>5.3</b> Correlations between abundance and detections</a></li>
+<li class="chapter" data-level="5.4" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#scaling-of-predictors-and-determining-distribution-family"><i class="fa fa-check"></i><b>5.4</b> Scaling of predictors and determining distribution family</a></li>
+<li class="chapter" data-level="5.5" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#generalized-linear-mixed-model-between-abundance-and-acoustic-detections"><i class="fa fa-check"></i><b>5.5</b> Generalized linear mixed model between abundance and acoustic detections</a></li>
+<li class="chapter" data-level="5.6" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#model-diagnostics"><i class="fa fa-check"></i><b>5.6</b> Model diagnostics</a></li>
+<li class="chapter" data-level="5.7" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#predict-abundance-given-detections"><i class="fa fa-check"></i><b>5.7</b> Predict abundance given detections</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="calling-rates.html"><a href="calling-rates.html"><i class="fa fa-check"></i><b>6</b> Calling rates</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="calling-rates.html"><a href="calling-rates.html#load-necessary-libraries-4"><i class="fa fa-check"></i><b>6.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="6.2" data-path="calling-rates.html"><a href="calling-rates.html#load-previous-model-object-and-filtered-data"><i class="fa fa-check"></i><b>6.2</b> Load previous model object and filtered data</a></li>
+<li class="chapter" data-level="6.3" data-path="calling-rates.html"><a href="calling-rates.html#calculating-calling-rate"><i class="fa fa-check"></i><b>6.3</b> Calculating calling rate</a></li>
+<li class="chapter" data-level="6.4" data-path="calling-rates.html"><a href="calling-rates.html#does-calling-rate-vary-as-a-function-of-number-of-individuals"><i class="fa fa-check"></i><b>6.4</b> Does calling rate vary as a function of number of individuals</a></li>
+<li class="chapter" data-level="6.5" data-path="calling-rates.html"><a href="calling-rates.html#is-calling-rate-linked-to-the-fit-between-predicted-abundance-and-acoustic-detections"><i class="fa fa-check"></i><b>6.5</b> Is calling rate linked to the fit between predicted abundance and acoustic detections?</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html"><i class="fa fa-check"></i><b>7</b> Hierarchical model approach</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#packages"><i class="fa fa-check"></i><b>7.1</b> Packages</a></li>
+<li class="chapter" data-level="7.2" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#loading-and-exploring-data"><i class="fa fa-check"></i><b>7.2</b> Loading and exploring data</a></li>
+<li class="chapter" data-level="7.3" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#hierarchical-model-for-counts-with-two-observation-processes"><i class="fa fa-check"></i><b>7.3</b> Hierarchical model for counts with two observation processes</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#state-process-for-each-morning"><i class="fa fa-check"></i><b>7.3.1</b> State process for each morning</a></li>
+<li class="chapter" data-level="7.3.2" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-point-counts"><i class="fa fa-check"></i><b>7.3.2</b> Observation process for each morning from point counts</a></li>
+<li class="chapter" data-level="7.3.3" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-acoustic-detections"><i class="fa fa-check"></i><b>7.3.3</b> Observation process for each morning from acoustic detections</a></li>
+<li class="chapter" data-level="7.3.4" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#coding"><i class="fa fa-check"></i><b>7.3.4</b> Coding</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Source code and supporting information for <em>Predicting abundances from acoustic data: New Hampshire Birsd</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="calling-rates" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Section 6</span> Calling rates<a href="calling-rates.html#calling-rates" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this script, we compute calling rates and test if the relationship between predicted counts of individuals and acoustic detections is governed by calling activity.</p>
+<div id="load-necessary-libraries-4" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Load necessary libraries<a href="calling-rates.html#load-necessary-libraries-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="calling-rates.html#cb30-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-2"><a href="calling-rates.html#cb30-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb30-3"><a href="calling-rates.html#cb30-3" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb30-4"><a href="calling-rates.html#cb30-4" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb30-5"><a href="calling-rates.html#cb30-5" tabindex="-1"></a><span class="fu">library</span>(scico)</span>
+<span id="cb30-6"><a href="calling-rates.html#cb30-6" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb30-7"><a href="calling-rates.html#cb30-7" tabindex="-1"></a><span class="fu">library</span>(extrafont)</span>
+<span id="cb30-8"><a href="calling-rates.html#cb30-8" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb30-9"><a href="calling-rates.html#cb30-9" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb30-10"><a href="calling-rates.html#cb30-10" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb30-11"><a href="calling-rates.html#cb30-11" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb30-12"><a href="calling-rates.html#cb30-12" tabindex="-1"></a><span class="fu">library</span>(ggspatial)</span>
+<span id="cb30-13"><a href="calling-rates.html#cb30-13" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span>
+<span id="cb30-14"><a href="calling-rates.html#cb30-14" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb30-15"><a href="calling-rates.html#cb30-15" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb30-16"><a href="calling-rates.html#cb30-16" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb30-17"><a href="calling-rates.html#cb30-17" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span></code></pre></div>
+</div>
+<div id="load-previous-model-object-and-filtered-data" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Load previous model object and filtered data<a href="calling-rates.html#load-previous-model-object-and-filtered-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="calling-rates.html#cb31-1" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;results/glmm_model_results.RData&quot;</span>)</span>
+<span id="cb31-2"><a href="calling-rates.html#cb31-2" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/glmm_model_abundance_detections.csv&quot;</span>)</span>
+<span id="cb31-3"><a href="calling-rates.html#cb31-3" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/datSubset.csv&quot;</span>)</span>
+<span id="cb31-4"><a href="calling-rates.html#cb31-4" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="calling-rates.html#cb31-5" tabindex="-1"></a><span class="co"># we will also load the unfiltered acoustic data and point count data for calling rate calculation</span></span>
+<span id="cb31-6"><a href="calling-rates.html#cb31-6" tabindex="-1"></a>unfiltered_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;results/pooled_pointCount_acoustic_data.csv&quot;</span>)</span></code></pre></div>
+</div>
+<div id="calculating-calling-rate" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Calculating calling rate<a href="calling-rates.html#calculating-calling-rate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here, we estimate species-specific calling rate as the detections per minute per species and the corresponding visit.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="calling-rates.html#cb32-1" tabindex="-1"></a><span class="co"># we work with the unfiltered data first to extract a detections per minute column for each species per visit</span></span>
+<span id="cb32-2"><a href="calling-rates.html#cb32-2" tabindex="-1"></a>detections_per_minute <span class="ot">&lt;-</span> unfiltered_data <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="calling-rates.html#cb32-3" tabindex="-1"></a>  <span class="fu">filter</span>(data_type <span class="sc">==</span> <span class="st">&quot;acoustic_data&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="calling-rates.html#cb32-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">minute =</span> <span class="fu">floor_date</span>(<span class="fu">as.POSIXct</span>(begin_clock_time, <span class="at">format =</span> <span class="st">&quot;%H:%M:%S&quot;</span>), <span class="st">&quot;minute&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-5"><a href="calling-rates.html#cb32-5" tabindex="-1"></a>  <span class="fu">group_by</span>(site_id, site_name, year, visit_number,</span>
+<span id="cb32-6"><a href="calling-rates.html#cb32-6" tabindex="-1"></a>    scientific_name, common_name, </span>
+<span id="cb32-7"><a href="calling-rates.html#cb32-7" tabindex="-1"></a>    minute) <span class="sc">%&gt;%</span></span>
+<span id="cb32-8"><a href="calling-rates.html#cb32-8" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">detections_per_minute =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span>)</span>
+<span id="cb32-9"><a href="calling-rates.html#cb32-9" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="calling-rates.html#cb32-10" tabindex="-1"></a><span class="co"># we work with the unfiltered data first to extract a detections per 30s column for each species per visit</span></span>
+<span id="cb32-11"><a href="calling-rates.html#cb32-11" tabindex="-1"></a><span class="co"># Alternative method using a custom 30-second flooring function</span></span>
+<span id="cb32-12"><a href="calling-rates.html#cb32-12" tabindex="-1"></a>detections_per_30s <span class="ot">&lt;-</span> unfiltered_data <span class="sc">%&gt;%</span></span>
+<span id="cb32-13"><a href="calling-rates.html#cb32-13" tabindex="-1"></a>  <span class="fu">filter</span>(data_type <span class="sc">==</span> <span class="st">&quot;acoustic_data&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb32-14"><a href="calling-rates.html#cb32-14" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-15"><a href="calling-rates.html#cb32-15" tabindex="-1"></a>    <span class="co"># Convert to POSIXct</span></span>
+<span id="cb32-16"><a href="calling-rates.html#cb32-16" tabindex="-1"></a>    <span class="at">time_posix =</span> <span class="fu">as.POSIXct</span>(begin_clock_time, <span class="at">format =</span> <span class="st">&quot;%H:%M:%S&quot;</span>),</span>
+<span id="cb32-17"><a href="calling-rates.html#cb32-17" tabindex="-1"></a>    <span class="co"># Floor to the nearest 30-second interval</span></span>
+<span id="cb32-18"><a href="calling-rates.html#cb32-18" tabindex="-1"></a>    <span class="at">bin_30s =</span> <span class="fu">floor_date</span>(time_posix, <span class="st">&quot;30 seconds&quot;</span>)</span>
+<span id="cb32-19"><a href="calling-rates.html#cb32-19" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb32-20"><a href="calling-rates.html#cb32-20" tabindex="-1"></a>  <span class="fu">group_by</span>(site_id, site_name, year, visit_number,</span>
+<span id="cb32-21"><a href="calling-rates.html#cb32-21" tabindex="-1"></a>    scientific_name, common_name, </span>
+<span id="cb32-22"><a href="calling-rates.html#cb32-22" tabindex="-1"></a>    bin_30s) <span class="sc">%&gt;%</span></span>
+<span id="cb32-23"><a href="calling-rates.html#cb32-23" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">detections_per_30s =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span>)</span>
+<span id="cb32-24"><a href="calling-rates.html#cb32-24" tabindex="-1"></a></span>
+<span id="cb32-25"><a href="calling-rates.html#cb32-25" tabindex="-1"></a><span class="co"># let&#39;s add the detections per minute or rate of detections for a species per visit back to the filtered data</span></span>
+<span id="cb32-26"><a href="calling-rates.html#cb32-26" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data, detections_per_30s) <span class="sc">%&gt;%</span></span>
+<span id="cb32-27"><a href="calling-rates.html#cb32-27" tabindex="-1"></a>    <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">abundance =</span> <span class="dv">0</span>, <span class="at">detections_per_30s =</span> <span class="dv">0</span>))</span>
+<span id="cb32-28"><a href="calling-rates.html#cb32-28" tabindex="-1"></a></span>
+<span id="cb32-29"><a href="calling-rates.html#cb32-29" tabindex="-1"></a><span class="co"># visualize calling rate across species</span></span>
+<span id="cb32-30"><a href="calling-rates.html#cb32-30" tabindex="-1"></a>fig_callingRate <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb32-31"><a href="calling-rates.html#cb32-31" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">!=</span> <span class="st">&quot;Scarlet Tanager&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># since it was excluded from the GLMM</span></span>
+<span id="cb32-32"><a href="calling-rates.html#cb32-32" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x =</span> common_name, </span>
+<span id="cb32-33"><a href="calling-rates.html#cb32-33" tabindex="-1"></a>                              <span class="at">y =</span> detections_per_30s)) <span class="sc">+</span></span>
+<span id="cb32-34"><a href="calling-rates.html#cb32-34" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">&quot;#D29C44FF&quot;</span>) <span class="sc">+</span>  </span>
+<span id="cb32-35"><a href="calling-rates.html#cb32-35" tabindex="-1"></a>  <span class="co">#facet_wrap(~site_name, scales =&quot;free&quot;) +          </span></span>
+<span id="cb32-36"><a href="calling-rates.html#cb32-36" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span>    </span>
+<span id="cb32-37"><a href="calling-rates.html#cb32-37" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb32-38"><a href="calling-rates.html#cb32-38" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb32-39"><a href="calling-rates.html#cb32-39" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb32-40"><a href="calling-rates.html#cb32-40" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb32-41"><a href="calling-rates.html#cb32-41" tabindex="-1"></a>      <span class="at">size =</span> <span class="dv">12</span>,</span>
+<span id="cb32-42"><a href="calling-rates.html#cb32-42" tabindex="-1"></a>      <span class="at">angle =</span> <span class="dv">45</span>,             </span>
+<span id="cb32-43"><a href="calling-rates.html#cb32-43" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="dv">1</span>,              </span>
+<span id="cb32-44"><a href="calling-rates.html#cb32-44" tabindex="-1"></a>      <span class="at">face =</span> <span class="st">&quot;italic&quot;</span>         </span>
+<span id="cb32-45"><a href="calling-rates.html#cb32-45" tabindex="-1"></a>    ),</span>
+<span id="cb32-46"><a href="calling-rates.html#cb32-46" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb32-47"><a href="calling-rates.html#cb32-47" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb32-48"><a href="calling-rates.html#cb32-48" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-49"><a href="calling-rates.html#cb32-49" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-50"><a href="calling-rates.html#cb32-50" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Common Name&quot;</span>,         </span>
+<span id="cb32-51"><a href="calling-rates.html#cb32-51" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Calling rate (total detections per minute per visit)&quot;</span>,        </span>
+<span id="cb32-52"><a href="calling-rates.html#cb32-52" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Calling Rate by Species&quot;</span> </span>
+<span id="cb32-53"><a href="calling-rates.html#cb32-53" tabindex="-1"></a>  )</span>
+<span id="cb32-54"><a href="calling-rates.html#cb32-54" tabindex="-1"></a></span>
+<span id="cb32-55"><a href="calling-rates.html#cb32-55" tabindex="-1"></a><span class="co"># Hermit thrush has the highest mean rate of calling per minute across the list of 21 species</span></span>
+<span id="cb32-56"><a href="calling-rates.html#cb32-56" tabindex="-1"></a><span class="fu">ggsave</span>(fig_callingRate, <span class="at">filename =</span> <span class="st">&quot;figs/callingRates-by-species.png&quot;</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">9</span>, <span class="at">device =</span> <span class="fu">png</span>(), <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb32-57"><a href="calling-rates.html#cb32-57" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="calling-rates.html#cb33-1" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
+<span id="cb33-2"><a href="calling-rates.html#cb33-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb33-3"><a href="calling-rates.html#cb33-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb33-4"><a href="calling-rates.html#cb33-4" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb33-5"><a href="calling-rates.html#cb33-5" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb33-6"><a href="calling-rates.html#cb33-6" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb33-7"><a href="calling-rates.html#cb33-7" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb33-8"><a href="calling-rates.html#cb33-8" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="calling-rates.html#cb33-9" tabindex="-1"></a><span class="co"># Function to calculate detection rates for different temporal bins</span></span>
+<span id="cb33-10"><a href="calling-rates.html#cb33-10" tabindex="-1"></a>calculate_detection_rates <span class="ot">&lt;-</span> <span class="cf">function</span>(data, bin_durations_sec) {</span>
+<span id="cb33-11"><a href="calling-rates.html#cb33-11" tabindex="-1"></a>  </span>
+<span id="cb33-12"><a href="calling-rates.html#cb33-12" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb33-13"><a href="calling-rates.html#cb33-13" tabindex="-1"></a>  </span>
+<span id="cb33-14"><a href="calling-rates.html#cb33-14" tabindex="-1"></a>  <span class="cf">for</span>(bin_sec <span class="cf">in</span> bin_durations_sec) {</span>
+<span id="cb33-15"><a href="calling-rates.html#cb33-15" tabindex="-1"></a>    </span>
+<span id="cb33-16"><a href="calling-rates.html#cb33-16" tabindex="-1"></a>    <span class="co"># Convert bin duration to appropriate label</span></span>
+<span id="cb33-17"><a href="calling-rates.html#cb33-17" tabindex="-1"></a>    <span class="cf">if</span>(bin_sec <span class="sc">&lt;</span> <span class="dv">60</span>) {</span>
+<span id="cb33-18"><a href="calling-rates.html#cb33-18" tabindex="-1"></a>      bin_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(bin_sec, <span class="st">&quot;s&quot;</span>)</span>
+<span id="cb33-19"><a href="calling-rates.html#cb33-19" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span>(bin_sec <span class="sc">&lt;</span> <span class="dv">3600</span>) {</span>
+<span id="cb33-20"><a href="calling-rates.html#cb33-20" tabindex="-1"></a>      bin_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(bin_sec<span class="sc">/</span><span class="dv">60</span>, <span class="st">&quot;min&quot;</span>)</span>
+<span id="cb33-21"><a href="calling-rates.html#cb33-21" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb33-22"><a href="calling-rates.html#cb33-22" tabindex="-1"></a>      bin_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(bin_sec<span class="sc">/</span><span class="dv">3600</span>, <span class="st">&quot;hr&quot;</span>)</span>
+<span id="cb33-23"><a href="calling-rates.html#cb33-23" tabindex="-1"></a>    }</span>
+<span id="cb33-24"><a href="calling-rates.html#cb33-24" tabindex="-1"></a>    </span>
+<span id="cb33-25"><a href="calling-rates.html#cb33-25" tabindex="-1"></a>    <span class="co"># Create time bins based on the current bin duration</span></span>
+<span id="cb33-26"><a href="calling-rates.html#cb33-26" tabindex="-1"></a>    data_binned <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb33-27"><a href="calling-rates.html#cb33-27" tabindex="-1"></a>      <span class="fu">filter</span>(data_type <span class="sc">==</span> <span class="st">&quot;acoustic_data&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-28"><a href="calling-rates.html#cb33-28" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb33-29"><a href="calling-rates.html#cb33-29" tabindex="-1"></a>        <span class="co"># Convert time to seconds from start of day for easier binning</span></span>
+<span id="cb33-30"><a href="calling-rates.html#cb33-30" tabindex="-1"></a>        <span class="at">time_seconds =</span> <span class="fu">as.numeric</span>(<span class="fu">as.POSIXct</span>(begin_clock_time, </span>
+<span id="cb33-31"><a href="calling-rates.html#cb33-31" tabindex="-1"></a>                                             <span class="at">format =</span> <span class="st">&quot;%H:%M:%S&quot;</span>) <span class="sc">-</span> </span>
+<span id="cb33-32"><a href="calling-rates.html#cb33-32" tabindex="-1"></a>                                 <span class="fu">as.POSIXct</span>(<span class="st">&quot;00:00:00&quot;</span>, <span class="at">format =</span> <span class="st">&quot;%H:%M:%S&quot;</span>)),</span>
+<span id="cb33-33"><a href="calling-rates.html#cb33-33" tabindex="-1"></a>        <span class="co"># Create time bins</span></span>
+<span id="cb33-34"><a href="calling-rates.html#cb33-34" tabindex="-1"></a>        <span class="at">time_bin =</span> <span class="fu">floor</span>(time_seconds <span class="sc">/</span> bin_sec),</span>
+<span id="cb33-35"><a href="calling-rates.html#cb33-35" tabindex="-1"></a>        <span class="at">bin_duration_sec =</span> bin_sec,</span>
+<span id="cb33-36"><a href="calling-rates.html#cb33-36" tabindex="-1"></a>        <span class="at">bin_label =</span> bin_label</span>
+<span id="cb33-37"><a href="calling-rates.html#cb33-37" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-38"><a href="calling-rates.html#cb33-38" tabindex="-1"></a>      <span class="fu">group_by</span>(site_id, site_name, year, visit_number,</span>
+<span id="cb33-39"><a href="calling-rates.html#cb33-39" tabindex="-1"></a>               scientific_name, common_name, </span>
+<span id="cb33-40"><a href="calling-rates.html#cb33-40" tabindex="-1"></a>               time_bin, bin_duration_sec, bin_label) <span class="sc">%&gt;%</span></span>
+<span id="cb33-41"><a href="calling-rates.html#cb33-41" tabindex="-1"></a>      <span class="fu">summarise</span>(</span>
+<span id="cb33-42"><a href="calling-rates.html#cb33-42" tabindex="-1"></a>        <span class="at">detections_per_bin =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-43"><a href="calling-rates.html#cb33-43" tabindex="-1"></a>        <span class="at">bin_start_time =</span> <span class="fu">min</span>(time_seconds),</span>
+<span id="cb33-44"><a href="calling-rates.html#cb33-44" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span></span>
+<span id="cb33-45"><a href="calling-rates.html#cb33-45" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-46"><a href="calling-rates.html#cb33-46" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb33-47"><a href="calling-rates.html#cb33-47" tabindex="-1"></a>        <span class="co"># Convert to detections per minute for comparison</span></span>
+<span id="cb33-48"><a href="calling-rates.html#cb33-48" tabindex="-1"></a>        <span class="at">detections_per_minute =</span> detections_per_bin <span class="sc">/</span> (bin_duration_sec <span class="sc">/</span> <span class="dv">60</span>)</span>
+<span id="cb33-49"><a href="calling-rates.html#cb33-49" tabindex="-1"></a>      )</span>
+<span id="cb33-50"><a href="calling-rates.html#cb33-50" tabindex="-1"></a>    </span>
+<span id="cb33-51"><a href="calling-rates.html#cb33-51" tabindex="-1"></a>    results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, data_binned)</span>
+<span id="cb33-52"><a href="calling-rates.html#cb33-52" tabindex="-1"></a>  }</span>
+<span id="cb33-53"><a href="calling-rates.html#cb33-53" tabindex="-1"></a>  </span>
+<span id="cb33-54"><a href="calling-rates.html#cb33-54" tabindex="-1"></a>  <span class="fu">return</span>(results)</span>
+<span id="cb33-55"><a href="calling-rates.html#cb33-55" tabindex="-1"></a>}</span>
+<span id="cb33-56"><a href="calling-rates.html#cb33-56" tabindex="-1"></a></span>
+<span id="cb33-57"><a href="calling-rates.html#cb33-57" tabindex="-1"></a><span class="co"># Function to calculate summary statistics for sensitivity analysis</span></span>
+<span id="cb33-58"><a href="calling-rates.html#cb33-58" tabindex="-1"></a>calculate_sensitivity_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(binned_data) {</span>
+<span id="cb33-59"><a href="calling-rates.html#cb33-59" tabindex="-1"></a>  </span>
+<span id="cb33-60"><a href="calling-rates.html#cb33-60" tabindex="-1"></a>  <span class="co"># Calculate statistics for each species and bin duration</span></span>
+<span id="cb33-61"><a href="calling-rates.html#cb33-61" tabindex="-1"></a>  summary_stats <span class="ot">&lt;-</span> binned_data <span class="sc">%&gt;%</span></span>
+<span id="cb33-62"><a href="calling-rates.html#cb33-62" tabindex="-1"></a>    <span class="fu">group_by</span>(scientific_name, common_name, bin_duration_sec, bin_label) <span class="sc">%&gt;%</span></span>
+<span id="cb33-63"><a href="calling-rates.html#cb33-63" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb33-64"><a href="calling-rates.html#cb33-64" tabindex="-1"></a>      <span class="at">mean_rate =</span> <span class="fu">mean</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-65"><a href="calling-rates.html#cb33-65" tabindex="-1"></a>      <span class="at">median_rate =</span> <span class="fu">median</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-66"><a href="calling-rates.html#cb33-66" tabindex="-1"></a>      <span class="at">sd_rate =</span> <span class="fu">sd</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-67"><a href="calling-rates.html#cb33-67" tabindex="-1"></a>      <span class="at">cv_rate =</span> <span class="fu">sd</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">mean</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-68"><a href="calling-rates.html#cb33-68" tabindex="-1"></a>      <span class="at">q25_rate =</span> <span class="fu">quantile</span>(detections_per_minute, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-69"><a href="calling-rates.html#cb33-69" tabindex="-1"></a>      <span class="at">q75_rate =</span> <span class="fu">quantile</span>(detections_per_minute, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-70"><a href="calling-rates.html#cb33-70" tabindex="-1"></a>      <span class="at">iqr_rate =</span> <span class="fu">IQR</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-71"><a href="calling-rates.html#cb33-71" tabindex="-1"></a>      <span class="at">n_bins =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-72"><a href="calling-rates.html#cb33-72" tabindex="-1"></a>      <span class="at">n_zero_bins =</span> <span class="fu">sum</span>(detections_per_bin <span class="sc">==</span> <span class="dv">0</span>),</span>
+<span id="cb33-73"><a href="calling-rates.html#cb33-73" tabindex="-1"></a>      <span class="at">prop_zero_bins =</span> n_zero_bins <span class="sc">/</span> n_bins,</span>
+<span id="cb33-74"><a href="calling-rates.html#cb33-74" tabindex="-1"></a>      <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span></span>
+<span id="cb33-75"><a href="calling-rates.html#cb33-75" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-76"><a href="calling-rates.html#cb33-76" tabindex="-1"></a>    <span class="co"># Remove infinite CV values</span></span>
+<span id="cb33-77"><a href="calling-rates.html#cb33-77" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">cv_rate =</span> <span class="fu">ifelse</span>(<span class="fu">is.infinite</span>(cv_rate) <span class="sc">|</span> <span class="fu">is.nan</span>(cv_rate), <span class="cn">NA</span>, cv_rate))</span>
+<span id="cb33-78"><a href="calling-rates.html#cb33-78" tabindex="-1"></a>  </span>
+<span id="cb33-79"><a href="calling-rates.html#cb33-79" tabindex="-1"></a>  <span class="fu">return</span>(summary_stats)</span>
+<span id="cb33-80"><a href="calling-rates.html#cb33-80" tabindex="-1"></a>}</span>
+<span id="cb33-81"><a href="calling-rates.html#cb33-81" tabindex="-1"></a></span>
+<span id="cb33-82"><a href="calling-rates.html#cb33-82" tabindex="-1"></a><span class="co"># Define temporal bin durations to test (in seconds)</span></span>
+<span id="cb33-83"><a href="calling-rates.html#cb33-83" tabindex="-1"></a>bin_durations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">120</span>, <span class="dv">240</span>, <span class="dv">300</span>, <span class="dv">600</span>)  <span class="co"># 30s to 20min</span></span>
+<span id="cb33-84"><a href="calling-rates.html#cb33-84" tabindex="-1"></a>bin_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;30s&quot;</span>, <span class="st">&quot;1min&quot;</span>, <span class="st">&quot;2min&quot;</span>, <span class="st">&quot;4min&quot;</span>, <span class="st">&quot;5min&quot;</span>, <span class="st">&quot;10min&quot;</span>)</span>
+<span id="cb33-85"><a href="calling-rates.html#cb33-85" tabindex="-1"></a></span>
+<span id="cb33-86"><a href="calling-rates.html#cb33-86" tabindex="-1"></a><span class="co"># Calculate detection rates for all bin durations</span></span>
+<span id="cb33-87"><a href="calling-rates.html#cb33-87" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Calculating detection rates for different temporal bins...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-88"><a href="calling-rates.html#cb33-88" tabindex="-1"></a>unfiltered_data <span class="ot">&lt;-</span> unfiltered_data <span class="sc">%&gt;%</span></span>
+<span id="cb33-89"><a href="calling-rates.html#cb33-89" tabindex="-1"></a>  <span class="fu">semi_join</span>(data, <span class="at">by =</span> <span class="st">&quot;common_name&quot;</span>)</span>
+<span id="cb33-90"><a href="calling-rates.html#cb33-90" tabindex="-1"></a></span>
+<span id="cb33-91"><a href="calling-rates.html#cb33-91" tabindex="-1"></a>binned_detection_data <span class="ot">&lt;-</span> <span class="fu">calculate_detection_rates</span>(unfiltered_data, bin_durations)</span>
+<span id="cb33-92"><a href="calling-rates.html#cb33-92" tabindex="-1"></a></span>
+<span id="cb33-93"><a href="calling-rates.html#cb33-93" tabindex="-1"></a><span class="co"># Calculate summary statistics</span></span>
+<span id="cb33-94"><a href="calling-rates.html#cb33-94" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> <span class="fu">calculate_sensitivity_stats</span>(binned_detection_data)</span>
+<span id="cb33-95"><a href="calling-rates.html#cb33-95" tabindex="-1"></a></span>
+<span id="cb33-96"><a href="calling-rates.html#cb33-96" tabindex="-1"></a><span class="co"># Filter out Scarlet Tanager to match your analysis</span></span>
+<span id="cb33-97"><a href="calling-rates.html#cb33-97" tabindex="-1"></a>summary_stats_filtered <span class="ot">&lt;-</span> summary_stats <span class="sc">%&gt;%</span></span>
+<span id="cb33-98"><a href="calling-rates.html#cb33-98" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">!=</span> <span class="st">&quot;Scarlet Tanager&quot;</span>)</span>
+<span id="cb33-99"><a href="calling-rates.html#cb33-99" tabindex="-1"></a></span>
+<span id="cb33-100"><a href="calling-rates.html#cb33-100" tabindex="-1"></a><span class="co"># 1. Heatmap showing coefficient of variation (precision) across species and bin durations</span></span>
+<span id="cb33-101"><a href="calling-rates.html#cb33-101" tabindex="-1"></a>p1_cv <span class="ot">&lt;-</span> summary_stats_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb33-102"><a href="calling-rates.html#cb33-102" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(bin_duration_sec, <span class="at">levels =</span> bin_durations, <span class="at">labels =</span> bin_labels), </span>
+<span id="cb33-103"><a href="calling-rates.html#cb33-103" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">reorder</span>(common_name, mean_rate))) <span class="sc">+</span></span>
+<span id="cb33-104"><a href="calling-rates.html#cb33-104" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cv_rate), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb33-105"><a href="calling-rates.html#cb33-105" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">&quot;Coefficient of</span><span class="sc">\n</span><span class="st">Variation&quot;</span>, </span>
+<span id="cb33-106"><a href="calling-rates.html#cb33-106" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">&quot;plasma&quot;</span>,</span>
+<span id="cb33-107"><a href="calling-rates.html#cb33-107" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">&quot;grey90&quot;</span>,</span>
+<span id="cb33-108"><a href="calling-rates.html#cb33-108" tabindex="-1"></a>                       <span class="at">trans =</span> <span class="st">&quot;log10&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-109"><a href="calling-rates.html#cb33-109" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-110"><a href="calling-rates.html#cb33-110" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Precision Analysis: Coefficient of Variation by Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-111"><a href="calling-rates.html#cb33-111" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;Lower values (darker) indicate more consistent detection rate estimates&quot;</span>,</span>
+<span id="cb33-112"><a href="calling-rates.html#cb33-112" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-113"><a href="calling-rates.html#cb33-113" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Species (ordered by mean calling rate)&quot;</span></span>
+<span id="cb33-114"><a href="calling-rates.html#cb33-114" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-115"><a href="calling-rates.html#cb33-115" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-116"><a href="calling-rates.html#cb33-116" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-117"><a href="calling-rates.html#cb33-117" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb33-118"><a href="calling-rates.html#cb33-118" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">&quot;italic&quot;</span>),</span>
+<span id="cb33-119"><a href="calling-rates.html#cb33-119" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb33-120"><a href="calling-rates.html#cb33-120" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb33-121"><a href="calling-rates.html#cb33-121" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb33-122"><a href="calling-rates.html#cb33-122" tabindex="-1"></a>  )</span>
+<span id="cb33-123"><a href="calling-rates.html#cb33-123" tabindex="-1"></a></span>
+<span id="cb33-124"><a href="calling-rates.html#cb33-124" tabindex="-1"></a><span class="co"># 2. Heatmap showing proportion of zero detection bins</span></span>
+<span id="cb33-125"><a href="calling-rates.html#cb33-125" tabindex="-1"></a>p2_zeros <span class="ot">&lt;-</span> summary_stats_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb33-126"><a href="calling-rates.html#cb33-126" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(bin_duration_sec, <span class="at">levels =</span> bin_durations, <span class="at">labels =</span> bin_labels), </span>
+<span id="cb33-127"><a href="calling-rates.html#cb33-127" tabindex="-1"></a>             <span class="at">y =</span> <span class="fu">reorder</span>(common_name, mean_rate))) <span class="sc">+</span></span>
+<span id="cb33-128"><a href="calling-rates.html#cb33-128" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> prop_zero_bins), <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">size =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb33-129"><a href="calling-rates.html#cb33-129" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">&quot;Proportion</span><span class="sc">\n</span><span class="st">Zero Bins&quot;</span>, </span>
+<span id="cb33-130"><a href="calling-rates.html#cb33-130" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">&quot;viridis&quot;</span>,</span>
+<span id="cb33-131"><a href="calling-rates.html#cb33-131" tabindex="-1"></a>                       <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb33-132"><a href="calling-rates.html#cb33-132" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-133"><a href="calling-rates.html#cb33-133" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Data Sparsity Analysis: Proportion of Zero-Detection Bins&quot;</span>,</span>
+<span id="cb33-134"><a href="calling-rates.html#cb33-134" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;Darker colors indicate fewer zero-detection bins (better data density)&quot;</span>,</span>
+<span id="cb33-135"><a href="calling-rates.html#cb33-135" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-136"><a href="calling-rates.html#cb33-136" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Species (ordered by mean calling rate)&quot;</span></span>
+<span id="cb33-137"><a href="calling-rates.html#cb33-137" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-138"><a href="calling-rates.html#cb33-138" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-139"><a href="calling-rates.html#cb33-139" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-140"><a href="calling-rates.html#cb33-140" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb33-141"><a href="calling-rates.html#cb33-141" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">&quot;italic&quot;</span>),</span>
+<span id="cb33-142"><a href="calling-rates.html#cb33-142" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb33-143"><a href="calling-rates.html#cb33-143" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb33-144"><a href="calling-rates.html#cb33-144" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb33-145"><a href="calling-rates.html#cb33-145" tabindex="-1"></a>  )</span>
+<span id="cb33-146"><a href="calling-rates.html#cb33-146" tabindex="-1"></a></span>
+<span id="cb33-147"><a href="calling-rates.html#cb33-147" tabindex="-1"></a><span class="co"># 3. Line plots showing how detection rates change with bin duration for each species</span></span>
+<span id="cb33-148"><a href="calling-rates.html#cb33-148" tabindex="-1"></a>p3_rates <span class="ot">&lt;-</span> summary_stats_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb33-149"><a href="calling-rates.html#cb33-149" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bin_duration_sec, <span class="at">y =</span> mean_rate, <span class="at">group =</span> common_name)) <span class="sc">+</span></span>
+<span id="cb33-150"><a href="calling-rates.html#cb33-150" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">color =</span> <span class="st">&quot;#D29C44FF&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-151"><a href="calling-rates.html#cb33-151" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">&quot;#D29C44FF&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-152"><a href="calling-rates.html#cb33-152" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="at">ncol =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb33-153"><a href="calling-rates.html#cb33-153" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb33-154"><a href="calling-rates.html#cb33-154" tabindex="-1"></a>    <span class="at">breaks =</span> bin_durations[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)],</span>
+<span id="cb33-155"><a href="calling-rates.html#cb33-155" tabindex="-1"></a>    <span class="at">labels =</span> bin_labels[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)]</span>
+<span id="cb33-156"><a href="calling-rates.html#cb33-156" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-157"><a href="calling-rates.html#cb33-157" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-158"><a href="calling-rates.html#cb33-158" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Mean Detection Rate by Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-159"><a href="calling-rates.html#cb33-159" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;Individual species responses to different temporal resolutions&quot;</span>,</span>
+<span id="cb33-160"><a href="calling-rates.html#cb33-160" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-161"><a href="calling-rates.html#cb33-161" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Mean Detection Rate</span><span class="sc">\n</span><span class="st">(detections per minute)&quot;</span></span>
+<span id="cb33-162"><a href="calling-rates.html#cb33-162" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-163"><a href="calling-rates.html#cb33-163" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-164"><a href="calling-rates.html#cb33-164" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-165"><a href="calling-rates.html#cb33-165" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">&quot;italic&quot;</span>),</span>
+<span id="cb33-166"><a href="calling-rates.html#cb33-166" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb33-167"><a href="calling-rates.html#cb33-167" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb33-168"><a href="calling-rates.html#cb33-168" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb33-169"><a href="calling-rates.html#cb33-169" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb33-170"><a href="calling-rates.html#cb33-170" tabindex="-1"></a>  )</span>
+<span id="cb33-171"><a href="calling-rates.html#cb33-171" tabindex="-1"></a></span>
+<span id="cb33-172"><a href="calling-rates.html#cb33-172" tabindex="-1"></a><span class="co"># 4. Summary metrics across all species</span></span>
+<span id="cb33-173"><a href="calling-rates.html#cb33-173" tabindex="-1"></a>overall_summary <span class="ot">&lt;-</span> summary_stats_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb33-174"><a href="calling-rates.html#cb33-174" tabindex="-1"></a>  <span class="fu">group_by</span>(bin_duration_sec, bin_label) <span class="sc">%&gt;%</span></span>
+<span id="cb33-175"><a href="calling-rates.html#cb33-175" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb33-176"><a href="calling-rates.html#cb33-176" tabindex="-1"></a>    <span class="at">mean_cv =</span> <span class="fu">mean</span>(cv_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-177"><a href="calling-rates.html#cb33-177" tabindex="-1"></a>    <span class="at">median_cv =</span> <span class="fu">median</span>(cv_rate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-178"><a href="calling-rates.html#cb33-178" tabindex="-1"></a>    <span class="at">mean_prop_zeros =</span> <span class="fu">mean</span>(prop_zero_bins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-179"><a href="calling-rates.html#cb33-179" tabindex="-1"></a>    <span class="at">mean_n_bins =</span> <span class="fu">mean</span>(n_bins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb33-180"><a href="calling-rates.html#cb33-180" tabindex="-1"></a>    <span class="at">n_species =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-181"><a href="calling-rates.html#cb33-181" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span></span>
+<span id="cb33-182"><a href="calling-rates.html#cb33-182" tabindex="-1"></a>  )</span>
+<span id="cb33-183"><a href="calling-rates.html#cb33-183" tabindex="-1"></a></span>
+<span id="cb33-184"><a href="calling-rates.html#cb33-184" tabindex="-1"></a>p4_summary <span class="ot">&lt;-</span> overall_summary <span class="sc">%&gt;%</span></span>
+<span id="cb33-185"><a href="calling-rates.html#cb33-185" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(mean_cv, mean_prop_zeros), </span>
+<span id="cb33-186"><a href="calling-rates.html#cb33-186" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">&quot;metric&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-187"><a href="calling-rates.html#cb33-187" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-188"><a href="calling-rates.html#cb33-188" tabindex="-1"></a>    <span class="at">metric =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-189"><a href="calling-rates.html#cb33-189" tabindex="-1"></a>      metric <span class="sc">==</span> <span class="st">&quot;mean_cv&quot;</span> <span class="sc">~</span> <span class="st">&quot;Mean Coefficient of Variation&quot;</span>,</span>
+<span id="cb33-190"><a href="calling-rates.html#cb33-190" tabindex="-1"></a>      metric <span class="sc">==</span> <span class="st">&quot;mean_prop_zeros&quot;</span> <span class="sc">~</span> <span class="st">&quot;Mean Proportion Zero Bins&quot;</span></span>
+<span id="cb33-191"><a href="calling-rates.html#cb33-191" tabindex="-1"></a>    )</span>
+<span id="cb33-192"><a href="calling-rates.html#cb33-192" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-193"><a href="calling-rates.html#cb33-193" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(bin_duration_sec, </span>
+<span id="cb33-194"><a href="calling-rates.html#cb33-194" tabindex="-1"></a>                        <span class="at">levels =</span> bin_durations, <span class="at">labels =</span> bin_labels), </span>
+<span id="cb33-195"><a href="calling-rates.html#cb33-195" tabindex="-1"></a>             <span class="at">y =</span> value, <span class="at">group =</span> metric, <span class="at">color =</span> metric)) <span class="sc">+</span></span>
+<span id="cb33-196"><a href="calling-rates.html#cb33-196" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb33-197"><a href="calling-rates.html#cb33-197" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb33-198"><a href="calling-rates.html#cb33-198" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-199"><a href="calling-rates.html#cb33-199" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#D29C44FF&quot;</span>, <span class="st">&quot;#2E8B57&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb33-200"><a href="calling-rates.html#cb33-200" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-201"><a href="calling-rates.html#cb33-201" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Overall Performance Metrics by Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-202"><a href="calling-rates.html#cb33-202" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">&quot;Lower values generally indicate better performance&quot;</span>,</span>
+<span id="cb33-203"><a href="calling-rates.html#cb33-203" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Temporal Bin Duration&quot;</span>,</span>
+<span id="cb33-204"><a href="calling-rates.html#cb33-204" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Metric Value&quot;</span></span>
+<span id="cb33-205"><a href="calling-rates.html#cb33-205" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-206"><a href="calling-rates.html#cb33-206" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-207"><a href="calling-rates.html#cb33-207" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb33-208"><a href="calling-rates.html#cb33-208" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb33-209"><a href="calling-rates.html#cb33-209" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb33-210"><a href="calling-rates.html#cb33-210" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb33-211"><a href="calling-rates.html#cb33-211" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb33-212"><a href="calling-rates.html#cb33-212" tabindex="-1"></a>  )</span>
+<span id="cb33-213"><a href="calling-rates.html#cb33-213" tabindex="-1"></a></span>
+<span id="cb33-214"><a href="calling-rates.html#cb33-214" tabindex="-1"></a><span class="co"># Display all plots</span></span>
+<span id="cb33-215"><a href="calling-rates.html#cb33-215" tabindex="-1"></a><span class="fu">print</span>(p1_cv)</span>
+<span id="cb33-216"><a href="calling-rates.html#cb33-216" tabindex="-1"></a><span class="fu">print</span>(p2_zeros)</span>
+<span id="cb33-217"><a href="calling-rates.html#cb33-217" tabindex="-1"></a><span class="fu">print</span>(p3_rates)</span>
+<span id="cb33-218"><a href="calling-rates.html#cb33-218" tabindex="-1"></a><span class="fu">print</span>(p4_summary)</span>
+<span id="cb33-219"><a href="calling-rates.html#cb33-219" tabindex="-1"></a></span>
+<span id="cb33-220"><a href="calling-rates.html#cb33-220" tabindex="-1"></a><span class="co"># Print recommendations</span></span>
+<span id="cb33-221"><a href="calling-rates.html#cb33-221" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">=== SENSITIVITY ANALYSIS RESULTS ===</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-222"><a href="calling-rates.html#cb33-222" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Temporal bin durations tested:&quot;</span>, <span class="fu">paste</span>(bin_labels, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-223"><a href="calling-rates.html#cb33-223" tabindex="-1"></a></span>
+<span id="cb33-224"><a href="calling-rates.html#cb33-224" tabindex="-1"></a><span class="co"># Find optimal durations based on different criteria</span></span>
+<span id="cb33-225"><a href="calling-rates.html#cb33-225" tabindex="-1"></a>optimal_precision <span class="ot">&lt;-</span> overall_summary <span class="sc">%&gt;%</span> </span>
+<span id="cb33-226"><a href="calling-rates.html#cb33-226" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(mean_cv)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-227"><a href="calling-rates.html#cb33-227" tabindex="-1"></a>  <span class="fu">slice_min</span>(mean_cv, <span class="at">n =</span> <span class="dv">1</span>)</span>
+<span id="cb33-228"><a href="calling-rates.html#cb33-228" tabindex="-1"></a></span>
+<span id="cb33-229"><a href="calling-rates.html#cb33-229" tabindex="-1"></a>optimal_sparsity <span class="ot">&lt;-</span> overall_summary <span class="sc">%&gt;%</span> </span>
+<span id="cb33-230"><a href="calling-rates.html#cb33-230" tabindex="-1"></a>  <span class="fu">slice_min</span>(mean_prop_zeros, <span class="at">n =</span> <span class="dv">1</span>)</span>
+<span id="cb33-231"><a href="calling-rates.html#cb33-231" tabindex="-1"></a></span>
+<span id="cb33-232"><a href="calling-rates.html#cb33-232" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Best precision (lowest CV):&quot;</span>, optimal_precision<span class="sc">$</span>bin_label, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-233"><a href="calling-rates.html#cb33-233" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Best data density (fewest zero bins):&quot;</span>, optimal_sparsity<span class="sc">$</span>bin_label, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-234"><a href="calling-rates.html#cb33-234" tabindex="-1"></a></span>
+<span id="cb33-235"><a href="calling-rates.html#cb33-235" tabindex="-1"></a><span class="co"># Balanced recommendation</span></span>
+<span id="cb33-236"><a href="calling-rates.html#cb33-236" tabindex="-1"></a>balanced_score <span class="ot">&lt;-</span> overall_summary <span class="sc">%&gt;%</span></span>
+<span id="cb33-237"><a href="calling-rates.html#cb33-237" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-238"><a href="calling-rates.html#cb33-238" tabindex="-1"></a>    <span class="at">norm_cv =</span> <span class="fu">scale</span>(mean_cv)[,<span class="dv">1</span>],</span>
+<span id="cb33-239"><a href="calling-rates.html#cb33-239" tabindex="-1"></a>    <span class="at">norm_zeros =</span> <span class="fu">scale</span>(mean_prop_zeros)[,<span class="dv">1</span>],</span>
+<span id="cb33-240"><a href="calling-rates.html#cb33-240" tabindex="-1"></a>    <span class="at">combined_score =</span> norm_cv <span class="sc">+</span> norm_zeros</span>
+<span id="cb33-241"><a href="calling-rates.html#cb33-241" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-242"><a href="calling-rates.html#cb33-242" tabindex="-1"></a>  <span class="fu">slice_min</span>(combined_score, <span class="at">n =</span> <span class="dv">1</span>)</span>
+<span id="cb33-243"><a href="calling-rates.html#cb33-243" tabindex="-1"></a></span>
+<span id="cb33-244"><a href="calling-rates.html#cb33-244" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Recommended duration (balanced performance):&quot;</span>, balanced_score<span class="sc">$</span>bin_label, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-245"><a href="calling-rates.html#cb33-245" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Your current choice of 1 minute ranks #&quot;</span>, </span>
+<span id="cb33-246"><a href="calling-rates.html#cb33-246" tabindex="-1"></a>    <span class="fu">which</span>(overall_summary<span class="sc">$</span>bin_duration_sec <span class="sc">==</span> <span class="dv">60</span>), </span>
+<span id="cb33-247"><a href="calling-rates.html#cb33-247" tabindex="-1"></a>    <span class="st">&quot;out of&quot;</span>, <span class="fu">nrow</span>(overall_summary), <span class="st">&quot;for balanced performance.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb33-248"><a href="calling-rates.html#cb33-248" tabindex="-1"></a></span>
+<span id="cb33-249"><a href="calling-rates.html#cb33-249" tabindex="-1"></a><span class="co"># Show the summary table</span></span>
+<span id="cb33-250"><a href="calling-rates.html#cb33-250" tabindex="-1"></a><span class="fu">print</span>(overall_summary)</span></code></pre></div>
+</div>
+<div id="does-calling-rate-vary-as-a-function-of-number-of-individuals" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Does calling rate vary as a function of number of individuals<a href="calling-rates.html#does-calling-rate-vary-as-a-function-of-number-of-individuals" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here, we expect that species-specific calling rate would increase with higher counts of individuals at a site. Alternately, there is no increase in the number of individuals and the same individual might produce no variation in calling rates per minute and we may see no relationship between the two.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="calling-rates.html#cb34-1" tabindex="-1"></a><span class="co"># visualize detections per minute vs abundance by species</span></span>
+<span id="cb34-2"><a href="calling-rates.html#cb34-2" tabindex="-1"></a>fig_det_rate_abundance <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="calling-rates.html#cb34-3" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">!=</span> <span class="st">&quot;Scarlet Tanager&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># since it was excluded from the GLMM</span></span>
+<span id="cb34-4"><a href="calling-rates.html#cb34-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x =</span> abundance, </span>
+<span id="cb34-5"><a href="calling-rates.html#cb34-5" tabindex="-1"></a>                <span class="at">y =</span> detections_per_minute)) <span class="sc">+</span></span>
+<span id="cb34-6"><a href="calling-rates.html#cb34-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;#D29C44FF&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  </span>
+<span id="cb34-7"><a href="calling-rates.html#cb34-7" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb34-8"><a href="calling-rates.html#cb34-8" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span>          </span>
+<span id="cb34-9"><a href="calling-rates.html#cb34-9" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span>    </span>
+<span id="cb34-10"><a href="calling-rates.html#cb34-10" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb34-11"><a href="calling-rates.html#cb34-11" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb34-12"><a href="calling-rates.html#cb34-12" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb34-13"><a href="calling-rates.html#cb34-13" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb34-14"><a href="calling-rates.html#cb34-14" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb34-15"><a href="calling-rates.html#cb34-15" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb34-16"><a href="calling-rates.html#cb34-16" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-17"><a href="calling-rates.html#cb34-17" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-18"><a href="calling-rates.html#cb34-18" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Abundance&quot;</span>,         </span>
+<span id="cb34-19"><a href="calling-rates.html#cb34-19" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Calling rate&quot;</span>,        </span>
+<span id="cb34-20"><a href="calling-rates.html#cb34-20" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Calling rate vs Abundance by Species&quot;</span> </span>
+<span id="cb34-21"><a href="calling-rates.html#cb34-21" tabindex="-1"></a>  )</span>
+<span id="cb34-22"><a href="calling-rates.html#cb34-22" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="calling-rates.html#cb34-23" tabindex="-1"></a><span class="co"># several species show an increase in rate of detections per minute with increasing number of individuals</span></span>
+<span id="cb34-24"><a href="calling-rates.html#cb34-24" tabindex="-1"></a><span class="fu">ggsave</span>(fig_det_rate_abundance, <span class="at">filename =</span> <span class="st">&quot;figs/calling-rate-vs-abundance-by-species.png&quot;</span>, <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">device =</span> <span class="fu">png</span>(), <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb34-25"><a href="calling-rates.html#cb34-25" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+</div>
+<div id="is-calling-rate-linked-to-the-fit-between-predicted-abundance-and-acoustic-detections" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Is calling rate linked to the fit between predicted abundance and acoustic detections?<a href="calling-rates.html#is-calling-rate-linked-to-the-fit-between-predicted-abundance-and-acoustic-detections" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here, we ask if calling rate governs the strength of the relationship between predicted abundance and acoustic detections as estimated from the generalized linear mixed effect model (previous script)?</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="calling-rates.html#cb35-1" tabindex="-1"></a><span class="co"># extract the mean, median, and max calling rate per species</span></span>
+<span id="cb35-2"><a href="calling-rates.html#cb35-2" tabindex="-1"></a>calling_rate_summary <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="calling-rates.html#cb35-3" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">!=</span> <span class="st">&quot;Scarlet Tanager&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="calling-rates.html#cb35-4" tabindex="-1"></a>  <span class="fu">group_by</span>(common_name) <span class="sc">%&gt;%</span></span>
+<span id="cb35-5"><a href="calling-rates.html#cb35-5" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb35-6"><a href="calling-rates.html#cb35-6" tabindex="-1"></a>    <span class="at">mean_detections_per_minute =</span> <span class="fu">mean</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-7"><a href="calling-rates.html#cb35-7" tabindex="-1"></a>    <span class="at">median_detections_per_minute =</span> <span class="fu">median</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-8"><a href="calling-rates.html#cb35-8" tabindex="-1"></a>    <span class="at">max_detections_per_minute =</span> <span class="fu">max</span>(detections_per_minute, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-9"><a href="calling-rates.html#cb35-9" tabindex="-1"></a>    <span class="at">n_observations =</span> <span class="fu">n</span>(),</span>
+<span id="cb35-10"><a href="calling-rates.html#cb35-10" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&#39;drop&#39;</span></span>
+<span id="cb35-11"><a href="calling-rates.html#cb35-11" tabindex="-1"></a>  ) </span>
+<span id="cb35-12"><a href="calling-rates.html#cb35-12" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="calling-rates.html#cb35-13" tabindex="-1"></a><span class="co"># join the psuedo r2 values and significance of fit to a single dataframe</span></span>
+<span id="cb35-14"><a href="calling-rates.html#cb35-14" tabindex="-1"></a>for_plot <span class="ot">&lt;-</span> <span class="fu">left_join</span>(summary_stats[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">12</span>)],calling_rate_summary,</span>
+<span id="cb35-15"><a href="calling-rates.html#cb35-15" tabindex="-1"></a>                    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Species&quot;</span> <span class="ot">=</span> <span class="st">&quot;common_name&quot;</span>))</span>
+<span id="cb35-16"><a href="calling-rates.html#cb35-16" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="calling-rates.html#cb35-17" tabindex="-1"></a><span class="co"># note: we remove species that have a ns or no significant fit/association between predicted abundance and acoustic detections</span></span>
+<span id="cb35-18"><a href="calling-rates.html#cb35-18" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="calling-rates.html#cb35-19" tabindex="-1"></a><span class="co"># plot mean detections</span></span>
+<span id="cb35-20"><a href="calling-rates.html#cb35-20" tabindex="-1"></a>fig_pseudoR2_mean_detections <span class="ot">&lt;-</span> for_plot <span class="sc">%&gt;%</span></span>
+<span id="cb35-21"><a href="calling-rates.html#cb35-21" tabindex="-1"></a>  <span class="fu">filter</span>(Significance <span class="sc">!=</span> <span class="st">&quot;ns&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-22"><a href="calling-rates.html#cb35-22" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x =</span> mean_detections_per_minute, <span class="at">y =</span> Pseudo_R2)) <span class="sc">+</span></span>
+<span id="cb35-23"><a href="calling-rates.html#cb35-23" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;#D29C44FF&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb35-24"><a href="calling-rates.html#cb35-24" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-25"><a href="calling-rates.html#cb35-25" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> Species), </span>
+<span id="cb35-26"><a href="calling-rates.html#cb35-26" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>, </span>
+<span id="cb35-27"><a href="calling-rates.html#cb35-27" tabindex="-1"></a>                  <span class="at">fontface =</span> <span class="st">&quot;italic&quot;</span>,</span>
+<span id="cb35-28"><a href="calling-rates.html#cb35-28" tabindex="-1"></a>                  <span class="at">max.overlaps =</span> <span class="dv">15</span>) <span class="sc">+</span>  </span>
+<span id="cb35-29"><a href="calling-rates.html#cb35-29" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-30"><a href="calling-rates.html#cb35-30" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb35-31"><a href="calling-rates.html#cb35-31" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb35-32"><a href="calling-rates.html#cb35-32" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb35-33"><a href="calling-rates.html#cb35-33" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb35-34"><a href="calling-rates.html#cb35-34" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-35"><a href="calling-rates.html#cb35-35" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-36"><a href="calling-rates.html#cb35-36" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Mean Calling Rate (mean detections per minute)&quot;</span>,</span>
+<span id="cb35-37"><a href="calling-rates.html#cb35-37" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Pseudo R²&quot;</span>,</span>
+<span id="cb35-38"><a href="calling-rates.html#cb35-38" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Pseudo R² vs Mean Calling Rate Across Species&quot;</span></span>
+<span id="cb35-39"><a href="calling-rates.html#cb35-39" tabindex="-1"></a>  )</span>
+<span id="cb35-40"><a href="calling-rates.html#cb35-40" tabindex="-1"></a></span>
+<span id="cb35-41"><a href="calling-rates.html#cb35-41" tabindex="-1"></a><span class="co"># negative association between pseudo R2 and mean detections per minute</span></span>
+<span id="cb35-42"><a href="calling-rates.html#cb35-42" tabindex="-1"></a><span class="fu">ggsave</span>(fig_pseudoR2_mean_detections, <span class="at">filename =</span> <span class="st">&quot;figs/pseudoR2-vs-mean-calling-rate.png&quot;</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">device =</span> <span class="fu">png</span>(), <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb35-43"><a href="calling-rates.html#cb35-43" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb35-44"><a href="calling-rates.html#cb35-44" tabindex="-1"></a></span>
+<span id="cb35-45"><a href="calling-rates.html#cb35-45" tabindex="-1"></a><span class="co"># max detections per minute </span></span>
+<span id="cb35-46"><a href="calling-rates.html#cb35-46" tabindex="-1"></a>fig_pseudoR2_max_detections <span class="ot">&lt;-</span> for_plot <span class="sc">%&gt;%</span></span>
+<span id="cb35-47"><a href="calling-rates.html#cb35-47" tabindex="-1"></a>  <span class="fu">filter</span>(Significance <span class="sc">!=</span> <span class="st">&quot;ns&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-48"><a href="calling-rates.html#cb35-48" tabindex="-1"></a>  <span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x =</span> max_detections_per_minute, <span class="at">y =</span> Pseudo_R2)) <span class="sc">+</span></span>
+<span id="cb35-49"><a href="calling-rates.html#cb35-49" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;#D29C44FF&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb35-50"><a href="calling-rates.html#cb35-50" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-51"><a href="calling-rates.html#cb35-51" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> Species), </span>
+<span id="cb35-52"><a href="calling-rates.html#cb35-52" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>, </span>
+<span id="cb35-53"><a href="calling-rates.html#cb35-53" tabindex="-1"></a>                  <span class="at">fontface =</span> <span class="st">&quot;italic&quot;</span>,</span>
+<span id="cb35-54"><a href="calling-rates.html#cb35-54" tabindex="-1"></a>                  <span class="at">max.overlaps =</span> <span class="dv">15</span>) <span class="sc">+</span>  </span>
+<span id="cb35-55"><a href="calling-rates.html#cb35-55" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_family =</span> <span class="st">&quot;Century Gothic&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-56"><a href="calling-rates.html#cb35-56" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb35-57"><a href="calling-rates.html#cb35-57" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb35-58"><a href="calling-rates.html#cb35-58" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb35-59"><a href="calling-rates.html#cb35-59" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb35-60"><a href="calling-rates.html#cb35-60" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb35-61"><a href="calling-rates.html#cb35-61" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-62"><a href="calling-rates.html#cb35-62" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Max Calling Rate (max detections per minute)&quot;</span>,</span>
+<span id="cb35-63"><a href="calling-rates.html#cb35-63" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Pseudo R²&quot;</span>,</span>
+<span id="cb35-64"><a href="calling-rates.html#cb35-64" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Pseudo R² vs Max Calling Rate Across Species&quot;</span></span>
+<span id="cb35-65"><a href="calling-rates.html#cb35-65" tabindex="-1"></a>  )</span>
+<span id="cb35-66"><a href="calling-rates.html#cb35-66" tabindex="-1"></a></span>
+<span id="cb35-67"><a href="calling-rates.html#cb35-67" tabindex="-1"></a><span class="co"># negative association between pseudo R2 and max detections per minute</span></span>
+<span id="cb35-68"><a href="calling-rates.html#cb35-68" tabindex="-1"></a><span class="fu">ggsave</span>(fig_pseudoR2_max_detections, <span class="at">filename =</span> <span class="st">&quot;figs/pseudoR2-vs-max-calling-rate.png&quot;</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">7</span>, <span class="at">device =</span> <span class="fu">png</span>(), <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb35-69"><a href="calling-rates.html#cb35-69" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<p>-do it per hour as well?
+-then plot it against the number of individuals
+-</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="abundance-vs.-acoustic-detections.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hierarchical-model-approach.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vjjan91/newHampshire-pointCount-acoustics/edit/master/04_calling-rates.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

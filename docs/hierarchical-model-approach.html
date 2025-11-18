@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 7 Hierarchical model approach | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd</title>
+  <meta name="description" content="Section 7 Hierarchical model approach | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 7 Hierarchical model approach | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="vjjan91/newHampshire-pointCount-acoustics" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 7 Hierarchical model approach | Source code and supporting information for Predicting abundances from acoustic data: New Hampshire Birsd" />
+  
+  
+  
+
+<meta name="author" content="Vijay Ramesh" />
+<meta name="author" content="Pooja Panwar" />
+<meta name="author" content="Laurel Symes" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="calling-rates.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#attribution"><i class="fa fa-check"></i><b>1.1</b> Attribution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#data-access"><i class="fa fa-check"></i><b>1.2</b> Data access</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#data-processing"><i class="fa fa-check"></i><b>1.3</b> Data processing</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-comparability.html"><a href="data-comparability.html"><i class="fa fa-check"></i><b>2</b> Data comparability</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-comparability.html"><a href="data-comparability.html#load-necessary-libraries"><i class="fa fa-check"></i><b>2.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="2.2" data-path="data-comparability.html"><a href="data-comparability.html#loading-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>2.2</b> Loading point count and acoustic data</a></li>
+<li class="chapter" data-level="2.3" data-path="data-comparability.html"><a href="data-comparability.html#cleaning-up-point-count-data"><i class="fa fa-check"></i><b>2.3</b> Cleaning up point count data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-comparability.html"><a href="data-comparability.html#cleaning-up-acoustic-data"><i class="fa fa-check"></i><b>2.4</b> Cleaning up acoustic data</a></li>
+<li class="chapter" data-level="2.5" data-path="data-comparability.html"><a href="data-comparability.html#creating-a-combined-dataset"><i class="fa fa-check"></i><b>2.5</b> Creating a combined dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html"><i class="fa fa-check"></i><b>3</b> Subsetting data and running exploratory data analyses</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#load-necessary-libraries-1"><i class="fa fa-check"></i><b>3.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="3.2" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#load-dataframe-containing-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>3.2</b> Load dataframe containing point count and acoustic data</a></li>
+<li class="chapter" data-level="3.3" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#estimate-total-abundance-and-richness-for-point-count-and-acoustic-data"><i class="fa fa-check"></i><b>3.3</b> Estimate total abundance and richness for point count and acoustic data</a></li>
+<li class="chapter" data-level="3.4" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#creating-a-single-dataframe-prior-to-running-statistical-analysis"><i class="fa fa-check"></i><b>3.4</b> Creating a single dataframe prior to running statistical analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#filtering-criteria-for-species-inclusion"><i class="fa fa-check"></i><b>3.5</b> Filtering criteria for species inclusion</a></li>
+<li class="chapter" data-level="3.6" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#explore-whether-time-of-day-shows-any-variation-in-abundancedetections"><i class="fa fa-check"></i><b>3.6</b> Explore whether time of day shows any variation in abundance/detections?</a></li>
+<li class="chapter" data-level="3.7" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#examining-abundance-and-acoustic-detections-as-a-function-of-time-of-day-by-species"><i class="fa fa-check"></i><b>3.7</b> Examining abundance and acoustic detections as a function of time of day by species</a></li>
+<li class="chapter" data-level="3.8" data-path="subsetting-data-and-running-exploratory-data-analyses.html"><a href="subsetting-data-and-running-exploratory-data-analyses.html#save-the-subsetted-data-to-file"><i class="fa fa-check"></i><b>3.8</b> Save the subsetted data to file</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html"><i class="fa fa-check"></i><b>4</b> Creating study area map</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#load-necessary-libraries-2"><i class="fa fa-check"></i><b>4.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="4.2" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#load-associated-shapefiles-for-each-region-sampled"><i class="fa fa-check"></i><b>4.2</b> Load associated shapefiles for each region sampled</a></li>
+<li class="chapter" data-level="4.3" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#download-natural-earth-layers"><i class="fa fa-check"></i><b>4.3</b> Download natural earth layers</a></li>
+<li class="chapter" data-level="4.4" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#acadia-national-park"><i class="fa fa-check"></i><b>4.4</b> Acadia National Park</a></li>
+<li class="chapter" data-level="4.5" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#hubbard-brook"><i class="fa fa-check"></i><b>4.5</b> Hubbard Brook</a></li>
+<li class="chapter" data-level="4.6" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#katahdin-woods-and-waters"><i class="fa fa-check"></i><b>4.6</b> Katahdin Woods and Waters</a></li>
+<li class="chapter" data-level="4.7" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#marsh-billings"><i class="fa fa-check"></i><b>4.7</b> Marsh Billings</a></li>
+<li class="chapter" data-level="4.8" data-path="creating-study-area-map.html"><a href="creating-study-area-map.html#create-visualization"><i class="fa fa-check"></i><b>4.8</b> Create visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html"><i class="fa fa-check"></i><b>5</b> Abundance vs. acoustic detections</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#load-necessary-libraries-3"><i class="fa fa-check"></i><b>5.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="5.2" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#load-dataframe-containing-data-that-is-already-filtered-for-a-subset-of-species"><i class="fa fa-check"></i><b>5.2</b> Load dataframe containing data that is already filtered for a subset of species</a></li>
+<li class="chapter" data-level="5.3" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#correlations-between-abundance-and-detections"><i class="fa fa-check"></i><b>5.3</b> Correlations between abundance and detections</a></li>
+<li class="chapter" data-level="5.4" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#scaling-of-predictors-and-determining-distribution-family"><i class="fa fa-check"></i><b>5.4</b> Scaling of predictors and determining distribution family</a></li>
+<li class="chapter" data-level="5.5" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#generalized-linear-mixed-model-between-abundance-and-acoustic-detections"><i class="fa fa-check"></i><b>5.5</b> Generalized linear mixed model between abundance and acoustic detections</a></li>
+<li class="chapter" data-level="5.6" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#model-diagnostics"><i class="fa fa-check"></i><b>5.6</b> Model diagnostics</a></li>
+<li class="chapter" data-level="5.7" data-path="abundance-vs.-acoustic-detections.html"><a href="abundance-vs.-acoustic-detections.html#predict-abundance-given-detections"><i class="fa fa-check"></i><b>5.7</b> Predict abundance given detections</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="calling-rates.html"><a href="calling-rates.html"><i class="fa fa-check"></i><b>6</b> Calling rates</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="calling-rates.html"><a href="calling-rates.html#load-necessary-libraries-4"><i class="fa fa-check"></i><b>6.1</b> Load necessary libraries</a></li>
+<li class="chapter" data-level="6.2" data-path="calling-rates.html"><a href="calling-rates.html#load-previous-model-object-and-filtered-data"><i class="fa fa-check"></i><b>6.2</b> Load previous model object and filtered data</a></li>
+<li class="chapter" data-level="6.3" data-path="calling-rates.html"><a href="calling-rates.html#calculating-calling-rate"><i class="fa fa-check"></i><b>6.3</b> Calculating calling rate</a></li>
+<li class="chapter" data-level="6.4" data-path="calling-rates.html"><a href="calling-rates.html#does-calling-rate-vary-as-a-function-of-number-of-individuals"><i class="fa fa-check"></i><b>6.4</b> Does calling rate vary as a function of number of individuals</a></li>
+<li class="chapter" data-level="6.5" data-path="calling-rates.html"><a href="calling-rates.html#is-calling-rate-linked-to-the-fit-between-predicted-abundance-and-acoustic-detections"><i class="fa fa-check"></i><b>6.5</b> Is calling rate linked to the fit between predicted abundance and acoustic detections?</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html"><i class="fa fa-check"></i><b>7</b> Hierarchical model approach</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#packages"><i class="fa fa-check"></i><b>7.1</b> Packages</a></li>
+<li class="chapter" data-level="7.2" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#loading-and-exploring-data"><i class="fa fa-check"></i><b>7.2</b> Loading and exploring data</a></li>
+<li class="chapter" data-level="7.3" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#hierarchical-model-for-counts-with-two-observation-processes"><i class="fa fa-check"></i><b>7.3</b> Hierarchical model for counts with two observation processes</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#state-process-for-each-morning"><i class="fa fa-check"></i><b>7.3.1</b> State process for each morning</a></li>
+<li class="chapter" data-level="7.3.2" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-point-counts"><i class="fa fa-check"></i><b>7.3.2</b> Observation process for each morning from point counts</a></li>
+<li class="chapter" data-level="7.3.3" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-acoustic-detections"><i class="fa fa-check"></i><b>7.3.3</b> Observation process for each morning from acoustic detections</a></li>
+<li class="chapter" data-level="7.3.4" data-path="hierarchical-model-approach.html"><a href="hierarchical-model-approach.html#coding"><i class="fa fa-check"></i><b>7.3.4</b> Coding</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Source code and supporting information for <em>Predicting abundances from acoustic data: New Hampshire Birsd</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="hierarchical-model-approach" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Section 7</span> Hierarchical model approach<a href="hierarchical-model-approach.html#hierarchical-model-approach" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="packages" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Packages<a href="hierarchical-model-approach.html#packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="hierarchical-model-approach.html#cb36-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb36-2"><a href="hierarchical-model-approach.html#cb36-2" tabindex="-1"></a><span class="fu">library</span>(MetBrewer)</span>
+<span id="cb36-3"><a href="hierarchical-model-approach.html#cb36-3" tabindex="-1"></a><span class="fu">library</span>(nimble)</span>
+<span id="cb36-4"><a href="hierarchical-model-approach.html#cb36-4" tabindex="-1"></a><span class="fu">library</span>(coda)</span></code></pre></div>
+</div>
+<div id="loading-and-exploring-data" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Loading and exploring data<a href="hierarchical-model-approach.html#loading-and-exploring-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s load the file used in <code>01_data-comparability.Rmd</code> script.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="hierarchical-model-approach.html#cb37-1" tabindex="-1"></a>acous_count <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;results/pooled_pointCount_acoustic_data.csv&quot;</span>)</span>
+<span id="cb37-2"><a href="hierarchical-model-approach.html#cb37-2" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="hierarchical-model-approach.html#cb37-3" tabindex="-1"></a><span class="fu">table</span>(acous_count<span class="sc">$</span>common_name, acous_count<span class="sc">$</span>data_type)</span></code></pre></div>
+<p>From 174 species, Vijay suggested to focus on 22 species (see <code>02_data-subsetting-and-EDA.Rmd</code>).</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="hierarchical-model-approach.html#cb38-1" tabindex="-1"></a>acous_count_filt <span class="ot">&lt;-</span> acous_count <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="hierarchical-model-approach.html#cb38-2" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;American Crow&quot;</span>,</span>
+<span id="cb38-3"><a href="hierarchical-model-approach.html#cb38-3" tabindex="-1"></a>                            <span class="st">&quot;American Robin&quot;</span>,</span>
+<span id="cb38-4"><a href="hierarchical-model-approach.html#cb38-4" tabindex="-1"></a>                            <span class="st">&quot;Black-and-white Warbler&quot;</span>,</span>
+<span id="cb38-5"><a href="hierarchical-model-approach.html#cb38-5" tabindex="-1"></a>                            <span class="st">&quot;Black-capped Chickadee&quot;</span>,</span>
+<span id="cb38-6"><a href="hierarchical-model-approach.html#cb38-6" tabindex="-1"></a>                            <span class="st">&quot;Black-throated Blue Warbler&quot;</span>,</span>
+<span id="cb38-7"><a href="hierarchical-model-approach.html#cb38-7" tabindex="-1"></a>                            <span class="st">&quot;Black-throated Green Warbler&quot;</span>,</span>
+<span id="cb38-8"><a href="hierarchical-model-approach.html#cb38-8" tabindex="-1"></a>                            <span class="st">&quot;Blackburnian Warbler&quot;</span>,</span>
+<span id="cb38-9"><a href="hierarchical-model-approach.html#cb38-9" tabindex="-1"></a>                            <span class="st">&quot;Blue Jay&quot;</span>,</span>
+<span id="cb38-10"><a href="hierarchical-model-approach.html#cb38-10" tabindex="-1"></a>                            <span class="st">&quot;Blue-headed Vireo&quot;</span>,</span>
+<span id="cb38-11"><a href="hierarchical-model-approach.html#cb38-11" tabindex="-1"></a>                            <span class="st">&quot;Brown Creeper&quot;</span>,</span>
+<span id="cb38-12"><a href="hierarchical-model-approach.html#cb38-12" tabindex="-1"></a>                            <span class="st">&quot;Eastern Wood-Pewee&quot;</span>,</span>
+<span id="cb38-13"><a href="hierarchical-model-approach.html#cb38-13" tabindex="-1"></a>                            <span class="st">&quot;Golden-crowned Kinglet&quot;</span>,</span>
+<span id="cb38-14"><a href="hierarchical-model-approach.html#cb38-14" tabindex="-1"></a>                            <span class="st">&quot;Hermit Thrush&quot;</span>,</span>
+<span id="cb38-15"><a href="hierarchical-model-approach.html#cb38-15" tabindex="-1"></a>                            <span class="st">&quot;Northern Parula&quot;</span>,</span>
+<span id="cb38-16"><a href="hierarchical-model-approach.html#cb38-16" tabindex="-1"></a>                            <span class="st">&quot;Ovenbird&quot;</span>,</span>
+<span id="cb38-17"><a href="hierarchical-model-approach.html#cb38-17" tabindex="-1"></a>                            <span class="st">&quot;Pine Warbler&quot;</span>,</span>
+<span id="cb38-18"><a href="hierarchical-model-approach.html#cb38-18" tabindex="-1"></a>                            <span class="st">&quot;Red-breasted Nuthatch&quot;</span>,</span>
+<span id="cb38-19"><a href="hierarchical-model-approach.html#cb38-19" tabindex="-1"></a>                            <span class="st">&quot;Red-eyed Vireo&quot;</span>,</span>
+<span id="cb38-20"><a href="hierarchical-model-approach.html#cb38-20" tabindex="-1"></a>                            <span class="st">&quot;Scarlet Tanager&quot;</span>,</span>
+<span id="cb38-21"><a href="hierarchical-model-approach.html#cb38-21" tabindex="-1"></a>                            <span class="st">&quot;Winter Wren&quot;</span>,</span>
+<span id="cb38-22"><a href="hierarchical-model-approach.html#cb38-22" tabindex="-1"></a>                            <span class="st">&quot;Yellow-bellied Sapsucker&quot;</span>,</span>
+<span id="cb38-23"><a href="hierarchical-model-approach.html#cb38-23" tabindex="-1"></a>                            <span class="st">&quot;Yellow-rumped Warbler&quot;</span>))</span>
+<span id="cb38-24"><a href="hierarchical-model-approach.html#cb38-24" tabindex="-1"></a><span class="fu">table</span>(acous_count_filt<span class="sc">$</span>common_name, acous_count_filt<span class="sc">$</span>data_type)</span></code></pre></div>
+<p>The package <code>naniar</code> allow to see a good summar of NAs per column</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="hierarchical-model-approach.html#cb39-1" tabindex="-1"></a>naniar<span class="sc">::</span><span class="fu">miss_var_summary</span>(acous_count_filt)</span></code></pre></div>
+<p>How to reconcile time of detection of each record? While the <code>point_count</code> data include the <code>observation_time</code> variable, this information for the <code>acoustic_data</code> seems to be at the <code>begin_clock_time</code> variable. Let’s adjust this with the function <code>coalesce</code> from <code>dplyr</code> in <code>tidyverse</code>. Then, we can consolidate the “initial temporal window” per visit in each site_id with the detection time.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="hierarchical-model-approach.html#cb40-1" tabindex="-1"></a>acoust_count_summary <span class="ot">&lt;-</span> acous_count_filt <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="hierarchical-model-approach.html#cb40-2" tabindex="-1"></a>  <span class="co"># dummy column to unify time of detection either by count or </span></span>
+<span id="cb40-3"><a href="hierarchical-model-approach.html#cb40-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">detection_time =</span> <span class="fu">coalesce</span>(observation_time, begin_clock_time)) <span class="sc">|&gt;</span> </span>
+<span id="cb40-4"><a href="hierarchical-model-approach.html#cb40-4" tabindex="-1"></a>  <span class="co"># initial temporal window</span></span>
+<span id="cb40-5"><a href="hierarchical-model-approach.html#cb40-5" tabindex="-1"></a>  <span class="fu">group_by</span>(site_id, date, visit_number) <span class="sc">|&gt;</span></span>
+<span id="cb40-6"><a href="hierarchical-model-approach.html#cb40-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_window =</span> <span class="fu">min</span>(hms<span class="sc">::</span><span class="fu">as_hms</span>(detection_time), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb40-7"><a href="hierarchical-model-approach.html#cb40-7" tabindex="-1"></a>         <span class="at">time_window =</span> hms<span class="sc">::</span><span class="fu">as_hms</span>(time_window)) <span class="sc">|&gt;</span> </span>
+<span id="cb40-8"><a href="hierarchical-model-approach.html#cb40-8" tabindex="-1"></a>  <span class="co"># First summarization to extract sum of counts per point count and number of detections</span></span>
+<span id="cb40-9"><a href="hierarchical-model-approach.html#cb40-9" tabindex="-1"></a>  <span class="fu">group_by</span>(site_name, site_id, date, visit_number, common_name, data_type, time_window) <span class="sc">|&gt;</span></span>
+<span id="cb40-10"><a href="hierarchical-model-approach.html#cb40-10" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">abundance =</span> <span class="fu">sum</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb40-11"><a href="hierarchical-model-approach.html#cb40-11" tabindex="-1"></a>         <span class="at">acous_detections =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb40-12"><a href="hierarchical-model-approach.html#cb40-12" tabindex="-1"></a>  <span class="co"># Second summarization to count number of detections and extract overall counts</span></span>
+<span id="cb40-13"><a href="hierarchical-model-approach.html#cb40-13" tabindex="-1"></a>  <span class="fu">group_by</span>(site_name, site_id, date, visit_number, common_name, time_window) <span class="sc">|&gt;</span></span>
+<span id="cb40-14"><a href="hierarchical-model-approach.html#cb40-14" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">counts =</span> <span class="fu">sum</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb40-15"><a href="hierarchical-model-approach.html#cb40-15" tabindex="-1"></a>         <span class="at">acous_detections =</span> <span class="fu">sum</span>(acous_detections)) <span class="sc">|&gt;</span></span>
+<span id="cb40-16"><a href="hierarchical-model-approach.html#cb40-16" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<p>And we can generate the figures. This are similar to my previous attempt, but including some days or point counts discarded by Vijay due to species richness.</p>
+<p>Time series of the counts</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="hierarchical-model-approach.html#cb41-1" tabindex="-1"></a><span class="fu">ggplot</span>(acoust_count_summary,</span>
+<span id="cb41-2"><a href="hierarchical-model-approach.html#cb41-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> time_window, <span class="at">y =</span> counts, <span class="at">color =</span> site_name)) <span class="sc">+</span> </span>
+<span id="cb41-3"><a href="hierarchical-model-approach.html#cb41-3" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> counts), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb41-4"><a href="hierarchical-model-approach.html#cb41-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb41-5"><a href="hierarchical-model-approach.html#cb41-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb41-6"><a href="hierarchical-model-approach.html#cb41-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb41-7"><a href="hierarchical-model-approach.html#cb41-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of individuals counted in a 10-minute point count&quot;</span>,</span>
+<span id="cb41-8"><a href="hierarchical-model-approach.html#cb41-8" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb41-9"><a href="hierarchical-model-approach.html#cb41-9" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb41-10"><a href="hierarchical-model-approach.html#cb41-10" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb41-11"><a href="hierarchical-model-approach.html#cb41-11" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb41-12"><a href="hierarchical-model-approach.html#cb41-12" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/counts-by-time-continuous.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/counts-by-time-continuous.jpg" alt="Counts during the morning" />
+<div class="figcaption">Counts during the morning</div>
+</div>
+<p>Time series of acoustic detections</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="hierarchical-model-approach.html#cb42-1" tabindex="-1"></a><span class="fu">ggplot</span>(acoust_count_summary,</span>
+<span id="cb42-2"><a href="hierarchical-model-approach.html#cb42-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> time_window, <span class="at">y =</span> acous_detections, <span class="at">color =</span> site_name)) <span class="sc">+</span> </span>
+<span id="cb42-3"><a href="hierarchical-model-approach.html#cb42-3" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> acous_detections), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb42-4"><a href="hierarchical-model-approach.html#cb42-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb42-5"><a href="hierarchical-model-approach.html#cb42-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb42-6"><a href="hierarchical-model-approach.html#cb42-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb42-7"><a href="hierarchical-model-approach.html#cb42-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of acoustic detections in a 10-minute recording&quot;</span>,</span>
+<span id="cb42-8"><a href="hierarchical-model-approach.html#cb42-8" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb42-9"><a href="hierarchical-model-approach.html#cb42-9" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb42-10"><a href="hierarchical-model-approach.html#cb42-10" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb42-11"><a href="hierarchical-model-approach.html#cb42-11" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb42-12"><a href="hierarchical-model-approach.html#cb42-12" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/acou_det-by-time-continuous.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/acou_det-by-time-continuous.jpg" alt="Acoustic detections during the morning" />
+<div class="figcaption">Acoustic detections during the morning</div>
+</div>
+<p>This summary dataset also allow to see the potential effect of phenology. We can see the two years independently</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="hierarchical-model-approach.html#cb43-1" tabindex="-1"></a>acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="hierarchical-model-approach.html#cb43-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="hierarchical-model-approach.html#cb43-3" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">|&gt;</span></span>
+<span id="cb43-4"><a href="hierarchical-model-approach.html#cb43-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> counts, <span class="at">color =</span> site_name))<span class="sc">+</span></span>
+<span id="cb43-5"><a href="hierarchical-model-approach.html#cb43-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> counts), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb43-6"><a href="hierarchical-model-approach.html#cb43-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb43-7"><a href="hierarchical-model-approach.html#cb43-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb43-8"><a href="hierarchical-model-approach.html#cb43-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Date of survey (2022)&quot;</span>,</span>
+<span id="cb43-9"><a href="hierarchical-model-approach.html#cb43-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of individuals counted in a 10-minute point count&quot;</span>,</span>
+<span id="cb43-10"><a href="hierarchical-model-approach.html#cb43-10" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb43-11"><a href="hierarchical-model-approach.html#cb43-11" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb43-12"><a href="hierarchical-model-approach.html#cb43-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb43-13"><a href="hierarchical-model-approach.html#cb43-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb43-14"><a href="hierarchical-model-approach.html#cb43-14" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/counts-by-date_2022.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/counts-by-date_2022.jpg" alt="Counts 2022 - phenology" />
+<div class="figcaption">Counts 2022 - phenology</div>
+</div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="hierarchical-model-approach.html#cb44-1" tabindex="-1"></a>acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="hierarchical-model-approach.html#cb44-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="hierarchical-model-approach.html#cb44-3" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-4"><a href="hierarchical-model-approach.html#cb44-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> acous_detections, <span class="at">color =</span> site_name))<span class="sc">+</span></span>
+<span id="cb44-5"><a href="hierarchical-model-approach.html#cb44-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> acous_detections), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb44-6"><a href="hierarchical-model-approach.html#cb44-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb44-7"><a href="hierarchical-model-approach.html#cb44-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb44-8"><a href="hierarchical-model-approach.html#cb44-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Date of survey (2022)&quot;</span>,</span>
+<span id="cb44-9"><a href="hierarchical-model-approach.html#cb44-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of acoustic detections in a 10-minute recording&quot;</span>,</span>
+<span id="cb44-10"><a href="hierarchical-model-approach.html#cb44-10" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb44-11"><a href="hierarchical-model-approach.html#cb44-11" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb44-12"><a href="hierarchical-model-approach.html#cb44-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb44-13"><a href="hierarchical-model-approach.html#cb44-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb44-14"><a href="hierarchical-model-approach.html#cb44-14" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/acou_det-by-date_2022.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/acou_det-by-date_2022.jpg" alt="Acoustic detections 2022 - phenology" />
+<div class="figcaption">Acoustic detections 2022 - phenology</div>
+</div>
+<p>And for 2023:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="hierarchical-model-approach.html#cb45-1" tabindex="-1"></a>acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="hierarchical-model-approach.html#cb45-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb45-3"><a href="hierarchical-model-approach.html#cb45-3" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>) <span class="sc">|&gt;</span></span>
+<span id="cb45-4"><a href="hierarchical-model-approach.html#cb45-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> counts, <span class="at">color =</span> site_name))<span class="sc">+</span></span>
+<span id="cb45-5"><a href="hierarchical-model-approach.html#cb45-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> counts), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb45-6"><a href="hierarchical-model-approach.html#cb45-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb45-7"><a href="hierarchical-model-approach.html#cb45-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb45-8"><a href="hierarchical-model-approach.html#cb45-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Date of survey (2023)&quot;</span>,</span>
+<span id="cb45-9"><a href="hierarchical-model-approach.html#cb45-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of individuals counted in a 10-minute point count&quot;</span>,</span>
+<span id="cb45-10"><a href="hierarchical-model-approach.html#cb45-10" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb45-11"><a href="hierarchical-model-approach.html#cb45-11" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb45-12"><a href="hierarchical-model-approach.html#cb45-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb45-13"><a href="hierarchical-model-approach.html#cb45-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb45-14"><a href="hierarchical-model-approach.html#cb45-14" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/counts-by-date_2023.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/counts-by-date_2023.jpg" alt="Counts 2023 - phenology" />
+<div class="figcaption">Counts 2023 - phenology</div>
+</div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="hierarchical-model-approach.html#cb46-1" tabindex="-1"></a>acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="hierarchical-model-approach.html#cb46-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb46-3"><a href="hierarchical-model-approach.html#cb46-3" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>) <span class="sc">|&gt;</span></span>
+<span id="cb46-4"><a href="hierarchical-model-approach.html#cb46-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> acous_detections, <span class="at">color =</span> site_name))<span class="sc">+</span></span>
+<span id="cb46-5"><a href="hierarchical-model-approach.html#cb46-5" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> acous_detections), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb46-6"><a href="hierarchical-model-approach.html#cb46-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb46-7"><a href="hierarchical-model-approach.html#cb46-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb46-8"><a href="hierarchical-model-approach.html#cb46-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Date of survey (2023)&quot;</span>,</span>
+<span id="cb46-9"><a href="hierarchical-model-approach.html#cb46-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of acoustic detections in a 10-minute recording&quot;</span>,</span>
+<span id="cb46-10"><a href="hierarchical-model-approach.html#cb46-10" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Site&quot;</span>)<span class="sc">+</span></span>
+<span id="cb46-11"><a href="hierarchical-model-approach.html#cb46-11" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">met.brewer</span>(<span class="st">&quot;Homer2&quot;</span>, <span class="dv">4</span>))<span class="sc">+</span></span>
+<span id="cb46-12"><a href="hierarchical-model-approach.html#cb46-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb46-13"><a href="hierarchical-model-approach.html#cb46-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb46-14"><a href="hierarchical-model-approach.html#cb46-14" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/acou_det-by-date_2023.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/acou_det-by-date_2023.jpg" alt="Acoustic detections 2023 - phenology" />
+<div class="figcaption">Acoustic detections 2023 - phenology</div>
+</div>
+<p>These figures serve to see that the date of visit have a more clear effect in acoustic detections than on counts. We can incorporate these covariates in a hierarchical model.</p>
+<p>These figures also allow to estimate the variance-to-mean ratio (VMR) of our two data sources (counts and acoustic detections) to select a family distribution accordingly. Recall a simple, clear table of VMR values:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="hierarchical-model-approach.html#cb47-1" tabindex="-1"></a>VMR_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb47-2"><a href="hierarchical-model-approach.html#cb47-2" tabindex="-1"></a>  <span class="at">Distribution =</span> <span class="fu">c</span>(<span class="st">&quot;Constant random variable&quot;</span>, <span class="st">&quot;Binomial&quot;</span>,<span class="st">&quot;Poisson&quot;</span>, <span class="st">&quot;Negative binomial&quot;</span>),</span>
+<span id="cb47-3"><a href="hierarchical-model-approach.html#cb47-3" tabindex="-1"></a>  <span class="at">VMR =</span> <span class="fu">c</span>(<span class="st">&quot;VMR = 0&quot;</span>, <span class="st">&quot;0&lt;VMR&lt;1&quot;</span>, <span class="st">&quot;VMR = 1&quot;</span>, <span class="st">&quot;VMR&gt;1&quot;</span>)</span>
+<span id="cb47-4"><a href="hierarchical-model-approach.html#cb47-4" tabindex="-1"></a>)</span>
+<span id="cb47-5"><a href="hierarchical-model-approach.html#cb47-5" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(VMR_table)</span></code></pre></div>
+<p>So, estimating these VMR per species:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="hierarchical-model-approach.html#cb48-1" tabindex="-1"></a>acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="hierarchical-model-approach.html#cb48-2" tabindex="-1"></a>  <span class="fu">group_by</span>(common_name) <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="hierarchical-model-approach.html#cb48-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">meanCounts =</span> <span class="fu">mean</span>(counts),</span>
+<span id="cb48-4"><a href="hierarchical-model-approach.html#cb48-4" tabindex="-1"></a>            <span class="at">varCounts =</span> <span class="fu">var</span>(counts), </span>
+<span id="cb48-5"><a href="hierarchical-model-approach.html#cb48-5" tabindex="-1"></a>            <span class="at">VMR_counts =</span> varCounts<span class="sc">/</span>meanCounts,</span>
+<span id="cb48-6"><a href="hierarchical-model-approach.html#cb48-6" tabindex="-1"></a>            <span class="at">meanAcouDet =</span> <span class="fu">mean</span>(acous_detections),</span>
+<span id="cb48-7"><a href="hierarchical-model-approach.html#cb48-7" tabindex="-1"></a>            <span class="at">varAcouDet =</span> <span class="fu">var</span>(acous_detections), </span>
+<span id="cb48-8"><a href="hierarchical-model-approach.html#cb48-8" tabindex="-1"></a>            <span class="at">VMR_AcouDet =</span> varAcouDet<span class="sc">/</span>meanAcouDet) <span class="sc">|&gt;</span> <span class="co">#summary()</span></span>
+<span id="cb48-9"><a href="hierarchical-model-approach.html#cb48-9" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="co"># to see all the table</span></span></code></pre></div>
+<p>We can see that VMR_counts is between 0 and 1, while VMR_AcousticDetection &gt; 1. These ranges suggest using a Binomial and a Negative binomial distributions, respectively, in the observation process.</p>
+</div>
+<div id="hierarchical-model-for-counts-with-two-observation-processes" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Hierarchical model for counts with two observation processes<a href="hierarchical-model-approach.html#hierarchical-model-for-counts-with-two-observation-processes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="state-process-for-each-morning" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> State process for each morning<a href="hierarchical-model-approach.html#state-process-for-each-morning" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Assuming that every morning of sampling we find a latent number of individuals in each site (including several point counts?) that fluctuates around a mean stationary number, we can see some similarities with a Stochastic Gompertz State Space population dynamics model, which in continuous time follows a Gaussian (Ornstein-Uhlenbeck, OU) diffusion dynamic.</p>
+<p>Let’s model the latent process of log-counts <span class="math inline">\(X_{i,t} = \ln(C_{i,t})\)</span> for species <span class="math inline">\(i\)</span> in time <span class="math inline">\(t\)</span> (sampling point count) in a site <span class="math inline">\(m\)</span>. We can simplify this (for now) by only working in a site (<span class="math inline">\(m = 1\)</span>; Katahdin Woods and Waters) and four species example (<span class="math inline">\(i = 1,2,3,4\)</span>; Ovenbird - OVEN, Pine Warbler - PAWA, Red-eyed Vireo - REVI, Scarlet Tanager - SCTA). On the logarithmic scale, the process becomes linear and follows an autoregressive model of order 1 (note we are not including the index <span class="math inline">\(m\)</span> for now):</p>
+<p><span class="math display">\[
+X_{i,t+1} = a_i + c_i * X_{i,t} + \epsilon_{i,t}; ~ \epsilon \sim \text{Normal}(0,\sigma_i^2)
+\]</span>
+where <span class="math inline">\(a_i\)</span> control the drift (equivalent to the growth rate) of each species, <span class="math inline">\(c_i\)</span> controls the mean-reverting dynamic (such as the strength of density dependence, <span class="math inline">\(c = 1 + b\)</span>), and <span class="math inline">\(\epsilon_{i,t}\)</span> captures stochasticity in the process, distributed as a normal random variable with some noise of the process <span class="math inline">\(\sigma_i^2\)</span>. In the long-run, we can estimate the mean of the log-counts as a function of the control drift and mean-reverting dynamic:</p>
+<p><span class="math display">\[
+\text{E}[X_{\infty,i}] = \frac{a_i}{1-c_i}
+\]</span></p>
+<p>Also the variance of the log-counts is given by the ratio of variance in stochasticity and the square of the mean-reverting dynamic:</p>
+<p><span class="math display">\[
+\text{Var}[X_{\infty,i}] = \frac{\sigma_i^2}{1-c_i^2}
+\]</span></p>
+<p>However, how to deal with Jansen’s inequality?!</p>
+<p><span class="math display">\[
+e^{(\text{E}[X_\infty])} \leq \text{E}[e^{(X_\infty)}]
+\]</span></p>
+<p>We can estimate the long-run mean count value on the original scale by adding half of the variance, which is our expected counts per species <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display">\[
+\text{E}[C_{\infty, i}] = e^{(\text{E}[X_{\infty, i}] + (0.5 \times \text{Var}[X_{\infty, i}]))}
+\]</span></p>
+</div>
+<div id="observation-process-for-each-morning-from-point-counts" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Observation process for each morning from point counts<a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-point-counts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The VMR_counts revealed underdispersion, so we can us a Binomial distribution for this observation process:</p>
+<p><span class="math display">\[
+y_{i,t}^{counts} | C_{i,t} \sim \text{Binomial}(\exp(X_{i,t}),~p_i)
+\]</span>
+where <span class="math inline">\(y_{i,t}^{counts}\)</span> is the observed counts from point counts sampling, <span class="math inline">\(\exp(X_{i,t}) = e^{X_{i,t}}\)</span> came from the state process and <span class="math inline">\(p_{i}\)</span> is the detection probability per species.</p>
+</div>
+<div id="observation-process-for-each-morning-from-acoustic-detections" class="section level3 hasAnchor" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Observation process for each morning from acoustic detections<a href="hierarchical-model-approach.html#observation-process-for-each-morning-from-acoustic-detections" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The VMR_AcousticDetection revealed overdispersion, so we can use a Negative Binomial distribution for this observation process:</p>
+<p><span class="math display">\[
+y_{i,t}^{acoust} \sim \text{Negative Binomial}(\mu_{i,t}, k_i)
+\]</span>
+where <span class="math inline">\(y_{i,t}^{acoust}\)</span> is the observed acoustic detections from sampling point (that overlap with point counts), <span class="math inline">\(\mu_{i,t}\)</span> is the expected number of acoustic detections per species per time (sampling) and <span class="math inline">\(k_i\)</span> is the overdispersion parameter per species. Then, we can link the expected number of acoustic detections per species (<span class="math inline">\(\mu_{i,t}\)</span>) with the state process under a log-linear model:</p>
+<p><span class="math display">\[
+\log(\mu_{i,t}) = \alpha_i + \gamma_{i} X_{i,t}
+\]</span>
+where <span class="math inline">\(\alpha_i\)</span> is a species-level intercept and <span class="math inline">\(\gamma_{i}\)</span> is the scaling parameter with the latent log-abundance <span class="math inline">\(X_{i,t}\)</span>.</p>
+</div>
+<div id="coding" class="section level3 hasAnchor" number="7.3.4">
+<h3><span class="header-section-number">7.3.4</span> Coding<a href="hierarchical-model-approach.html#coding" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Create index values. In this example I only use two species, to test the code.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="hierarchical-model-approach.html#cb49-1" tabindex="-1"></a>acoust_count_nimble <span class="ot">&lt;-</span> acoust_count_summary <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a href="hierarchical-model-approach.html#cb49-2" tabindex="-1"></a>  <span class="co"># four examples in a single site</span></span>
+<span id="cb49-3"><a href="hierarchical-model-approach.html#cb49-3" tabindex="-1"></a>  <span class="fu">filter</span>(common_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Ovenbird&quot;</span>,<span class="st">&quot;Pine Warbler&quot;</span>, <span class="st">&quot;Red-eyed Vireo&quot;</span>,</span>
+<span id="cb49-4"><a href="hierarchical-model-approach.html#cb49-4" tabindex="-1"></a>                            <span class="st">&quot;Scarlet Tanager&quot;</span>),</span>
+<span id="cb49-5"><a href="hierarchical-model-approach.html#cb49-5" tabindex="-1"></a>         site_name <span class="sc">==</span> <span class="st">&quot;Katahdin Woods and Waters&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb49-6"><a href="hierarchical-model-approach.html#cb49-6" tabindex="-1"></a>  <span class="co"># Organize the data for NIMBLE</span></span>
+<span id="cb49-7"><a href="hierarchical-model-approach.html#cb49-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb49-8"><a href="hierarchical-model-approach.html#cb49-8" tabindex="-1"></a>    <span class="at">species_id =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(common_name)),</span>
+<span id="cb49-9"><a href="hierarchical-model-approach.html#cb49-9" tabindex="-1"></a>    <span class="at">site_id_num =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(site_id)),</span>
+<span id="cb49-10"><a href="hierarchical-model-approach.html#cb49-10" tabindex="-1"></a>    <span class="at">time_id =</span> <span class="fu">as.integer</span>(<span class="fu">factor</span>(<span class="fu">paste</span>(visit_number, time_window, <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>))),</span>
+<span id="cb49-11"><a href="hierarchical-model-approach.html#cb49-11" tabindex="-1"></a>    <span class="at">log_acoust =</span> <span class="fu">log</span>(acous_detections <span class="sc">+</span> <span class="dv">1</span>),  <span class="co"># avoid log(0)</span></span>
+<span id="cb49-12"><a href="hierarchical-model-approach.html#cb49-12" tabindex="-1"></a>    <span class="at">log_counts =</span> <span class="fu">log</span>(counts <span class="sc">+</span><span class="dv">1</span>)  <span class="co"># avoid log(0)</span></span>
+<span id="cb49-13"><a href="hierarchical-model-approach.html#cb49-13" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb49-14"><a href="hierarchical-model-approach.html#cb49-14" tabindex="-1"></a>  <span class="fu">arrange</span>(species_id, time_id)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="hierarchical-model-approach.html#cb50-1" tabindex="-1"></a>code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb50-2"><a href="hierarchical-model-approach.html#cb50-2" tabindex="-1"></a>  <span class="co">#Priors</span></span>
+<span id="cb50-3"><a href="hierarchical-model-approach.html#cb50-3" tabindex="-1"></a>  <span class="co"># Species level</span></span>
+<span id="cb50-4"><a href="hierarchical-model-approach.html#cb50-4" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N_species) {</span>
+<span id="cb50-5"><a href="hierarchical-model-approach.html#cb50-5" tabindex="-1"></a>    x0[i] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.01</span>)        <span class="co"># Prior mean for initial abundance</span></span>
+<span id="cb50-6"><a href="hierarchical-model-approach.html#cb50-6" tabindex="-1"></a>    p[i] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">1</span>)             <span class="co"># Detection probability</span></span>
+<span id="cb50-7"><a href="hierarchical-model-approach.html#cb50-7" tabindex="-1"></a>    alpha[i] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.1</span>)      <span class="co"># Intercept for acoustic detection model</span></span>
+<span id="cb50-8"><a href="hierarchical-model-approach.html#cb50-8" tabindex="-1"></a>    a[i] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)            <span class="co"># Drift term in OU process (ep. pop growth rate)</span></span>
+<span id="cb50-9"><a href="hierarchical-model-approach.html#cb50-9" tabindex="-1"></a>    c[i] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>)      <span class="co"># mean-reverting dynamic (eq. Density dependence strength)</span></span>
+<span id="cb50-10"><a href="hierarchical-model-approach.html#cb50-10" tabindex="-1"></a>    sigma_sqr[i] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">10</span>)   <span class="co"># Process variance</span></span>
+<span id="cb50-11"><a href="hierarchical-model-approach.html#cb50-11" tabindex="-1"></a>    gamma[i] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>)        <span class="co"># Scaling of latent abundance in acoustic model</span></span>
+<span id="cb50-12"><a href="hierarchical-model-approach.html#cb50-12" tabindex="-1"></a>    k[i] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>, <span class="dv">100</span>)          <span class="co"># Overdispersion for acoustic detections</span></span>
+<span id="cb50-13"><a href="hierarchical-model-approach.html#cb50-13" tabindex="-1"></a>  }</span>
+<span id="cb50-14"><a href="hierarchical-model-approach.html#cb50-14" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="hierarchical-model-approach.html#cb50-15" tabindex="-1"></a>  <span class="co">#Latent process (OU-Gompertz)</span></span>
+<span id="cb50-16"><a href="hierarchical-model-approach.html#cb50-16" tabindex="-1"></a></span>
+<span id="cb50-17"><a href="hierarchical-model-approach.html#cb50-17" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N_species) {</span>
+<span id="cb50-18"><a href="hierarchical-model-approach.html#cb50-18" tabindex="-1"></a>    X[i, <span class="dv">1</span>] <span class="sc">~</span> <span class="fu">dnorm</span>(x0[i], <span class="dv">1</span>)        <span class="co"># Initial latent abundance per species</span></span>
+<span id="cb50-19"><a href="hierarchical-model-approach.html#cb50-19" tabindex="-1"></a>  }</span>
+<span id="cb50-20"><a href="hierarchical-model-approach.html#cb50-20" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>N_time) {</span>
+<span id="cb50-21"><a href="hierarchical-model-approach.html#cb50-21" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N_species) {</span>
+<span id="cb50-22"><a href="hierarchical-model-approach.html#cb50-22" tabindex="-1"></a>      eps[i, t<span class="dv">-1</span>] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, sigma_sqr[i])  <span class="co"># Environmental noise</span></span>
+<span id="cb50-23"><a href="hierarchical-model-approach.html#cb50-23" tabindex="-1"></a>      X[i, t] <span class="ot">&lt;-</span> a[i] <span class="sc">+</span> c[i] <span class="sc">*</span> X[i, t<span class="dv">-1</span>] <span class="sc">+</span> eps[i, t<span class="dv">-1</span>]  <span class="co"># OU update</span></span>
+<span id="cb50-24"><a href="hierarchical-model-approach.html#cb50-24" tabindex="-1"></a>    }</span>
+<span id="cb50-25"><a href="hierarchical-model-approach.html#cb50-25" tabindex="-1"></a>  }</span>
+<span id="cb50-26"><a href="hierarchical-model-approach.html#cb50-26" tabindex="-1"></a>  </span>
+<span id="cb50-27"><a href="hierarchical-model-approach.html#cb50-27" tabindex="-1"></a>  <span class="co">#Observation models</span></span>
+<span id="cb50-28"><a href="hierarchical-model-approach.html#cb50-28" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N_obs) {</span>
+<span id="cb50-29"><a href="hierarchical-model-approach.html#cb50-29" tabindex="-1"></a>    <span class="co"># Counts from point counts observations</span></span>
+<span id="cb50-30"><a href="hierarchical-model-approach.html#cb50-30" tabindex="-1"></a>    counts[n] <span class="sc">~</span> <span class="fu">dbin</span>(p[species_id[n]], X[species_id[n], time_id[n]])</span>
+<span id="cb50-31"><a href="hierarchical-model-approach.html#cb50-31" tabindex="-1"></a></span>
+<span id="cb50-32"><a href="hierarchical-model-approach.html#cb50-32" tabindex="-1"></a>    <span class="co"># Acoustic detections in 10-minutes recordings simultaneously sampled</span></span>
+<span id="cb50-33"><a href="hierarchical-model-approach.html#cb50-33" tabindex="-1"></a>    log_mu[n] <span class="ot">&lt;-</span> alpha[species_id[n]] <span class="sc">+</span> gamma[species_id[n]] <span class="sc">*</span> X[species_id[n], time_id[n]]</span>
+<span id="cb50-34"><a href="hierarchical-model-approach.html#cb50-34" tabindex="-1"></a>    mu[n] <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_mu[n])</span>
+<span id="cb50-35"><a href="hierarchical-model-approach.html#cb50-35" tabindex="-1"></a>    acous_detections[n] <span class="sc">~</span> <span class="fu">dnegbin</span>(mu[n], k[species_id[n]])</span>
+<span id="cb50-36"><a href="hierarchical-model-approach.html#cb50-36" tabindex="-1"></a>  }</span>
+<span id="cb50-37"><a href="hierarchical-model-approach.html#cb50-37" tabindex="-1"></a>  </span>
+<span id="cb50-38"><a href="hierarchical-model-approach.html#cb50-38" tabindex="-1"></a>  <span class="co"># Derived quantities</span></span>
+<span id="cb50-39"><a href="hierarchical-model-approach.html#cb50-39" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N_species) {</span>
+<span id="cb50-40"><a href="hierarchical-model-approach.html#cb50-40" tabindex="-1"></a>    E_X[i] <span class="ot">&lt;-</span> a[i] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> c[i])</span>
+<span id="cb50-41"><a href="hierarchical-model-approach.html#cb50-41" tabindex="-1"></a>    Var_X[i] <span class="ot">&lt;-</span> sigma_sqr[i] <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> c[i]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb50-42"><a href="hierarchical-model-approach.html#cb50-42" tabindex="-1"></a>    E_C[i] <span class="ot">&lt;-</span> <span class="fu">exp</span>(E_X[i] <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> Var_X[i])</span>
+<span id="cb50-43"><a href="hierarchical-model-approach.html#cb50-43" tabindex="-1"></a>  }</span>
+<span id="cb50-44"><a href="hierarchical-model-approach.html#cb50-44" tabindex="-1"></a>})</span></code></pre></div>
+<p>Compile the code</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="hierarchical-model-approach.html#cb51-1" tabindex="-1"></a><span class="co"># Change to eval=FALSE</span></span>
+<span id="cb51-2"><a href="hierarchical-model-approach.html#cb51-2" tabindex="-1"></a><span class="co"># Bundle data for Nimble</span></span>
+<span id="cb51-3"><a href="hierarchical-model-approach.html#cb51-3" tabindex="-1"></a><span class="fu">str</span>(nimble_data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">N_species =</span> <span class="fu">length</span>(<span class="fu">unique</span>(acoust_count_nimble<span class="sc">$</span>species_id)),</span>
+<span id="cb51-4"><a href="hierarchical-model-approach.html#cb51-4" tabindex="-1"></a>                        <span class="at">N_time =</span> <span class="fu">max</span>(acoust_count_nimble<span class="sc">$</span>time_id),</span>
+<span id="cb51-5"><a href="hierarchical-model-approach.html#cb51-5" tabindex="-1"></a>                        <span class="at">N_obs =</span> <span class="fu">nrow</span>(acoust_count_nimble),</span>
+<span id="cb51-6"><a href="hierarchical-model-approach.html#cb51-6" tabindex="-1"></a>                        <span class="at">species_id =</span> acoust_count_nimble<span class="sc">$</span>species_id,</span>
+<span id="cb51-7"><a href="hierarchical-model-approach.html#cb51-7" tabindex="-1"></a>                        <span class="at">time_id =</span> acoust_count_nimble<span class="sc">$</span>time_id,</span>
+<span id="cb51-8"><a href="hierarchical-model-approach.html#cb51-8" tabindex="-1"></a>                        <span class="at">counts =</span> acoust_count_nimble<span class="sc">$</span>log_counts,</span>
+<span id="cb51-9"><a href="hierarchical-model-approach.html#cb51-9" tabindex="-1"></a>                        <span class="at">acous_detections =</span> acoust_count_nimble<span class="sc">$</span>log_acoust</span>
+<span id="cb51-10"><a href="hierarchical-model-approach.html#cb51-10" tabindex="-1"></a>))</span>
+<span id="cb51-11"><a href="hierarchical-model-approach.html#cb51-11" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="hierarchical-model-approach.html#cb51-12" tabindex="-1"></a><span class="co"># initial values</span></span>
+<span id="cb51-13"><a href="hierarchical-model-approach.html#cb51-13" tabindex="-1"></a><span class="co"># For the matrix X, we have to initiate with a full matrix, even if some combination are missing</span></span>
+<span id="cb51-14"><a href="hierarchical-model-approach.html#cb51-14" tabindex="-1"></a>X_init_df <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb51-15"><a href="hierarchical-model-approach.html#cb51-15" tabindex="-1"></a>  <span class="at">species_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">unique</span>(acoust_count_nimble<span class="sc">$</span>species_id)), </span>
+<span id="cb51-16"><a href="hierarchical-model-approach.html#cb51-16" tabindex="-1"></a>  <span class="at">time_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">max</span>(acoust_count_nimble<span class="sc">$</span>time_id)</span>
+<span id="cb51-17"><a href="hierarchical-model-approach.html#cb51-17" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb51-18"><a href="hierarchical-model-approach.html#cb51-18" tabindex="-1"></a>  <span class="fu">left_join</span>(acoust_count_nimble <span class="sc">|&gt;</span></span>
+<span id="cb51-19"><a href="hierarchical-model-approach.html#cb51-19" tabindex="-1"></a>              <span class="fu">select</span>(species_id, time_id, log_counts),</span>
+<span id="cb51-20"><a href="hierarchical-model-approach.html#cb51-20" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;species_id&quot;</span>, <span class="st">&quot;time_id&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb51-21"><a href="hierarchical-model-approach.html#cb51-21" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_counts =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(log_counts), <span class="dv">0</span>, log_counts))  <span class="co"># fill missing with 0</span></span>
+<span id="cb51-22"><a href="hierarchical-model-approach.html#cb51-22" tabindex="-1"></a></span>
+<span id="cb51-23"><a href="hierarchical-model-approach.html#cb51-23" tabindex="-1"></a><span class="co"># Reshape to matrix</span></span>
+<span id="cb51-24"><a href="hierarchical-model-approach.html#cb51-24" tabindex="-1"></a>X_init <span class="ot">&lt;-</span> X_init_df <span class="sc">|&gt;</span></span>
+<span id="cb51-25"><a href="hierarchical-model-approach.html#cb51-25" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> time_id,</span>
+<span id="cb51-26"><a href="hierarchical-model-approach.html#cb51-26" tabindex="-1"></a>              <span class="at">values_from =</span> log_counts,</span>
+<span id="cb51-27"><a href="hierarchical-model-approach.html#cb51-27" tabindex="-1"></a>              <span class="at">values_fn =</span> mean) <span class="sc">|&gt;</span></span>
+<span id="cb51-28"><a href="hierarchical-model-approach.html#cb51-28" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(species_id)) <span class="sc">|&gt;</span></span>
+<span id="cb51-29"><a href="hierarchical-model-approach.html#cb51-29" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb51-30"><a href="hierarchical-model-approach.html#cb51-30" tabindex="-1"></a></span>
+<span id="cb51-31"><a href="hierarchical-model-approach.html#cb51-31" tabindex="-1"></a><span class="co"># initial values - using fixed initial values to check model structure, then we can change to random</span></span>
+<span id="cb51-32"><a href="hierarchical-model-approach.html#cb51-32" tabindex="-1"></a>inits <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb51-33"><a href="hierarchical-model-approach.html#cb51-33" tabindex="-1"></a>  N_species <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(acoust_count_nimble<span class="sc">$</span>species_id))</span>
+<span id="cb51-34"><a href="hierarchical-model-approach.html#cb51-34" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb51-35"><a href="hierarchical-model-approach.html#cb51-35" tabindex="-1"></a>    <span class="at">X =</span> X_init,</span>
+<span id="cb51-36"><a href="hierarchical-model-approach.html#cb51-36" tabindex="-1"></a>    <span class="at">x0 =</span> <span class="fu">rep</span>(<span class="dv">1</span>, N_species), </span>
+<span id="cb51-37"><a href="hierarchical-model-approach.html#cb51-37" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fu">rep</span>(<span class="dv">1</span>, N_species), </span>
+<span id="cb51-38"><a href="hierarchical-model-approach.html#cb51-38" tabindex="-1"></a>    <span class="at">a =</span> <span class="fu">rep</span>(<span class="fl">0.1</span>, N_species), </span>
+<span id="cb51-39"><a href="hierarchical-model-approach.html#cb51-39" tabindex="-1"></a>    <span class="at">c =</span> <span class="fu">rep</span>(<span class="fl">0.9</span>, N_species), <span class="co"># mean-reverting </span></span>
+<span id="cb51-40"><a href="hierarchical-model-approach.html#cb51-40" tabindex="-1"></a>    <span class="at">sigma_sqr =</span> <span class="fu">rep</span>(<span class="fl">0.5</span>, N_species), </span>
+<span id="cb51-41"><a href="hierarchical-model-approach.html#cb51-41" tabindex="-1"></a>    <span class="at">gamma =</span> <span class="fu">rep</span>(<span class="dv">1</span>, N_species), </span>
+<span id="cb51-42"><a href="hierarchical-model-approach.html#cb51-42" tabindex="-1"></a>    <span class="at">k =</span> <span class="fu">rep</span>(<span class="dv">10</span>, N_species)</span>
+<span id="cb51-43"><a href="hierarchical-model-approach.html#cb51-43" tabindex="-1"></a>  )}</span>
+<span id="cb51-44"><a href="hierarchical-model-approach.html#cb51-44" tabindex="-1"></a></span>
+<span id="cb51-45"><a href="hierarchical-model-approach.html#cb51-45" tabindex="-1"></a><span class="co"># monitoring parameters</span></span>
+<span id="cb51-46"><a href="hierarchical-model-approach.html#cb51-46" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>, <span class="st">&quot;sigma_sqr&quot;</span>, </span>
+<span id="cb51-47"><a href="hierarchical-model-approach.html#cb51-47" tabindex="-1"></a>          <span class="st">&quot;X&quot;</span>,<span class="st">&quot;p&quot;</span>,</span>
+<span id="cb51-48"><a href="hierarchical-model-approach.html#cb51-48" tabindex="-1"></a>          <span class="st">&quot;gamma&quot;</span>, <span class="st">&quot;k&quot;</span>, <span class="st">&quot;mu&quot;</span>,</span>
+<span id="cb51-49"><a href="hierarchical-model-approach.html#cb51-49" tabindex="-1"></a>          <span class="st">&quot;E_C&quot;</span>)</span>
+<span id="cb51-50"><a href="hierarchical-model-approach.html#cb51-50" tabindex="-1"></a>nimble_AcoustiCounts <span class="ot">&lt;-</span> <span class="fu">nimbleMCMC</span>(<span class="at">code =</span> code,</span>
+<span id="cb51-51"><a href="hierarchical-model-approach.html#cb51-51" tabindex="-1"></a>                          <span class="at">constants =</span> nimble_data, </span>
+<span id="cb51-52"><a href="hierarchical-model-approach.html#cb51-52" tabindex="-1"></a>                          <span class="at">inits =</span> inits, </span>
+<span id="cb51-53"><a href="hierarchical-model-approach.html#cb51-53" tabindex="-1"></a>                          <span class="at">monitors =</span> pars, </span>
+<span id="cb51-54"><a href="hierarchical-model-approach.html#cb51-54" tabindex="-1"></a>                          <span class="at">nchains =</span> <span class="dv">3</span>, </span>
+<span id="cb51-55"><a href="hierarchical-model-approach.html#cb51-55" tabindex="-1"></a>                          <span class="at">niter =</span> <span class="dv">3000</span>, </span>
+<span id="cb51-56"><a href="hierarchical-model-approach.html#cb51-56" tabindex="-1"></a>                          <span class="at">nburnin =</span> <span class="dv">1000</span>,</span>
+<span id="cb51-57"><a href="hierarchical-model-approach.html#cb51-57" tabindex="-1"></a>                          <span class="at">thin =</span> <span class="dv">3</span>,</span>
+<span id="cb51-58"><a href="hierarchical-model-approach.html#cb51-58" tabindex="-1"></a>                          <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-59"><a href="hierarchical-model-approach.html#cb51-59" tabindex="-1"></a>                          <span class="at">WAIC =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb51-60"><a href="hierarchical-model-approach.html#cb51-60" tabindex="-1"></a><span class="fu">saveRDS</span>(nimble_AcoustiCounts, <span class="st">&quot;data/HM_four_spp.RDS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="hierarchical-model-approach.html#cb52-1" tabindex="-1"></a>nimble_AcoustiCounts <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;data/HM_four_spp.RDS&quot;</span>)</span>
+<span id="cb52-2"><a href="hierarchical-model-approach.html#cb52-2" tabindex="-1"></a><span class="co">#summary(nimble_AcoustiCounts$samples)</span></span>
+<span id="cb52-3"><a href="hierarchical-model-approach.html#cb52-3" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;E_C[1]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Expected abundance OVEN&quot;</span>)</span>
+<span id="cb52-4"><a href="hierarchical-model-approach.html#cb52-4" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;E_C[2]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Expected abundance PIWA&quot;</span>)</span>
+<span id="cb52-5"><a href="hierarchical-model-approach.html#cb52-5" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;E_C[4]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Expected abundance REVI&quot;</span>)</span>
+<span id="cb52-6"><a href="hierarchical-model-approach.html#cb52-6" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;E_C[3]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Expected abundance SCTA&quot;</span>)</span>
+<span id="cb52-7"><a href="hierarchical-model-approach.html#cb52-7" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;p[1]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Detection probability OVEN&quot;</span>)</span>
+<span id="cb52-8"><a href="hierarchical-model-approach.html#cb52-8" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;p[2]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Detection probability PIWA&quot;</span>)</span>
+<span id="cb52-9"><a href="hierarchical-model-approach.html#cb52-9" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;p[4]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Detection probability REVI&quot;</span>)</span>
+<span id="cb52-10"><a href="hierarchical-model-approach.html#cb52-10" tabindex="-1"></a><span class="fu">traceplot</span>(nimble_AcoustiCounts<span class="sc">$</span>samples[,<span class="st">&quot;p[3]&quot;</span>], <span class="at">ylab =</span> <span class="st">&quot;Detection probability SCTA&quot;</span>)</span></code></pre></div>
+<p>Looking at the output of the model - expected abundance of four species in Katahdin Woods and Waters</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="hierarchical-model-approach.html#cb53-1" tabindex="-1"></a>post_1 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(nimble_AcoustiCounts<span class="sc">$</span>samples)</span>
+<span id="cb53-2"><a href="hierarchical-model-approach.html#cb53-2" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="hierarchical-model-approach.html#cb53-3" tabindex="-1"></a>OVEN <span class="ot">&lt;-</span> <span class="fu">quantile</span>(post_1[,<span class="st">&quot;E_C[1]&quot;</span>], <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</span>
+<span id="cb53-4"><a href="hierarchical-model-approach.html#cb53-4" tabindex="-1"></a>PIWA <span class="ot">&lt;-</span> <span class="fu">quantile</span>(post_1[,<span class="st">&quot;E_C[2]&quot;</span>], <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</span>
+<span id="cb53-5"><a href="hierarchical-model-approach.html#cb53-5" tabindex="-1"></a>REVI <span class="ot">&lt;-</span> <span class="fu">quantile</span>(post_1[,<span class="st">&quot;E_C[3]&quot;</span>], <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</span>
+<span id="cb53-6"><a href="hierarchical-model-approach.html#cb53-6" tabindex="-1"></a>SCTA <span class="ot">&lt;-</span> <span class="fu">quantile</span>(post_1[,<span class="st">&quot;E_C[4]&quot;</span>], <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>))</span>
+<span id="cb53-7"><a href="hierarchical-model-approach.html#cb53-7" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="hierarchical-model-approach.html#cb53-8" tabindex="-1"></a>ExpectedCounts <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">rbind</span>(OVEN, PIWA, REVI, SCTA)) <span class="sc">|&gt;</span></span>
+<span id="cb53-9"><a href="hierarchical-model-approach.html#cb53-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">c</span>(<span class="st">&quot;Ovenbird&quot;</span>, <span class="st">&quot;Pine Warbler&quot;</span>, <span class="st">&quot;Red-eyed Vireo&quot;</span>, <span class="st">&quot;Scarlet Tanager&quot;</span>))</span>
+<span id="cb53-10"><a href="hierarchical-model-approach.html#cb53-10" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="hierarchical-model-approach.html#cb53-11" tabindex="-1"></a><span class="fu">ggplot</span>(ExpectedCounts, <span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> <span class="st">`</span><span class="at">50%</span><span class="st">`</span>))<span class="sc">+</span></span>
+<span id="cb53-12"><a href="hierarchical-model-approach.html#cb53-12" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> <span class="st">`</span><span class="at">2.5%</span><span class="st">`</span>, <span class="at">ymax =</span> <span class="st">`</span><span class="at">97.5%</span><span class="st">`</span>), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb53-13"><a href="hierarchical-model-approach.html#cb53-13" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>))<span class="sc">+</span></span>
+<span id="cb53-14"><a href="hierarchical-model-approach.html#cb53-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Expected counts&quot;</span>, </span>
+<span id="cb53-15"><a href="hierarchical-model-approach.html#cb53-15" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Katahdin Woods and Waters&quot;</span>)<span class="sc">+</span></span>
+<span id="cb53-16"><a href="hierarchical-model-approach.html#cb53-16" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb53-17"><a href="hierarchical-model-approach.html#cb53-17" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb53-18"><a href="hierarchical-model-approach.html#cb53-18" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">&quot;figs/E_counts-site1-KWW.jpg&quot;</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">units =</span> <span class="st">&quot;in&quot;</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+<div class="float">
+<img src="figs/E_counts-site1-KWW.jpg" alt="Expected counts for 4 species in KWW" />
+<div class="figcaption">Expected counts for 4 species in KWW</div>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="calling-rates.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vjjan91/newHampshire-pointCount-acoustics/edit/master/Counts_AcousticDetections_oac.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
