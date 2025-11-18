@@ -1,0 +1,398 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+# Creating study area map
+
+Here, I will create a map featuring locations of the point counts and acoustic data. 
+
+## Load necessary libraries  
+```{r}
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(vegan)
+library(scico)
+library(data.table)
+library(extrafont)
+library(sf)
+library(raster)
+library(scales)
+library(ggplot2)
+library(ggspatial)
+library(colorspace)
+library(lubridate)
+library(naniar)
+library(ggstatsplot)
+library(MetBrewer)
+library(FedData)
+library(patchwork)
+library(rnaturalearth)
+library(tmap)
+library(ggspatial)
+```
+
+## Load associated shapefiles for each region sampled
+```{r}
+# load sites sampled
+points <- read.csv("data/list-of-sites.csv") %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+# add a site name column
+points <- points %>%
+  mutate(site_name = case_when(
+    grepl("^ACAD", site_id) ~ "Acadia National Park",
+    grepl("^HBEF", site_id) ~ "Hubbard Brook Experimental Forest",
+    grepl("^KAWW", site_id) ~ "Katahdin Woods and Waters",
+    grepl("^MABI", site_id) ~ "Marsh-Billings-Rockefeller NHP"
+  ))
+
+# load shapefiles for Acadia National Park, Marsh-Billings, Katahdin and Hubbard Brook
+# this data was accessed from several federal sources and using an R package
+
+# Acadia National Park
+acadia <- get_padus(template = "Acadia National Park", 
+                       label = "Acadia")
+acadia <- acadia$Manager_Name[acadia$Manager_Name$Des_Tp == "NP",] #subset required polygons after inspecting
+
+# convert to multiple polygons to remove the boundary polygons
+acadia <- st_cast(acadia, "POLYGON")
+acadia <- acadia[-c(1:5), ]
+
+# hubbard brook
+hubbard_brook <- st_read("data/spatial/hbef_boundary.shp") %>%
+  st_transform(., crs = 4326)
+
+# katahdin
+katahdin <- st_read("data/spatial/nps_boundary.shp") %>%
+  filter(UNIT_NAME == "Katahdin Woods and Waters National Monument") %>%
+  st_transform(., crs = 4326)
+
+# marsh billings
+marsh_billings <- get_padus(template = "Marsh-Billings-Rockefeller National Historical Park",label = "MBR")
+marsh_billings <- marsh_billings$Manager_Name[marsh_billings$Manager_Name$Own_Name == "NPS",]
+```
+
+## Download natural earth layers
+
+Let's download layers that we can add to the map to make it look a little pretty
+
+```{r}
+ne_shapes_to_get <- c(
+  "rivers_lake_centerlines", "rivers_north_america",
+  "lakes", "lakes_north_america"
+)
+
+# loop through ne_shapes_to_get and download each shapefile and store it locally
+ne_shapes_to_get %>%
+    walk(~ ne_download(
+      scale = 10, type = .x, category = "physical",
+      destdir = "data/spatial/", load = FALSE
+    ))
+
+# load each pre-downloaded shapefile and store it in a list
+ne_data_list <- ne_shapes_to_get %>%
+  map(~ {
+    ne_load(
+      scale = 10, type = .x, category = "physical",
+      destdir = "data/spatial/", returnclass = "sf"
+    ) %>%
+      st_transform(., crs = 4326)
+  }) %>%
+  set_names(ne_shapes_to_get)
+
+# load all the datasets in the list into the global environment
+list2env(ne_data_list, envir = .GlobalEnv)
+```
+
+## Acadia National Park
+
+```{r}
+# Acadia National Park
+acadia_points <- points %>%
+  filter(site_name == "Acadia National Park")
+
+# get data for Northeast US
+usa <- ne_states(country = "United States of America", returnclass = "sf")
+northeast_states <- c("Maine", "New Hampshire", "Vermont", "Massachusetts", 
+                      "Rhode Island", "Connecticut", "New York", "New Jersey", 
+                      "Pennsylvania")
+northeast <- usa[usa$name %in% northeast_states, ]
+maine <- usa[usa$name == "Maine", ]
+
+# get approximate bounding box of Acadia for inset highlight
+acadia_bbox <- st_bbox(acadia)
+acadia_point <- st_centroid(st_as_sfc(acadia_bbox))
+
+# create inset map for Acadia
+inset_acadia <- ggplot() +
+  geom_sf(data = northeast, fill = "grey90", color = "white", size = 0.1) +
+  geom_sf(data = maine, fill = "grey50", color = "white", size = 0.2) +
+  geom_sf(data = acadia_point, color = "black", size = 2.5) +
+  coord_sf(crs = 4326, 
+           xlim = c(-80, -66), 
+           ylim = c(40, 48)) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+    plot.background = element_rect(fill = "white", color = "black", size = 0.5)
+  )
+
+# main plot
+plot_acadia <- ggplot() +
+  geom_sf(data = acadia, fill = "#FFE6B7FF") +
+  geom_sf(data = acadia_points, size = 1.2, color = "#de2d26") +
+  coord_sf(crs = 4326) +
+  theme_bw(base_family = "Century Gothic") +
+  annotation_north_arrow(
+    location = "tr", 
+    pad_x = unit(0.3, "cm"), 
+    pad_y = unit(0.3, "cm"),
+    height = unit(0.8, "cm"),
+    width = unit(0.8, "cm"),
+    style = north_arrow_fancy_orienteering(fill = c("grey30", "white"), 
+                                           line_col = "grey30",
+                                           text_family = "Century Gothic",
+                                           text_size = 8)) +
+  annotation_scale(
+    location = "bl", 
+    pad_x = unit(0.1, "cm"), 
+    pad_y = unit(0.2, "cm"),
+    height = unit(0.3, "cm"),
+    bar_cols = c("grey30", "white"),
+    text_family = "Century Gothic",
+    text_cex = 0.6,
+    unit_category = "metric") +
+  labs(title = "Acadia National Park")
+
+# position the inset in bottom right
+acadia_with_inset <- plot_acadia +
+  annotation_custom(
+    ggplotGrob(inset_acadia),
+    xmin = st_bbox(acadia)[3] - (st_bbox(acadia)[3] - st_bbox(acadia)[1]) * 0.20,
+    xmax = st_bbox(acadia)[3],
+    ymin = st_bbox(acadia)[2],
+    ymax = st_bbox(acadia)[2] + (st_bbox(acadia)[4] - st_bbox(acadia)[2]) * 0.30
+  )
+
+acadia_with_inset
+```
+
+
+## Hubbard Brook
+
+```{r}
+# hubbard brook
+hb_points <- points %>%
+  filter(site_name == "Hubbard Brook Experimental Forest")
+
+# get data for Northeast US
+new_hampshire <- usa[usa$name == "New Hampshire", ]
+
+# get approximate bounding box of Hubbard Brook for inset highlight
+hb_bbox <- st_bbox(hubbard_brook)
+hb_point <- st_centroid(st_as_sfc(hb_bbox))
+
+# create inset map for Acadia
+inset_hb <- ggplot() +
+  geom_sf(data = northeast, fill = "grey90", color = "white", size = 0.1) +
+  geom_sf(data = new_hampshire,fill = "grey50", color = "white", size = 0.2) +
+  geom_sf(data = hb_point, color = "black", size = 2.5) +
+  coord_sf(crs = 4326, 
+           xlim = c(-80, -66), 
+           ylim = c(40, 48)) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+    plot.background = element_rect(fill = "white", color = "black", size = 0.5)
+  )
+
+# main plot
+plot_hb <- ggplot() +
+  geom_sf(data = hubbard_brook, fill = "#FFE6B7FF") +
+  geom_sf(data = hb_points, size = 1.2, color = "#de2d26") +
+  coord_sf(crs = 4326) +
+  theme_bw(base_family = "Century Gothic") +
+  annotation_north_arrow(
+    location = "tr", 
+    pad_x = unit(0.3, "cm"), 
+    pad_y = unit(0.3, "cm"),
+    height = unit(0.8, "cm"),
+    width = unit(0.8, "cm"),
+    style = north_arrow_fancy_orienteering(fill = c("grey30", "white"), 
+                                           line_col = "grey30",
+                                           text_family = "Century Gothic",
+                                           text_size = 8)) +
+  annotation_scale(
+    location = "bl", 
+    pad_x = unit(0.1, "cm"), 
+    pad_y = unit(0.2, "cm"),
+    height = unit(0.3, "cm"),
+    bar_cols = c("grey30", "white"),
+    text_family = "Century Gothic",
+    text_cex = 0.6,
+    unit_category = "metric") +
+  labs(title = "Hubbard Brook Experimental Forest")
+
+# position the inset in bottom right
+hb_with_inset <- plot_hb +
+  annotation_custom(
+    ggplotGrob(inset_hb),
+    xmin = st_bbox(hubbard_brook)[3] - (st_bbox(hubbard_brook)[3] - st_bbox(hubbard_brook)[1]) * 0.20,
+    xmax = st_bbox(hubbard_brook)[3],
+    ymin = st_bbox(hubbard_brook)[2],
+    ymax = st_bbox(hubbard_brook)[2] + (st_bbox(hubbard_brook)[4] - st_bbox(hubbard_brook)[2]) * 0.30
+  )
+
+hb_with_inset
+```
+
+
+## Katahdin Woods and Waters
+
+```{r}
+# katahdin points
+katahdin_points <- points %>%
+  filter(site_name == "Katahdin Woods and Waters")
+
+# get approximate bounding box of Katahdin for inset highlight
+katahdin_bbox <- st_bbox(katahdin)
+katahdin_point <- st_centroid(st_as_sfc(katahdin_bbox))
+
+# create inset map for Acadia
+inset_katahdin <- ggplot() +
+  geom_sf(data = northeast, fill = "grey90", color = "white", size = 0.1) +
+  geom_sf(data = maine,fill = "grey50", color = "white", size = 0.2) +
+  geom_sf(data = katahdin_point, color = "black", size = 2.5) +
+  coord_sf(crs = 4326, 
+           xlim = c(-80, -66), 
+           ylim = c(40, 48)) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+    plot.background = element_rect(fill = "white", color = "black", size = 0.5)
+  )
+
+# main plot
+plot_katahdin <- ggplot() +
+  geom_sf(data = katahdin, fill = "#FFE6B7FF") +
+  geom_sf(data = katahdin_points, size = 1.2, color = "#de2d26") +
+  coord_sf(crs = 4326) +
+  theme_bw(base_family = "Century Gothic") +
+  annotation_north_arrow(
+    location = "tr", 
+    pad_x = unit(0.3, "cm"), 
+    pad_y = unit(0.3, "cm"),
+    height = unit(0.8, "cm"),
+    width = unit(0.8, "cm"),
+    style = north_arrow_fancy_orienteering(fill = c("grey30", "white"), 
+                                           line_col = "grey30",
+                                           text_family = "Century Gothic",
+                                           text_size = 8)) +
+  annotation_scale(
+    location = "bl", 
+    pad_x = unit(0.1, "cm"), 
+    pad_y = unit(0.2, "cm"),
+    height = unit(0.3, "cm"),
+    bar_cols = c("grey30", "white"),
+    text_family = "Century Gothic",
+    text_cex = 0.6,
+    unit_category = "metric") +
+  labs(title = "Katahdin Woods and Waters")
+
+# position the inset in bottom right
+katahdin_with_inset <- plot_katahdin +
+  annotation_custom(
+    ggplotGrob(inset_katahdin),
+    xmin = st_bbox(katahdin)[3] - (st_bbox(katahdin)[3] - st_bbox(katahdin)[1]) * 0.20,
+    xmax = st_bbox(katahdin)[3],
+    ymin = st_bbox(katahdin)[2],
+    ymax = st_bbox(katahdin)[2] + (st_bbox(katahdin)[4] - st_bbox(katahdin)[2]) * 1.85
+  )
+
+katahdin_with_inset
+```
+
+
+## Marsh Billings
+
+
+```{r}
+# save
+ggsave(acadia_with_inset, filename = "figs/acadia.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
+ggsave(hb_with_inset, filename = "figs/hb.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
+ggsave(katahdin_with_inset, filename = "figs/katahdin.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
+dev.off()
+ggsave(mbi_with_inset, filename = "figs/marshbil.png", width = 12, height = 7, device = png(), units = "in", dpi = 300)
+dev.off()
+
+
+# Acadia National Park
+mbi_points <- points %>%
+  filter(site_name == "Marsh-Billings-Rockefeller NHP")
+
+# get data for Northeast US
+vermont <- usa[usa$name == "Vermont", ]
+
+# get approximate bounding box of Acadia for inset highlight
+mbi_bbox <- st_bbox(marsh_billings)
+mbi_point <- st_centroid(st_as_sfc(mbi_bbox))
+
+# create inset map for Acadia
+inset_mbi <- ggplot() +
+  geom_sf(data = northeast, fill = "grey90", color = "white", size = 0.1) +
+  geom_sf(data = vermont, fill = "grey50", color = "white", size = 0.2) +
+  geom_sf(data = mbi_point, color = "black", size = 2.5) +
+  coord_sf(crs = 4326, 
+           xlim = c(-80, -66), 
+           ylim = c(40, 48)) +
+  theme_void() +
+  theme(
+    panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+    plot.background = element_rect(fill = "white", color = "black", size = 0.5)
+  )
+
+# main plot
+plot_mbi <- ggplot() +
+  geom_sf(data = marsh_billings, fill = "#FFE6B7FF") +
+  geom_sf(data = mbi_points, size = 1.2, color = "#de2d26") +
+  coord_sf(crs = 4326) +
+  theme_bw(base_family = "Century Gothic") +
+  annotation_north_arrow(
+    location = "tr", 
+    pad_x = unit(0.3, "cm"), 
+    pad_y = unit(0.3, "cm"),
+    height = unit(0.8, "cm"),
+    width = unit(0.8, "cm"),
+    style = north_arrow_fancy_orienteering(fill = c("grey30", "white"), 
+                                           line_col = "grey30",
+                                           text_family = "Century Gothic",
+                                           text_size = 8)) +
+  annotation_scale(
+    location = "bl", 
+    pad_x = unit(0.1, "cm"), 
+    pad_y = unit(0.2, "cm"),
+    height = unit(0.3, "cm"),
+    bar_cols = c("grey30", "white"),
+    text_family = "Century Gothic",
+    text_cex = 0.6,
+    unit_category = "metric") +
+  labs(title = "Marsh-Billings-Rockefeller NHP")
+
+# position the inset in bottom right
+mbi_with_inset <- plot_mbi +
+  annotation_custom(
+    ggplotGrob(inset_mbi),
+    xmin = st_bbox(marsh_billings)[3] - (st_bbox(marsh_billings)[3] - st_bbox(marsh_billings)[1]) * 0.20,
+    xmax = st_bbox(marsh_billings)[3],
+    ymin = st_bbox(marsh_billings)[2],
+    ymax = st_bbox(marsh_billings)[2] + (st_bbox(marsh_billings)[4] - st_bbox(marsh_billings)[2]) * 1.60
+  )
+
+mbi_with_inset
+
+```
+
+
+
