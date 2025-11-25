@@ -21,7 +21,7 @@ library(mcmcplots)
 
 Let's load the file used in `01_data-comparability.Rmd` script. 
 
-```{r loading data}
+```{r}
 acous_count <- read_csv("results/pooled_pointCount_acoustic_data.csv")
 
 acous_count |> # names()
