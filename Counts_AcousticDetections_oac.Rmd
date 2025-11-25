@@ -314,7 +314,7 @@ final_df$time_id <- as.integer(factor(final_df$DateTime))
 
 ```
 
-```{r Stochastic GSS model for data cloning fitting of point counts}
+```{r}
 StochGSS.dc <- function(){
   
   # Priors on model parameters. Priors are DC1 in Lele et al (2007)
@@ -352,7 +352,7 @@ StochGSS.dc <- function(){
 
 For this model, we will need some initial values of the parameters, and given that there could be many `NA` a wrap to provide those initial guess values.
 
-```{r two functions to guess initial parameters in point counts}
+```{r}
 guess.calc <- function(Yobs,Tvec){
   
   T.t <-Tvec-Tvec[1]; #  For calculations, time starts at zero.
@@ -407,7 +407,7 @@ guess.calc2.0<- function(TimeAndNs){
 
 And we have to bundle the data for Data cloning. Let's fit the first species in the taxa with higher data (Ovenbird in Marsh-Billings-Rockefeller NHP) as a test.
 
-```{r Fit DC model, eval=FALSE}
+```{r Fit DC model1, eval=FALSE}
 ts.4guess  <-  final_df$counts
 tvec4guess  <- 1:length(ts.4guess)
 onets4guess <- cbind(tvec4guess, ts.4guess)
@@ -434,7 +434,7 @@ saveRDS(dcrun.GSS, "data/dcfitGSS_2022_OVEN_MBR.rds")
 ```
 
 
-```{r results of the data cloning fitted model point counts}
+```{r}
 dcrun.GSS <- readRDS("data/dcfitGSS_2022_OVEN_MBR.rds")
 
 summary(dcrun.GSS);
@@ -447,7 +447,7 @@ coef(dcrun.GSS)
 
 And with these coefficients of the model, we can estimate latent count trajectories with the Kalman filter structure. This Kalman filter structure allows simultaneous estimation of latent states for observed time steps and prediction for missing ones, leveraging the temporal correlation in the process model.
 
-```{r Kalman trajectories model point counts}
+```{r}
 Kalman.pred.fn <- function() {
 # Priors on model parameters: they are on the real line.
   parms ~ dmnorm(MuPost,PrecPost)
@@ -478,7 +478,7 @@ Kalman.pred.fn <- function() {
 ```
 
 
-```{r data for Kalman trajectories point counts}
+```{r}
 data4kalman <- list(qp1 = as.numeric(length(final_df$counts)),
                     Y1 = array(final_df$counts,
                                dim = c(as.numeric(length(final_df$counts)))),
@@ -488,7 +488,7 @@ data4kalman <- list(qp1 = as.numeric(length(final_df$counts)),
 
 And run the Bayesian inference using the MLE from Data cloning
 
-```{r Fit Bayes Kalman trajectories point counts}
+```{r}
 BH_DC_Pred = jags.fit(data=data4kalman, 
                       params=c("C"), 
                       model=Kalman.pred.fn)
@@ -496,7 +496,7 @@ BH_DC_Pred = jags.fit(data=data4kalman,
 
 And we can generate a dataframe of the time series with the estimates, inter quartile range, and observed data through time
 
-```{r Kalman trajectories point counts}
+```{r}
 summary(BH_DC_Pred)
 # extract predictions and CI around them
 pred <- as.data.frame(t(mcmcapply(BH_DC_Pred, quantile, c(0.025, 0.5, 0.975))))
@@ -590,7 +590,7 @@ StochGSS.acou.dc <- function(){
 
 For this model, we will need some initial values of the parameters, and given that there could be many `NA` a wrap to provide those initial guess values.
 
-```{r two functions to guess initial parameters acoustic detections but same point counts}
+```{r}
 guess.calc <- function(Yobs,Tvec){
   
   T.t <-Tvec-Tvec[1]; #  For calculations, time starts at zero.
@@ -645,7 +645,7 @@ guess.calc2.0<- function(TimeAndNs){
 
 And we have to bundle the data for Data cloning. Let's fit the first species in the taxa with higher data (Ovenbird in Marsh-Billings-Rockefeller NHP) as a test.
 
-```{r Fit DC model acoustic detections, eval=FALSE}
+```{r Fit DC model acoustic detections1, eval=FALSE}
 ts.4guess  <-  as.numeric(final_df$acous_detections)
 tvec4guess  <- 1:length(ts.4guess)
 onets4guess <- cbind(tvec4guess, ts.4guess)
@@ -672,7 +672,7 @@ saveRDS(dcrun.GSS.acou, "data/dcfitGSS_AcDet_2022_OVEN_MBR.rds")
 ```
 
 
-```{r results of the data cloning fitted model acoustic detections}
+```{r results of the data cloning fitted model acoustic detections1}
 dcrun.GSS.acou <- readRDS("data/dcfitGSS_AcDet_2022_OVEN_MBR.rds")
 
 summary(dcrun.GSS.acou);
@@ -687,7 +687,7 @@ Although diagnostics for lambda.max decreases with more clones, the chains are n
 
 Anyway, with these coefficients of the model, we can estimate latent count trajectories with the Kalman filter structure. This Kalman filter structure allows simultaneous estimation of latent states for observed time steps and prediction for missing ones, leveraging the temporal correlation in the process model.
 
-```{r Kalman trajectories model acoustic detections}
+```{r}
 Kalman.pred.acou.fn <- function() {
 # Priors on model parameters: they are on the real line.
   parms ~ dmnorm(MuPost,PrecPost)
@@ -723,7 +723,7 @@ Kalman.pred.acou.fn <- function() {
 ```
 
 
-```{r data for Kalman trajectories acoustic detections}
+```{r}
 data4kalmanAco <- list(qp1 = as.numeric(length(final_df$acous_detections)),
                     Y1 = array(final_df$acous_detections,
                                dim = c(as.numeric(length(final_df$acous_detections)))),
@@ -733,7 +733,7 @@ data4kalmanAco <- list(qp1 = as.numeric(length(final_df$acous_detections)),
 
 And run the Bayesian inference using the MLE from Data cloning
 
-```{r Fit Bayes Kalman trajectories acoustic detections}
+```{r}
 BH_DC_Pred_Acou = jags.fit(data=data4kalmanAco, 
                       params=c("C"), 
                       model=Kalman.pred.acou.fn)
@@ -741,7 +741,7 @@ BH_DC_Pred_Acou = jags.fit(data=data4kalmanAco,
 
 And we can generate a dataframe of the time series with the estimates, inter quartile range, and observed data through time
 
-```{r Kalman trajectories acoustic detections}
+```{r}
 summary(BH_DC_Pred_Acou)
 # extract predictions and CI around them
 predAcou <- as.data.frame(t(mcmcapply(BH_DC_Pred_Acou, quantile, c(0.025, 0.5, 0.975))))
@@ -816,7 +816,7 @@ legend(x = min(ExpectedCountsAcou$DateTime),
 
 Cutting the edges to see the details of the estimates:
 
-```{r figure zoom combining two estimates as lines}
+```{r}
 par(mar = c(6, 4, 4, 2))  
 
 plot(x = ExpectedCountsAcou$DateTime,
