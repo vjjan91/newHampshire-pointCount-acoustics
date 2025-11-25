@@ -49,3 +49,9 @@ observation-process-for-morning-point-counts
 observation-process-for-morning-acoustic-detections
 coding-observation-point-counts
 coding-acoustic-detections-counts
+another-example-with-hierarchical-model-approach---oven-in-katahdin-woods-and-waters
+packages-1
+loading-and-exploring-data-1
+hierarchical-model-for-counts-with-two-observation-processes-1
+coding-observation-point-counts-1
+coding-acoustic-detections-counts-1

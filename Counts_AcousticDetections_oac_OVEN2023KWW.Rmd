@@ -3,11 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Hierarchical model approach
-
-Here we want to evaluate the use of another approach for a hierarchical model of estimation of counts. First, we fit a dynamic autoregressive model to estimate stochastic counts that can be compared to conventional approaches (e.g., \textit{N}-mixture models). We can use this autoregressive model also to estimate the same latent counts from the acoustic detections data as observation process, including an extra parameter of scaling the acoustic activity (e.g., one individual singing more than a 1:1 relationship). 
-
-We try this option first with a single species in a single site. However, this can be further extrapolated to use multispecies models, \textit{borrowing information} from abundant species in the community to estimate parameters of rare ones (sharing some characteristics), such as Beta N-Mixture \href{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12856}{Lopez et al. 2017} and Normal N-Mixture \href{https://esj-journals.onlinelibrary.wiley.com/doi/10.1007/s11284-016-1340-4}{Yamaura et al. 2016}. 
+# Another example with hierarchical model approach - OVEN in Katahdin Woods and Waters
 
 ## Packages
 ```{r}
@@ -23,10 +19,6 @@ Let's load the file used in `01_data-comparability.Rmd` script.
 
 ```{r loading data}
 acous_count <- read_csv("results/pooled_pointCount_acoustic_data.csv")
-
-acous_count |> # names()
-  group_by(common_name, data_type, site_name) |>
-  count() #|> View() # use filter in RStudio
 ```
 
 Let's work on the species-site combination of more data: Ovenbird in Marsh-Billings-Rockefeller NHP.
@@ -40,14 +32,8 @@ acous_count_filt <- acous_count |>
                             
                             #,"Pine Warbler","Red-breasted Nuthatch","Red-eyed Vireo","Scarlet Tanager","Winter Wren","Yellow-bellied Sapsucker","Yellow-rumped Warbler"
                             ),
-    site_name == "Marsh-Billings-Rockefeller NHP")
+    site_name == "Katahdin Woods and Waters")
 table(acous_count_filt$common_name, acous_count_filt$data_type)
-```
-
-The package `naniar` allow to see a good summar of NAs per column
-
-```{r}
-naniar::miss_var_summary(acous_count_filt)
 ```
 
 How to reconcile time of detection of each record? 
@@ -81,202 +67,7 @@ str(acoust_count_summary)
 
 And we can generate the figures. This are similar to my previous attempt, but including some days or point counts discarded by Vijay due to species richness. 
 
-### Figures of the data
-
-Time series of the counts
-
-```{r}
-ggplot(acoust_count_summary,
-       aes(x = Time_window, y = counts, color = site_name)) + 
-  geom_segment(aes(y = 0, yend = counts), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3) + 
-  labs(x = "Time",
-       y = "Number of individuals counted in a 10-minute point count",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/counts-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Counts during the morning for 22 species](figs/counts-by-time-continuous.jpg)
-
-Time series of acoustic detections
-
-```{r}
-ggplot(acoust_count_summary,
-       aes(x = Time_window, y = acous_detections, color = site_name)) + 
-  geom_segment(aes(y = 0, yend = acous_detections), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3, scales = "free_y") + 
-  labs(x = "Time",
-       y = "Number of acoustic detections in a 10-minute recording",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/acou_det-by-time-continuous.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Acoustic detections during the morning for 22 species](figs/acou_det-by-time-continuous.jpg)
-
-This summary dataset also allow to see the potential effect of phenology. We can see the two years independently
-
-```{r}
-acoust_count_summary |>
-  mutate(year = year(date)) |>
-  filter(year == 2022) |>
-  ggplot(aes(x = Time_window, y = counts, color = site_name))+
-  geom_segment(aes(y = 0, yend = counts), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3) + 
-  labs(x = "Date-Time of survey (2022)",
-       y = "Number of individuals counted in a 10-minute point count",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/counts-by-date_2022.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Counts 2022 - phenology for 22 species](figs/counts-by-date_2022.jpg)
-
-```{r}
-acoust_count_summary |>
-  mutate(year = year(date)) |>
-  filter(year == 2022) |>
-  ggplot(aes(x = Time_window, y = acous_detections, color = site_name))+
-  geom_segment(aes(y = 0, yend = acous_detections), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3, scales = "free_y") + 
-  labs(x = "Date-Time of survey (2022)",
-       y = "Number of acoustic detections in a 10-minute recording",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/acou_det-by-date_2022.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Acoustic detections 2022 - phenology for 22 species](figs/acou_det-by-date_2022.jpg)
-
-And for 2023:
-```{r}
-acoust_count_summary |>
-  mutate(year = year(date)) |>
-  filter(year == 2023) |>
-  ggplot(aes(x = DateTime, y = counts, color = site_name))+
-  geom_segment(aes(y = 0, yend = counts), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3) + 
-  labs(x = "Date of survey (2023)",
-       y = "Number of individuals counted in a 10-minute point count",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/counts-by-date_2023.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Counts 2023 - phenology for 22 species](figs/counts-by-date_2023.jpg)
-
-```{r}
-acoust_count_summary |>
-  mutate(year = year(date)) |>
-  filter(year == 2023) |>
-  ggplot(aes(x = DateTime, y = acous_detections, color = site_name))+
-  geom_segment(aes(y = 0, yend = acous_detections), alpha = 0.3) + 
-  geom_point(alpha = 0.6) + 
-  facet_wrap(~common_name, ncol = 3, scales = "free_y") + 
-  labs(x = "Date of survey (2023)",
-       y = "Number of acoustic detections in a 10-minute recording",
-       color = "Site")+
-  scale_color_manual(values=met.brewer("Homer2", 4))+
-  theme_minimal()+
-  theme(legend.position = "bottom")
-#ggsave(filename = "figs/acou_det-by-date_2023.jpg", width = 10, height = 10, units = "in", dpi = 300)
-```
-![Acoustic detections 2023 - phenology for 22 species](figs/acou_det-by-date_2023.jpg)
-
-These figures serve to see that the date of visit have a more clear effect in acoustic detections than on counts. We can incorporate these covariates in a hierarchical model.
-
-These figures also allow to estimate the variance-to-mean ratio (VMR) of our two data sources (counts and acoustic detections) to select a family distribution accordingly. Recall a simple, clear table of VMR values:
-```{r}
-VMR_table <- data.frame(
-  Distribution = c("Constant random variable", "Binomial","Poisson", "Negative binomial"),
-  VMR = c("VMR = 0", "0<VMR<1", "VMR = 1", "VMR>1")
-)
-knitr::kable(VMR_table)
-```
-
-So, estimating these VMR per species:
-```{r}
-acoust_count_summary |>
-  group_by(common_name) |>
-  summarise(meanCounts = mean(counts),
-            varCounts = var(counts), 
-            VMR_counts = varCounts/meanCounts,
-            meanAcouDet = mean(acous_detections),
-            varAcouDet = var(acous_detections), 
-            VMR_AcouDet = varAcouDet/meanAcouDet) |> #summary()
-  as.data.frame() # to see all the table
-```
-
-We can see that VMR_counts is between 0 and 1, while VMR_AcousticDetection > 1. These ranges suggest using a Binomial and a Negative binomial distributions, respectively, in the observation process.
-
 ## Hierarchical model for counts with two observation processes
-
-### State process for morning expected counts
-
-Assuming that every morning of sampling we find a latent number of individuals in each site (including several point counts) that fluctuates around a mean stationary number, we can see some similarities with a Stochastic Gompertz State Space population dynamics model, which in continuous time follows a Gaussian (Ornstein-Uhlenbeck, OU) diffusion dynamic.
-
-Let's model the latent process of log-counts $X_{i,t} = \ln(C_{i,t})$ for species $i$ in time $t$ (sampling point count) in a site $m$. We can simplify this (for now) by only working in a site ($m = 1$; Marsh-Billings-Rockefeller NHP) and a single species example ($i = 1$; Ovenbird - OVEN). On the logarithmic scale, the process becomes linear and follows an autoregressive model of order 1 (note we are not including the index $m$ nor $i$ for now):
-
-$$
-X_{t+1} = a + c * X_{t} + \epsilon_{t}; ~ \epsilon \sim \text{Normal}(0,\sigma^2)
-$$
-where $a$ control the drift (equivalent to the initial condition at $t=1$, and then the maximum growth rate in a population model), $c$ controls the mean-reverting dynamic (such as the strength of density dependence, $c = 1 + b$ in a population model), and $\epsilon_{t}$ captures stochasticity in the process, distributed as a normal random variable with some noise of the process $\sigma^2$. In the long-run, we can estimate the mean of the log-counts as a function of the control drift and mean-reverting dynamic:
-
-$$
-\text{E}[X_{\infty}] = \frac{a}{1-c}
-$$
-
-Also the variance of the log-counts is given by the ratio of variance in stochasticity and the square of the mean-reverting dynamic:
-
-$$
-\text{Var}[X_{\infty}] = \frac{\sigma^2}{1-c^2}
-$$
-
-However, how to deal with Jansen's inequality?! 
-
-$$
-e^{(\text{E}[X_\infty])} \leq \text{E}[e^{(X_\infty)}]
-$$
-
-We can estimate the long-run mean count value on the original scale by adding half of the variance, which is our expected counts per species $i$:
-
-$$
-\text{E}[C_{\infty}] = e^{(\text{E}[X_{\infty}] + (0.5 \times \text{Var}[X_{\infty}]))}
-$$
-
-### Observation process for morning point counts
-
-The VMR_counts revealed underdispersion, so we can us a Binomial distribution for this observation process:
-
-$$
-Y_{t}^{Counts} | C_{t} \sim \text{Binomial}(\lambda_{t},~\tau), ~ \lambda_{t} = e^{X_{t}} = C_{t}
-$$
-where $Y_{t}^{counts}$ is the observed counts from point counts sampling, linked to the latent (unobserved) counts $C_{t}$, assuming that counts are noisy realizations of the true abundance under a binomial distribution with expected "success" counts of $\lambda_{t}$ and detection probability $\tau$.
-
-### Observation process for morning acoustic detections
-
-The VMR_AcousticDetection revealed overdispersion, so we can use a Negative Binomial distribution for this observation process:
-
-$$
-Y_{t}^{AcoustDet}|C_t \sim \text{Negative Binomial}(p_{t}, r)
-$$
-where $Y_{t}^{AcoustDet}$ is the observed acoustic detections from sampling point (that overlap with point counts), $p_{t} = \frac{r}{r+\lambda_t}$ represents the success parameter, being a ratio of the (over)dispersion parameter $r$ and the sum of the overdispersion parameter and the mean expected counts $\lambda_t = e^{X_t} = C_t$. Given that the number of acoustic detection counts does not have a perfect 1:1 relationship with expected counts, we can formulate a log-linear relationship for $\lambda_t$:
-
-$$
-\log(\lambda_{t}) = \alpha + \gamma X_{t}
-$$
-where $\alpha$ is a species-level intercept and $\gamma$ is the scaling parameter with the latent log-abundance $X_{t}$.
 
 ### Coding Observation point counts 
 
@@ -289,7 +80,7 @@ acoust_count_df <- acoust_count_summary |>
          acous_detections = acous_detections+1,
          year = year(date), 
          ) |>
-  filter(year == 2022) |>
+  filter(year == 2023) |>
   arrange(Time_window)
 
 # generate sequence of potential point counts
@@ -430,12 +221,12 @@ dcrun.GSS <- dc.fit(data = datalistGSS.dc,
                     thin = 20,
                     n.iter = 20000)
 
-saveRDS(dcrun.GSS, "data/dcfitGSS_2022_OVEN_MBR.rds")
+saveRDS(dcrun.GSS, "data/dcfitGSS_2023_OVEN_KWW.rds")
 ```
 
 
 ```{r results of the data cloning fitted model point counts}
-dcrun.GSS <- readRDS("data/dcfitGSS_2022_OVEN_MBR.rds")
+dcrun.GSS <- readRDS("data/dcfitGSS_2023_OVEN_KWW.rds")
 
 summary(dcrun.GSS);
 dcdiag(dcrun.GSS) 
@@ -443,7 +234,7 @@ plot(dcdiag(dcrun.GSS))
 pairs(dcrun.GSS)
 coef(dcrun.GSS)
 ```
-![Data cloning results for four parameters of GSS from point counts](figs/dc_GSS_parameters.jpeg)
+![Data cloning results for four parameters of GSS from point counts](figs/dc_GSS_parameters_OVEN2023KWW.jpeg)
 
 And with these coefficients of the model, we can estimate latent count trajectories with the Kalman filter structure. This Kalman filter structure allows simultaneous estimation of latent states for observed time steps and prediction for missing ones, leveraging the temporal correlation in the process model.
 
@@ -531,7 +322,8 @@ ExpectedCounts |>
                                        "Upper",
                                        "Estimated",
                                        "Lower")))) +
-    labs(title = "OVEN - Marsh-Billings-Rockefeller NHP - 2022 sampling",
+  scale_y_continuous(limits = c(0,10))+
+    labs(title = "OVEN - Katahdin Woods and Waters - 2023 sampling",
          x = "Time (sampling window)",
          y = "Counts",
          color = "Counts",
@@ -590,59 +382,6 @@ StochGSS.acou.dc <- function(){
 
 For this model, we will need some initial values of the parameters, and given that there could be many `NA` a wrap to provide those initial guess values.
 
-```{r two functions to guess initial parameters acoustic detections but same point counts}
-guess.calc <- function(Yobs,Tvec){
-  
-  T.t <-Tvec-Tvec[1]; #  For calculations, time starts at zero.
-  q <- length(Yobs)-1;      #  Number of time series transitions, q.
-  qp1 <- q+1;              #  q+1 gets used a lot, too.
-  S.t <- T.t[2:qp1]-T.t[1:q];  #  Time intervals.
-  Ybar <- mean(Yobs);
-  Yvar <- sum((Yobs-Ybar)*(Yobs-Ybar))/q;
-  mu1 <- Ybar;
-  
-  # Kludge an initial value for theta based on mean of Y(t+s) given Y(t).
-  th1<- -mean(log(abs((Yobs[2:qp1]-mu1)/(Yobs[1:q]-mu1)))/S.t);            
-  bsq1<- 2*th1*Yvar/(1+2*th1);         # Moment estimate using stationary
-  tsq1<- bsq1;                         #   variance, with betasq=tausq.
-  
-  #three 0's 
-  three0s <- sum(c(th1,bsq1,tsq1))
-  if(three0s==0|is.na(three0s)){th1 <- 0.5;bsq1 <- 0.09; tsq1 <- 0.23;}
-  
-  
-  out1 <- c(th1,bsq1,tsq1);
-  if(sum(out1<1e-7)>=1){out1 <- c(0.5,0.09,0.23)}
-  out <- c(mu1,out1);
-  return(abs(out))
-  
-}
-
-guess.calc2.0<- function(TimeAndNs){
-  
-  newmat <- TimeAndNs 
-  isnas <- sum(is.na(TimeAndNs))
-  
-  if(isnas >= 1){
-    
-    isnaind <- which(is.na(TimeAndNs[,2]), arr.ind=TRUE)
-    newmat <- TimeAndNs[-isnaind,]
-    newmat[,1] <- newmat[,1] - newmat[1,1]
-    
-  }
-  
-  init.guess <- guess.calc(Yobs = log(newmat[,2]), Tvec=newmat[,1])
-  
-  mu1  <- init.guess[1]
-  th1  <- init.guess[2]
-  bsq1 <- init.guess[3]
-  sigsq1<- ((1-exp(-2*th1))*bsq1)/(2*th1)
-  
-  out <- c(mu=mu1, theta=th1, sigmasq = sigsq1)
-  return(out)
-}
-```
-
 And we have to bundle the data for Data cloning. Let's fit the first species in the taxa with higher data (Ovenbird in Marsh-Billings-Rockefeller NHP) as a test.
 
 ```{r Fit DC model acoustic detections, eval=FALSE}
@@ -668,12 +407,12 @@ dcrun.GSS.acou <- dc.fit(data = datalistGSS.acou.dc,
                     thin = 20,
                     n.iter = 20000)
 
-saveRDS(dcrun.GSS.acou, "data/dcfitGSS_AcDet_2022_OVEN_MBR.rds")
+saveRDS(dcrun.GSS.acou, "data/dcfitGSS_AcDet_2023_OVEN_KWW.rds")
 ```
 
 
 ```{r results of the data cloning fitted model acoustic detections}
-dcrun.GSS.acou <- readRDS("data/dcfitGSS_AcDet_2022_OVEN_MBR.rds")
+dcrun.GSS.acou <- readRDS("data/dcfitGSS_AcDet_2023_OVEN_KWW.rds")
 
 summary(dcrun.GSS.acou);
 dcdiag(dcrun.GSS.acou) 
@@ -681,7 +420,7 @@ plot(dcdiag(dcrun.GSS.acou))
 pairs(dcrun.GSS.acou)
 coef(dcrun.GSS.acou)
 ```
-![Data cloning results for four parameters of GSS from acoustic detections](figs/dc_GSS_AcouDet_parameters.jpeg)
+![Data cloning results for six parameters of GSS from acoustic detections](figs/dc_GSS_parsAcouDet_OVEN2023KWW.jpeg)
 
 Although diagnostics for lambda.max decreases with more clones, the chains are not converging. It seems that this needs more iterations and change initial values. 
 
@@ -811,7 +550,7 @@ legend(x = min(ExpectedCountsAcou$DateTime),
        bty = "n")                     # no box around legend
 
 ```
-![Observed and estimated counts from point counts and acoustic detections - A](figs/ExpectedCountsOVEN_MBR_2022_a.jpeg)
+![Observed and estimated counts from point counts and acoustic detections - A](figs/ExpecCountsOVEN_KWW_2023_A.jpeg)
 
 
 Cutting the edges to see the details of the estimates:
@@ -825,7 +564,7 @@ plot(x = ExpectedCountsAcou$DateTime,
      ylim = c(0,10), 
      ylab = "Counts",
      xlab = "Time (sampling window)", 
-     main = "OVEN - 2022 - Marsh-Billings-Rockefeller NHP")
+     main = "OVEN - 2023 - Katahdin Woods and Waters")
 points(x = ExpectedCountsAcou$DateTime,
      y = ExpectedCountsAcou$AcousticDetections, 
      col = "#762a83")
@@ -848,7 +587,7 @@ lines(x = ExpectedCountsAcou$DateTime,
      y = ExpectedCountsAcou$AcouDetUpper, 
      col = "#e7d4e8", lty = 2)
 
-legend(x = min(ExpectedCountsAcou$DateTime),
+legend(x = quantile(ExpectedCountsAcou$DateTime, 0.75),
        y = 10,
        cex = 0.7, 
        pt.cex = 0.7,
@@ -871,5 +610,5 @@ legend(x = min(ExpectedCountsAcou$DateTime),
        bty = "n")                     # no box around legend
 
 ```
-![Observed and estimated counts from point counts and acoustic detections - B](figs/ExpectedCountsOVEN_MBR_2022_b.jpeg)
+![Observed and estimated counts from point counts and acoustic detections - B](figs/ExpecCountsOVEN_KWW_2023_B.jpeg)
 
